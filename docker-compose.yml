@@ -1,0 +1,20 @@
+﻿services:
+#  dbusers.api:
+#    image: dbusers.api
+#    build:
+#      context: .
+#      dockerfile: src/Services/DbUsers/DbUsers.API/Dockerfile
+  postgres.db:
+    image: postgres
+    container_name: postgres.db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=xc56-426i-rkmf
+      - POSTGRES_DB=datingAgencyDb
+    volumes:
+      - postgres-default-volume:/var/lib/postgresql/data
+
+volumes:
+  postgres-default-volume:
