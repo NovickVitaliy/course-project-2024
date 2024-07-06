@@ -1,6 +1,6 @@
-using DbUsers.API.Models.ServiceResults;
+using DbUsers.Application.Shared;
 
-namespace DbUsers.API.Services.Contracts;
+namespace DbUsers.Application.Contracts;
 
 public interface IRoleManager
 {

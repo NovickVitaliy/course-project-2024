@@ -1,4 +1,4 @@
-namespace DbUsers.API.Models.Domain;
+namespace DbUsers.Domain.Models;
 
 public class DbUser
 {

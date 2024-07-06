@@ -1,7 +1,7 @@
-using DbUsers.API.Models.ServiceResults;
-using DbUsers.API.Services.Contracts;
+using DbUsers.Application.Contracts;
+using DbUsers.Application.Shared;
 
-namespace DbUsers.API.Services.Implementations;
+namespace DbUsers.Infrastructure.Services;
 
 public class DefaultRoleManager : IRoleManager
 {
