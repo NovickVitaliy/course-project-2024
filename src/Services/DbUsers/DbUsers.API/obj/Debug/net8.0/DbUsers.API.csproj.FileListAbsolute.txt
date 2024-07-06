@@ -38,3 +38,14 @@ C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\obj\Debug\net8.0\DbUsers.API.pdb
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\obj\Debug\net8.0\DbUsers.API.genruntimeconfig.cache
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\obj\Debug\net8.0\ref\DbUsers.API.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Common.Auth.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.API\bin\Debug\net8.0\Common.Auth.pdb

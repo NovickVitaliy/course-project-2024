@@ -15,3 +15,5 @@ C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\refint\DbUsers.Infrastructure.dll
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\DbUsers.Infrastructure.pdb
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\ref\DbUsers.Infrastructure.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\bin\Debug\net8.0\Common.Auth.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\bin\Debug\net8.0\Common.Auth.pdb

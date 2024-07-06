@@ -1,4 +1,5 @@
 using DbUsers.Application.Contracts;
+using DbUsers.Infrastructure;
 using DbUsers.Infrastructure.Services;
 
 [assembly:ApiController]
@@ -17,7 +18,12 @@ builder.Services.AddSingleton<IDbManager, PostgresDbManager>();
 builder.Services.AddKeyedSingleton<string>("pg_conn_template",
     cfg["pg_conn_template"] ?? throw new ArgumentException("pg_conn_template"));
 
+builder.Services.ConfigureInfrastructure(cfg);
+
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

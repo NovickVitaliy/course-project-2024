@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DbUsers.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+28a8105367cc6d68c9000692d7aefe2ea861455d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5308082a1be2e42db9a83c72a5066e8e5c959417")]
 [assembly: System.Reflection.AssemblyProductAttribute("DbUsers.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DbUsers.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
