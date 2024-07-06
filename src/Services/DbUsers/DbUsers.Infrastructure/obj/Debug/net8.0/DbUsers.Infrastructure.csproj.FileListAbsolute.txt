@@ -1,0 +1,17 @@
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\bin\Debug\net8.0\DbUsers.Infrastructure.deps.json
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\bin\Debug\net8.0\DbUsers.Infrastructure.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\bin\Debug\net8.0\DbUsers.Infrastructure.pdb
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\bin\Debug\net8.0\DbUsers.Application.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\bin\Debug\net8.0\DbUsers.Domain.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\bin\Debug\net8.0\DbUsers.Application.pdb
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\bin\Debug\net8.0\DbUsers.Domain.pdb
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\DbUsers.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\DbUsers.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\DbUsers.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\DbUsers.Infrastructure.AssemblyInfo.cs
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\DbUsers.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\DbUsers..3E76101C.Up2Date
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\DbUsers.Infrastructure.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\refint\DbUsers.Infrastructure.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\DbUsers.Infrastructure.pdb
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DbUsers.Infrastructure\obj\Debug\net8.0\ref\DbUsers.Infrastructure.dll

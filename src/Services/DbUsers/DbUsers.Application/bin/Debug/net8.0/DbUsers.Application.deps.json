@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "DbUsers.Application/1.0.0": {
+        "dependencies": {
+          "DbUsers.Domain": "1.0.0"
+        },
+        "runtime": {
+          "DbUsers.Application.dll": {}
+        }
+      },
+      "DbUsers.Domain/1.0.0": {
+        "runtime": {
+          "DbUsers.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DbUsers.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DbUsers.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
