@@ -7,18 +7,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbUsers", "DbUsers", "{6E5B7057-C7F1-46CD-8855-6E84879A8833}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUsers.API", "src\Services\DbUsers\DbUsers.API\DbUsers.API.csproj", "{12391B55-B738-4D4B-A9F5-8A2854592173}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatingAgencyMS.API", "src\Services\DbUsers\DatingAgencyMS.API\DatingAgencyMS.API.csproj", "{12391B55-B738-4D4B-A9F5-8A2854592173}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B278D927-5429-4146-BBD9-BBB600FA1E2D}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUsers.Domain", "src\Services\DbUsers\DbUsers.Domain\DbUsers.Domain.csproj", "{51B4B1B6-7E9D-4DD9-9B78-95000848D1F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatingAgencyMS.Domain", "src\Services\DbUsers\DatingAgencyMS.Domain\DatingAgencyMS.Domain.csproj", "{51B4B1B6-7E9D-4DD9-9B78-95000848D1F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUsers.Application", "src\Services\DbUsers\DbUsers.Application\DbUsers.Application.csproj", "{8FF4BECD-615F-4B8D-8BBC-643348A0F4B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatingAgencyMS.Application", "src\Services\DbUsers\DatingAgencyMS.Application\DatingAgencyMS.Application.csproj", "{8FF4BECD-615F-4B8D-8BBC-643348A0F4B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUsers.Infrastructure", "src\Services\DbUsers\DbUsers.Infrastructure\DbUsers.Infrastructure.csproj", "{7A5A061C-9410-4ECF-A3CE-2AF39A2A8E06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatingAgencyMS.Infrastructure", "src\Services\DbUsers\DatingAgencyMS.Infrastructure\DatingAgencyMS.Infrastructure.csproj", "{7A5A061C-9410-4ECF-A3CE-2AF39A2A8E06}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{4371B756-DC38-40EF-9510-375885ABBD6D}"
 EndProject
