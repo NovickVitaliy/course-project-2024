@@ -1,5 +1,6 @@
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Infrastructure;
+using DatingAgencyMS.Infrastructure.DbSetup;
 using DatingAgencyMS.Infrastructure.Services;
 
 [assembly:ApiController]
@@ -21,6 +22,11 @@ builder.Services.AddKeyedSingleton<string>("pg_conn_template",
 builder.Services.ConfigureInfrastructure(cfg);
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    await app.SetupInitialDbWithUsersAndRole();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
