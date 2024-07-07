@@ -7,7 +7,7 @@ public static class PasswordHelper
 {
     private const int KeySize = 64;
     private const int Iterations = 350000;
-    private static readonly HashAlgorithmName HashAlgorithm = HashAlgorithmName.SHA512;
+    private static readonly HashAlgorithmName _hashAlgorithm = HashAlgorithmName.SHA512;
 
     public static (string hashedPassword, string salt) HashPasword(string password)
     {
@@ -16,7 +16,7 @@ public static class PasswordHelper
             Encoding.UTF8.GetBytes(password),
             salt,
             Iterations,
-            HashAlgorithm,
+            _hashAlgorithm,
             KeySize);
 
         return (Convert.ToHexString(hash), Convert.ToHexString(salt));
@@ -24,7 +24,7 @@ public static class PasswordHelper
     
     public static bool VerifyPassword(string password, string hash, string salt)
     {
-        var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, Encoding.UTF8.GetBytes(salt), Iterations, HashAlgorithm, KeySize);
+        var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, Convert.FromHexString(salt), Iterations, _hashAlgorithm, KeySize);
 
         return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromHexString(hash));
     }

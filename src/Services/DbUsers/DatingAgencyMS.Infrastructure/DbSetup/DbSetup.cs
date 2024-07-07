@@ -1,3 +1,4 @@
+using DatingAgencyMS.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -29,11 +30,29 @@ public static class DbSetup
 
     private static async Task SeedInitialUsers(NpgsqlCommand cmd)
     {
-        //TODO: seed initial user that is admin
+        cmd.CommandText = "SELECT COUNT(*) FROM keys;";
+        var keysCount = (long?)await cmd.ExecuteScalarAsync() ?? throw new ArgumentException("keysCount");
+        if (keysCount > 0) return;
+        
+        var (hashedPassword, salt) = PasswordHelper.HashPasword("xc56-426i-rkmf");
+        cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, role_id) VALUES " +
+                          "(@login, @hash, @salt, @role_id)";
+        
+        cmd.Parameters.AddWithValue("login", "admin");
+        cmd.Parameters.AddWithValue("hash", hashedPassword);
+        cmd.Parameters.AddWithValue("salt", salt);
+        cmd.Parameters.AddWithValue("role_id", 1);
+
+        await cmd.ExecuteNonQueryAsync();
+        cmd.Parameters.Clear();
     }
 
     private static async Task SeedInitialRoles(NpgsqlCommand cmd)
     {
+        cmd.CommandText = "SELECT COUNT(*) FROM roles;";
+        var rolesCount = (long?)await cmd.ExecuteScalarAsync() ?? throw new ArgumentException("rolesCount");
+        if (rolesCount > 0) return;
+        
         cmd.CommandText = "INSERT INTO roles (name) VALUES " +
                           "('owner'), " +
                           "('admin'), " +
@@ -64,8 +83,8 @@ public static class DbSetup
         cmd.CommandText = "CREATE TABLE IF NOT EXISTS Keys (" +
                           "id SERIAL, " +
                           "login VARCHAR(50) NOT NULL," +
-                          "password_hash VARCHAR(64) NOT NULL," +
-                          "password_salt VARCHAR(64) NOT NULL," +
+                          "password_hash VARCHAR(200) NOT NULL," +
+                          "password_salt VARCHAR(200) NOT NULL," +
                           "role_id INT NOT NULL," +
                           "PRIMARY KEY(id)," +
                           "FOREIGN KEY (role_id) REFERENCES Roles(id) ON DELETE CASCADE);";
