@@ -14,7 +14,6 @@ builder.Services.AddControllers()
         options.SuppressModelStateInvalidFilter = true;
     });
 
-builder.Services.AddSingleton<IDbManager, PostgresDbManager>();
 
 builder.Services.AddKeyedSingleton<string>("pg_conn_template",
     cfg["pg_conn_template"] ?? throw new ArgumentException("pg_conn_template"));

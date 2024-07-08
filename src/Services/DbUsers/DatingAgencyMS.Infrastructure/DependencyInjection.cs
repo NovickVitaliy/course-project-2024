@@ -24,6 +24,9 @@ public static class DependencyInjection
         services.ConfigureAuth(configuration);
 
         services.AddSingleton<ITokenService, DefaultTokenService>();
+        services.AddSingleton<IDbManager, PostgresDbManager>();
+        services.AddScoped<IUserManager, PostgresUserManager>();
+        services.AddScoped<IRoleManager, PostgresRoleManager>();
 
         return services;
     }

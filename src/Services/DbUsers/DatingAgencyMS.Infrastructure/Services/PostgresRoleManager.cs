@@ -4,7 +4,7 @@ using DatingAgencyMS.Application.Shared;
 
 namespace DatingAgencyMS.Infrastructure.Services;
 
-public class DefaultRoleManager : IRoleManager
+public class PostgresRoleManager : IRoleManager
 {
     public Task<ServiceResult<int>> CreateRole(string roleName)
     {
