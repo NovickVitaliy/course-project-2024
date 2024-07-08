@@ -149,4 +149,24 @@ public class PostgresUserManager : IUserManager
 
         return new ServiceResult<bool>(success, (int)HttpStatusCode.OK, success);
     }
+
+    public async Task<ServiceResult<string>> GetUserRole(string login)
+    {
+        var serviceResult = await _dbManager.GetConnection(login);
+        if (!serviceResult.Success)
+            return new ServiceResult<string>(false, (int)HttpStatusCode.BadRequest, default, serviceResult.Description);
+
+        var connection = serviceResult.ResponseData!;
+        await using var cmd = connection.CreateCommand();
+        cmd.CommandText = "SELECT role FROM keys WHERE login=@login";
+        cmd.AddParameter("login", login);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        if (await reader.ReadAsync())
+        {
+            var role = reader.GetString(reader.GetOrdinal("role"));
+            return new ServiceResult<string>(true, (int)HttpStatusCode.OK, role);
+        }
+
+        throw new ArgumentException("User with given login was not found", login);
+    }
 }
