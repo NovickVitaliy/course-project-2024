@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Globalization;
 using System.Net;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.UserManagement;
@@ -10,12 +11,10 @@ namespace DatingAgencyMS.Infrastructure.Services;
 public class PostgresUserManager : IUserManager
 {
     private readonly IDbManager _dbManager;
-    private readonly IRoleManager _roleManager;
 
-    public PostgresUserManager(IDbManager dbManager, IRoleManager roleManager)
+    public PostgresUserManager(IDbManager dbManager)
     {
         _dbManager = dbManager;
-        _roleManager = roleManager;
     }
 
     public async Task<ServiceResult<long>> CreateUser(CreateUserRequest request)
@@ -39,13 +38,13 @@ public class PostgresUserManager : IUserManager
             }
 
             var (hashedPassword, salt) = PasswordHelper.HashPasword(request.Password);
-            var roleId = await GetRoleId(request.Role, cmd);
-            cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, role_id) VALUES " +
-                              "(@login, @passwordHash, @passwordSalt, @roleId) RETURNING id;";
+            var role = request.Role.ToLower(CultureInfo.InvariantCulture);
+            cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, role) VALUES " +
+                              "(@login, @passwordHash, @passwordSalt, @role) RETURNING id;";
             cmd.AddParameter("login", request.Login);
             cmd.AddParameter("passwordHash", hashedPassword);
             cmd.AddParameter("passwordSalt", salt);
-            cmd.AddParameter("roleId", roleId);
+            cmd.AddParameter("role", role);
             id = (int?)await cmd.ExecuteScalarAsync();
             if (id is null)
             {
@@ -74,21 +73,6 @@ public class PostgresUserManager : IUserManager
     private async Task GrantAccessRights(string login, string role, DbCommand cmd)
     {
         //TODO: grant access rights
-    }
-
-    private static async Task<int> GetRoleId(string role, DbCommand cmd)
-    {
-        //TODO: change to use service
-        cmd.CommandText = "SELECT id FROM roles WHERE name = @role";
-        cmd.AddParameter("role", role);
-        await using var reader = await cmd.ExecuteReaderAsync();
-        if (await reader.ReadAsync())
-        {
-            cmd.Parameters.Clear();
-            return reader.GetInt32(reader.GetOrdinal("id"));
-        }
-        //TODO: throw exception that role does exist
-        return 0;
     }
 
     private static async Task<bool> UserWithLoginExists(string login, DbCommand cmd)
@@ -142,9 +126,8 @@ public class PostgresUserManager : IUserManager
         {
             await using var cmd = connection.CreateCommand();
             cmd.Transaction = transaction;
-            var roleId = await GetRoleId(request.NewRole, cmd);
-            cmd.CommandText = "UPDATE keys SET role_id = @roleId WHERE login = @login;";
-            cmd.AddParameter("roleId", roleId);
+            cmd.CommandText = "UPDATE keys SET role = @role WHERE login = @login;";
+            cmd.AddParameter("role", request.NewRole);
             cmd.AddParameter("login", request.Login);
             success = await cmd.ExecuteNonQueryAsync() == 1;
             await transaction.CommitAsync();

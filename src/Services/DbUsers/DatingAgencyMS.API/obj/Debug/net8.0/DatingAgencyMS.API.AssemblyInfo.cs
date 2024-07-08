@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DatingAgencyMS.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3bd83816c1e3b5ff50967d278ed4c74ff775c67a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed90801248a8a63284c094b9969cd91ac20bd2e4")]
 [assembly: System.Reflection.AssemblyProductAttribute("DatingAgencyMS.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DatingAgencyMS.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -24,7 +24,6 @@ public static class DbSetup
 
     private static async Task SeedTablesWithInitialData(NpgsqlCommand cmd)
     {
-        await SeedInitialRoles(cmd);
         await SeedInitialUsers(cmd);
     }
 
@@ -35,47 +34,21 @@ public static class DbSetup
         if (keysCount > 0) return;
         
         var (hashedPassword, salt) = PasswordHelper.HashPasword("xc56-426i-rkmf");
-        cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, role_id) VALUES " +
-                          "(@login, @hash, @salt, @role_id)";
+        cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, role) VALUES " +
+                          "(@login, @hash, @salt, @role)";
         
         cmd.Parameters.AddWithValue("login", "admin");
         cmd.Parameters.AddWithValue("hash", hashedPassword);
         cmd.Parameters.AddWithValue("salt", salt);
-        cmd.Parameters.AddWithValue("role_id", 1);
+        cmd.Parameters.AddWithValue("role", "owner");
 
         await cmd.ExecuteNonQueryAsync();
         cmd.Parameters.Clear();
     }
 
-    private static async Task SeedInitialRoles(NpgsqlCommand cmd)
-    {
-        cmd.CommandText = "SELECT COUNT(*) FROM roles;";
-        var rolesCount = (long?)await cmd.ExecuteScalarAsync() ?? throw new ArgumentException("rolesCount");
-        if (rolesCount > 0) return;
-        
-        cmd.CommandText = "INSERT INTO roles (name) VALUES " +
-                          "('owner'), " +
-                          "('admin'), " +
-                          "('operator'), " +
-                          "('guest')";
-        
-        await cmd.ExecuteNonQueryAsync();
-    }
-
     private static async Task CreateInitialTables(NpgsqlCommand cmd)
     {
-        await CreateRolesTable(cmd);
         await CreateKeysTable(cmd);
-    }
-
-    private static async Task CreateRolesTable(NpgsqlCommand cmd)
-    {
-        cmd.CommandText = "CREATE TABLE IF NOT EXISTS Roles(" +
-                          "id SERIAL," +
-                          "name VARCHAR(50)," +
-                          "PRIMARY KEY (id));";
-        
-        await cmd.ExecuteNonQueryAsync();
     }
 
     private static async Task CreateKeysTable(NpgsqlCommand cmd)
@@ -85,9 +58,8 @@ public static class DbSetup
                           "login VARCHAR(50) NOT NULL," +
                           "password_hash VARCHAR(200) NOT NULL," +
                           "password_salt VARCHAR(200) NOT NULL," +
-                          "role_id INT NOT NULL," +
-                          "PRIMARY KEY(id)," +
-                          "FOREIGN KEY (role_id) REFERENCES Roles(id) ON DELETE CASCADE);";
+                          "role VARCHAR(50) NOT NULL," +
+                          "PRIMARY KEY(id))";
         
         await cmd.ExecuteNonQueryAsync();
     }
