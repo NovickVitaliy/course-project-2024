@@ -4,6 +4,7 @@ using System.Net;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Application.Shared;
+using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Helpers;
 
 namespace DatingAgencyMS.Infrastructure.Services;
@@ -57,8 +58,8 @@ public class PostgresUserManager : IUserManager
             var escapedLogin = "\"" + request.Login.Replace("\"", "\"\"") + "\"";
             var escapedPassword = "'" + request.Password.Replace("'", "''") + "'";
             cmd.CommandText = $"CREATE ROLE {escapedLogin} WITH LOGIN PASSWORD {escapedPassword}";
-            await GrantAccessRights(escapedLogin, request.Role, cmd);
             await cmd.ExecuteNonQueryAsync();
+            await GrantAccessRights(escapedLogin, request.Role, cmd);
             
             await transaction.CommitAsync();
         }
@@ -70,9 +71,17 @@ public class PostgresUserManager : IUserManager
         return new ServiceResult<long>(true, (int)HttpStatusCode.OK, id.Value);
     }
 
-    private async Task GrantAccessRights(string login, string role, DbCommand cmd)
+    private static async Task GrantAccessRights(string login, string role, DbCommand cmd)
     {
-        //TODO: grant access rights
+        var roleExists = DbRoles.EnsureRoleExists(role);
+        if (!roleExists)
+        {
+            throw new ArgumentException("Invalid role.", nameof(role));
+        }
+
+        var template = DbRoles.GetGrantPrivilegesTemplateStringForRole(role);
+        cmd.CommandText = string.Format(template, login);
+        await cmd.ExecuteNonQueryAsync();
     }
 
     private static async Task<bool> UserWithLoginExists(string login, DbCommand cmd)

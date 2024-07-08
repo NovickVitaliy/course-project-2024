@@ -11,7 +11,7 @@ public static class DbSetup
     {
         await using var scope = app.Services.CreateAsyncScope();
         var pgConnTemplate = scope.ServiceProvider.GetRequiredKeyedService<string>("pg_conn_template");
-        var connectionString = string.Format(pgConnTemplate, "admin", "xc56-426i-rkmf");
+        var connectionString = string.Format(pgConnTemplate, "root", "xc56-426i-rkmf");
 
         //TODO: change in the future to be scalable
         await using var connection = new NpgsqlConnection(connectionString);
@@ -37,7 +37,7 @@ public static class DbSetup
         cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, role) VALUES " +
                           "(@login, @hash, @salt, @role)";
         
-        cmd.Parameters.AddWithValue("login", "admin");
+        cmd.Parameters.AddWithValue("login", "root");
         cmd.Parameters.AddWithValue("hash", hashedPassword);
         cmd.Parameters.AddWithValue("salt", salt);
         cmd.Parameters.AddWithValue("role", "owner");

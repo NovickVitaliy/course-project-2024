@@ -10,7 +10,7 @@
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=admin
+      - POSTGRES_USER=root
       - POSTGRES_PASSWORD=xc56-426i-rkmf
       - POSTGRES_DB=datingAgencyDb
     volumes:
