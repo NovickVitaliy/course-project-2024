@@ -2,6 +2,7 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Infrastructure.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Npgsql;
 
 namespace DatingAgencyMS.API.Controllers;
@@ -34,6 +35,7 @@ public class TestingController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateUser(CreateUserRequest request)
     {
         var result = await _userManager.CreateUser(request);

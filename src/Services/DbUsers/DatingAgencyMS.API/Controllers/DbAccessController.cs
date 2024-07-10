@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
 
-[Authorize]
 public class DbAccessController : BaseApiController
 {
     private readonly IDbManager _dbManager;
@@ -34,6 +33,7 @@ public class DbAccessController : BaseApiController
         return Ok(new { token });
     }
 
+    [Authorize]
     [HttpPost("{login}")]
     public async Task<IActionResult> Connection([FromRoute] string login)
     {
@@ -46,7 +46,8 @@ public class DbAccessController : BaseApiController
 
         return Ok();
     }
-
+    
+    [Authorize]
     [HttpPost("{login}")]
     public async Task<IActionResult> Close([FromRoute] string login)
     {
