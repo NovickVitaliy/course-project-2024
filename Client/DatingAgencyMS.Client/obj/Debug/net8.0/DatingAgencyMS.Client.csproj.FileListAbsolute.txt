@@ -27,3 +27,7 @@ C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\
 C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\obj\Debug\net8.0\DatingAgencyMS.Client.pdb
 C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\obj\Debug\net8.0\DatingAgencyMS.Client.genruntimeconfig.cache
 C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\obj\Debug\net8.0\ref\DatingAgencyMS.Client.dll
+C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\Refit.dll
+C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\Refit.HttpClientFactory.dll
+C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\obj\Debug\net8.0\DatingAgencyMS.Client.csproj.AssemblyReference.cache
+C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\obj\Debug\net8.0\DatingAg.EBDFA6D4.Up2Date

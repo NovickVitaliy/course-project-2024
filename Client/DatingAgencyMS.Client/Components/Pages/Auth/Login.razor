@@ -1,0 +1,54 @@
+@page "/auth/login"
+@using DatingAgencyMS.Client.Extensions
+@using DatingAgencyMS.Client.Models.DTOs.Auth
+@using DatingAgencyMS.Client.Services
+@using Refit
+@inject IJSRuntime JsRuntime
+@inject IDbAccessService DbAccessService
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <EditForm FormName="loginForm" Model="LoginRequest" OnValidSubmit="OnValidSubmit" class="w-25 h-100 border-black border-2 p-3 rounded-3">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <h1 class="text-center">Увійти до акаунту</h1>
+            <div class="mb-3">
+                <label for="login" class="form-label">Логін</label>
+                <InputText @bind-Value="LoginRequest.Login" type="text" class="form-control" id="login" placeholder="Введіть логін..."/>
+            </div>
+            <div class="mb-3">
+                <ValidationMessage For="() => LoginRequest.Login"></ValidationMessage>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Пароль</label>
+                <InputText @bind-Value="LoginRequest.Password" type="password" class="form-control" id="password" placeholder="Введіть пароль..."/>
+            </div>
+            <div class="mb-3">
+                <ValidationMessage For="() => LoginRequest.Password"></ValidationMessage>
+            </div>
+            <div class="row justify-content-between">
+                <a href="/" class="col-4 btn btn-secondary">Скасувати</a>
+                <button type="submit" class="col-4 btn btn-primary">Увійти</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private LoginRequest LoginRequest { get; set; } = new();
+
+    private async Task OnValidSubmit()
+    {
+        try
+        {
+            await JsRuntime.InvokeVoidAsync("console.log", LoginRequest.ToString());
+            var response = await DbAccessService.Login(LoginRequest);
+            await JsRuntime.InvokeVoidAsync("console.log", response);
+        }
+        catch (ApiException e)
+        {
+            var apiError = e.ToApiError();
+            await JsRuntime.InvokeVoidAsync("console.log", apiError);
+            Console.WriteLine(e);
+        }
+    }
+}

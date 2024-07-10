@@ -37,14 +37,13 @@ public class PostgresDbManager : IDbManager
             return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, false, e.Message);
         }
 
-        var connectionAddedToPool = false;
-        var delay = MsDelayToAddConnectionToPool;
-        while (!connectionAddedToPool)
+        if (_connections.ContainsKey(login))
         {
-            connectionAddedToPool = _connections.TryAdd(login, new DbConnectionInfo(connection));
-            await Task.Delay(delay);
-            delay *= ExponentialDelayMultiplier;
+            return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, false,
+                "Connection is alredy established for given user.");
         }
+
+        _connections.TryAdd(login, new DbConnectionInfo(connection));
 
         return new ServiceResult<bool>(true, (int)HttpStatusCode.OK, true);
     }

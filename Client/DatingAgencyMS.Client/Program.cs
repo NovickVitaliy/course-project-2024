@@ -1,9 +1,21 @@
 using DatingAgencyMS.Client.Components;
+using DatingAgencyMS.Client.Services;
+using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var cfg = builder.Configuration;
 // Add services to the container.
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+builder.Services.AddRefitClient<IDbAccessService>()
+    .ConfigureHttpClient(c =>
+    {
+        c.BaseAddress = new Uri(cfg["ApiBaseUrl"] ??
+                                throw new ArgumentException(
+                                    "Api base url was not found in configuration",
+                                    "ApiBaseUrl"));
+    });
 
 var app = builder.Build();
 
@@ -20,6 +32,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapRazorComponents<App>();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();
