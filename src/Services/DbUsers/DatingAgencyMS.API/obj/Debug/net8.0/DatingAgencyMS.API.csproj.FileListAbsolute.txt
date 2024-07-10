@@ -49,3 +49,5 @@ C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAg
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.API\obj\Debug\net8.0\DatingAgencyMS.API.pdb
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.API\obj\Debug\net8.0\DatingAgencyMS.API.genruntimeconfig.cache
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.API\obj\Debug\net8.0\ref\DatingAgencyMS.API.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.API\bin\Debug\net8.0\dbup-core.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.API\bin\Debug\net8.0\dbup-postgresql.dll

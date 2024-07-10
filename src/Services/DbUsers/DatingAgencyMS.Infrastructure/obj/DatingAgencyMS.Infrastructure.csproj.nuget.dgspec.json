@@ -245,6 +245,10 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[7.6.2, )"
+            },
+            "dbup-postgresql": {
+              "target": "Package",
+              "version": "[5.0.40, )"
             }
           },
           "imports": [
