@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\DatingAgencyMS.Client.props" />
+</Project>
