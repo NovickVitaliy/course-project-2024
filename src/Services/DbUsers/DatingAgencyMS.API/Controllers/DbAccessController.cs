@@ -10,11 +10,13 @@ public class DbAccessController : BaseApiController
 {
     private readonly IDbManager _dbManager;
     private readonly ITokenService _tokenService;
+    private readonly IUserManager _userManager;
 
-    public DbAccessController(IDbManager dbManager, ITokenService tokenService)
+    public DbAccessController(IDbManager dbManager, ITokenService tokenService, IUserManager userManager)
     {
         _dbManager = dbManager;
         _tokenService = tokenService;
+        _userManager = userManager;
     }
 
     [HttpPost]
@@ -29,8 +31,8 @@ public class DbAccessController : BaseApiController
         }
 
         var token = await _tokenService.GenerateJwtToken(request.Login);
-
-        return Ok(new { token });
+        var role = (await _userManager.GetUserRole(request.Login)).ResponseData;
+        return Ok(new { login = request.Login, token, role });
     }
 
     [Authorize]
@@ -46,7 +48,7 @@ public class DbAccessController : BaseApiController
 
         return Ok();
     }
-    
+
     [Authorize]
     [HttpPost("{login}")]
     public async Task<IActionResult> Close([FromRoute] string login)

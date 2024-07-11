@@ -1,5 +1,8 @@
 ﻿@page "/"
-
+@using DatingAgencyMS.Client.Models.Core
+@using DatingAgencyMS.Client.Store.UserUseCase
+@using Fluxor
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 <PageTitle>Home</PageTitle>
 
 <div class="container">
@@ -8,9 +11,38 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-2 d-flex justify-content-center">
-            <a href="/auth/login" class="btn btn-primary m-auto">
-                Увійти
-            </a>
+            @if (User is null)
+            {
+                <a href="/auth/login" class="btn btn-primary m-auto">
+                    Увійти
+                </a>
+            }
+            else
+            {
+                <a href="/database/manage" class="btn btn-primary m-auto">
+                    Почати
+                </a>
+            }
         </div>
     </div>
 </div>
+
+@code {
+    [Inject]
+    public IState<UserState> UserState { get; set; }
+
+    public User? User { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        User = UserState.Value.User;
+        UserState.StateChanged += UserStateOnStateChanged;
+        base.OnInitialized();
+    }
+
+    private void UserStateOnStateChanged(object? sender, EventArgs e)
+    {
+        User = UserState.Value.User;
+    }
+
+}

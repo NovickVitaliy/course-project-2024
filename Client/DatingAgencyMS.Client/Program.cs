@@ -1,5 +1,7 @@
+using Blazored.LocalStorage;
 using DatingAgencyMS.Client.Components;
 using DatingAgencyMS.Client.Services;
+using Fluxor;
 using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,13 @@ builder.Services.AddRefitClient<IDbAccessService>()
                                     "Api base url was not found in configuration",
                                     "ApiBaseUrl"));
     });
+
+builder.Services.AddFluxor(options =>
+{
+    options.ScanAssemblies(typeof(Program).Assembly);
+});
+
+builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 

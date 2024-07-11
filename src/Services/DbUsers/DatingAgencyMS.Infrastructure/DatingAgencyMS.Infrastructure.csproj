@@ -35,6 +35,8 @@
       <EmbeddedResource Include="DbSetup\Scripts\Script_0001 - Create Tables.sql" />
       <None Remove="DbSetup\Scripts\Script_0002 - Create Root User.sql" />
       <EmbeddedResource Include="DbSetup\Scripts\Script_0002 - Create Root User.sql" />
+      <None Remove="DbSetup\Scripts\Script_0003 - Create Roles (Must be the last in the sequence).sql" />
+      <EmbeddedResource Include="DbSetup\Scripts\Script_0003 - Create Roles (Must be the last in the sequence).sql" />
     </ItemGroup>
 
 </Project>

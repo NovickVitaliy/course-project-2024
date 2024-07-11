@@ -1,17 +1,51 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using System.Text.Json
+@using Blazored.LocalStorage
+@using DatingAgencyMS.Client.Models.Core
+@using DatingAgencyMS.Client.Store.UserUseCase
+@using Fluxor
+@using DatingAgencyMS.Client.Components.Controls
+@using DatingAgencyMS.Client.Constants
+@using DatingAgencyMS.Client.Services
+@inherits LayoutComponentBase
+@inject IState<UserState> UserState
 <div class="page">
     <div class="sidebar">
         <NavMenu/>
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+        <NavBar></NavBar>
 
         <article class="content px-4">
             @Body
         </article>
     </main>
 </div>
+
+@code
+{
+    [Inject] private IDispatcher Dispatcher { get; set; }
+
+    [Inject] private ILocalStorageService LocalStorageService { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadUserFromStorage()
+    {
+        var user = await LocalStorageService.GetItemAsync<User?>(UserConstants.UserLocalStorageKey);
+        if (user is not null)
+        {
+            Dispatcher.Dispatch(new SetUserAction(user));
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadUserFromStorage();
+        }
+    }
+}

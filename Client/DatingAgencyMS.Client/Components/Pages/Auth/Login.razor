@@ -1,10 +1,16 @@
 @page "/auth/login"
+@using Blazored.LocalStorage
+@using DatingAgencyMS.Client.Constants
 @using DatingAgencyMS.Client.Extensions
+@using DatingAgencyMS.Client.Models.Core
 @using DatingAgencyMS.Client.Models.DTOs.Auth
 @using DatingAgencyMS.Client.Services
+@using DatingAgencyMS.Client.Store.UserUseCase
+@using Fluxor
 @using Refit
 @inject IJSRuntime JsRuntime
 @inject IDbAccessService DbAccessService
+@inject IDispatcher Dispatcher
 <div class="container">
     <div class="d-flex justify-content-center">
         <EditForm FormName="loginForm" Model="LoginRequest" OnValidSubmit="OnValidSubmit" class="w-25 h-100 border-black border-2 p-3 rounded-3">
@@ -35,7 +41,10 @@
 @code {
     [SupplyParameterFromForm]
     private LoginRequest LoginRequest { get; set; } = new();
-
+    
+    [Inject]
+    private ILocalStorageService LocalStorageService { get; set; }
+    
     private async Task OnValidSubmit()
     {
         try
@@ -43,6 +52,8 @@
             await JsRuntime.InvokeVoidAsync("console.log", LoginRequest.ToString());
             var response = await DbAccessService.Login(LoginRequest);
             await JsRuntime.InvokeVoidAsync("console.log", response);
+            await LocalStorageService.SetItemAsync(UserConstants.UserLocalStorageKey, response.ToUser());
+            Dispatcher.Dispatch(new SetUserAction(response.ToUser()));
         }
         catch (ApiException e)
         {

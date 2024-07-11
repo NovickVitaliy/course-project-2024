@@ -40,6 +40,18 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Blazored.LocalStorage": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "Fluxor": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Fluxor.Blazor.Web": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
             "Refit": {
               "target": "Package",
               "version": "[7.1.2, )"

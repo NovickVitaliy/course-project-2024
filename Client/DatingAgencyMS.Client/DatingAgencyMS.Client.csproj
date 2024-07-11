@@ -7,6 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+      <PackageReference Include="Fluxor" Version="6.0.0" />
+      <PackageReference Include="Fluxor.Blazor.Web" Version="6.0.0" />
       <PackageReference Include="Refit" Version="7.1.2" />
       <PackageReference Include="Refit.HttpClientFactory" Version="7.1.2" />
     </ItemGroup>
