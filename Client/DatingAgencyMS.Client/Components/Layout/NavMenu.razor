@@ -17,24 +17,27 @@
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Домашня
             </NavLink>
-            @if (User is not null && IsInRoleAllowedToManageUsers())
-            {
-                <NavLink class="nav-link" style="line-height: 1.2rem" href="" Match="NavLinkMatch.All">
+        </div>
+        @if (User is not null && IsInRoleAllowedToManageUsers())
+        {
+            <div class="nav-item px-3">
+
+                <NavLink class="nav-link" style="line-height: 1.2rem" href="/users-management" Match="NavLinkMatch.All">
                     <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Керування користувачами
                 </NavLink>
-            }
-        </div>
+            </div>
+        }
+
     </nav>
 </div>
 
 @code {
-    [Inject]
-    private IState<UserState> UserState { get; set; }
+    [Inject] private IState<UserState> UserState { get; set; }
 
     private DbRoles _rolesAllowedToManageUsers = DbRoles.Owner | DbRoles.Admin;
-    
+
     private User? User { get; set; }
-    
+
     protected override void OnInitialized()
     {
         UserState.StateChanged += UserStateOnStateChanged;

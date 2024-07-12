@@ -14,8 +14,4 @@
       <PackageReference Include="Refit.HttpClientFactory" Version="7.1.2" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Components\Pages\UserManagement\" />
-    </ItemGroup>
-
 </Project>
