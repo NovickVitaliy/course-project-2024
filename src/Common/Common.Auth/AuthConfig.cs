@@ -31,7 +31,7 @@ public static class AuthConfig
                     ValidIssuer = configuration.GetValue<string>("JwtSettings:Issuer"),
                 };
             });
-
+        
         return services;
     }
 }

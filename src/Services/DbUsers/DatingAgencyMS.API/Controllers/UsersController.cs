@@ -1,6 +1,7 @@
 using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.UserManagement;
+using DatingAgencyMS.Infrastructure.Constants;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
@@ -16,7 +17,7 @@ public class UsersController : BaseApiController
         _userManager = userManager;
     }
     
-    [Authorize]
+    [Authorize(Policy = ApplicationPolicies.IsOwnerOrAdmin)]
     public async Task<IActionResult> CreateUser(CreateUserRequest request)
     {
         var result = await _userManager.CreateUser(request);

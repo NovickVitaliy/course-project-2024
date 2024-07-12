@@ -1,6 +1,8 @@
 using System.Text;
 using Common.Auth;
 using DatingAgencyMS.Application.Contracts;
+using DatingAgencyMS.Domain.Models;
+using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Services;
 using DatingAgencyMS.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,7 +24,13 @@ public static class DependencyInjection
             .ValidateOnStart();
 
         services.ConfigureAuth(configuration);
-
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(ApplicationPolicies.IsOwnerOrAdmin, builder =>
+            {
+                builder.RequireClaim(ApplicationClaimTypes.DbRole, [DbRoles.Owner.ToString(), DbRoles.Admin.ToString()]);
+            });
+        });
         services.AddScoped<ITokenService, DefaultTokenService>();
         services.AddSingleton<IDbManager, PostgresDbManager>();
         services.AddScoped<IUserManager, PostgresUserManager>();
