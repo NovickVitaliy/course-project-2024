@@ -4,9 +4,9 @@ namespace DatingAgencyMS.Client.Store.UserUseCase;
 
 public class SetUserAction
 {
-    public User? User { get; }
+    public LoggedInUser? User { get; }
 
-    public SetUserAction(User? user)
+    public SetUserAction(LoggedInUser? user)
     {
         User = user;
     }

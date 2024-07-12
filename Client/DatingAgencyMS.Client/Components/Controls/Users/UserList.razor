@@ -1,0 +1,19 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Models.DTOs.User
+<Grid TItem="DbUser"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="UserDataProvider"
+      AllowPaging="true"
+      AllowSorting="true"
+      AllowFiltering="true"
+      PageSize="5">
+    <GridColumn TItem="DbUser" HeaderText="Id" PropertyName="Id" SortString="Id" SortKeySelector="user => user.Id">
+        @context.Id
+    </GridColumn>
+    <GridColumn TItem="DbUser" HeaderText="Login" PropertyName="Login" SortString="Login" SortKeySelector="user => user.Login">
+        @context.Login
+    </GridColumn>
+    <GridColumn TItem="DbUser" HeaderText="Role" PropertyName="Role" SortString="Role" SortKeySelector="user => user.Role">
+        @context.Role
+    </GridColumn>
+</Grid>

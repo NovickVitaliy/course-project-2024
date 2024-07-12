@@ -1,4 +1,6 @@
 @page "/users-management"
 @using DatingAgencyMS.Client.Components.Controls.Users
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Models.DTOs.User
 <h3>User Management</h3>
-<UserSearchBar OnSearchUser="OnSearchUser"></UserSearchBar>
+<UserList Users="_users"></UserList>

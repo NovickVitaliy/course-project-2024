@@ -34,7 +34,7 @@
 
     private async Task LoadUserFromStorage()
     {
-        var user = await LocalStorageService.GetItemAsync<User?>(UserConstants.UserLocalStorageKey);
+        var user = await LocalStorageService.GetItemAsync<LoggedInUser?>(UserConstants.UserLocalStorageKey);
         if (user is not null)
         {
             Dispatcher.Dispatch(new SetUserAction(user));

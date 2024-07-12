@@ -36,7 +36,7 @@
 
     private DbRoles _rolesAllowedToManageUsers = DbRoles.Owner | DbRoles.Admin;
 
-    private User? User { get; set; }
+    private LoggedInUser? User { get; set; }
 
     protected override void OnInitialized()
     {

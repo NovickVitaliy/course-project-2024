@@ -6,11 +6,11 @@ namespace DatingAgencyMS.Client.Store.UserUseCase;
 [FeatureState]
 public class UserState
 {
-    public User? User { get; }
+    public LoggedInUser? User { get; }
     
     private UserState() {}
 
-    public UserState(User? user)
+    public UserState(LoggedInUser? user)
     {
         User = user;
     }
