@@ -4,6 +4,7 @@ using System.Net;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Application.Shared;
+using DatingAgencyMS.Domain.Models;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Helpers;
 
@@ -39,7 +40,7 @@ public class PostgresUserManager : IUserManager
             }
 
             var (hashedPassword, salt) = PasswordHelper.HashPasword(request.Password);
-            var role = request.Role.ToLower(CultureInfo.InvariantCulture);
+            var role = request.Role.ToString().ToUpperInvariant();
             cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, role) VALUES " +
                               "(@login, @passwordHash, @passwordSalt, @role) RETURNING id;";
             cmd.AddParameter("login", request.Login);
@@ -71,15 +72,9 @@ public class PostgresUserManager : IUserManager
         return new ServiceResult<long>(true, (int)HttpStatusCode.OK, id.Value);
     }
 
-    private static async Task GrantAccessRights(string login, string role, DbCommand cmd)
+    private static async Task GrantAccessRights(string login, DbRoles role, DbCommand cmd)
     {
-        var roleExists = DbRoles.EnsureRoleExists(role);
-        if (!roleExists)
-        {
-            throw new ArgumentException("Invalid role.", nameof(role));
-        }
-
-        var template = DbRoles.GetGrantPrivilegesTemplateStringForRole(role);
+        var template = DbRolesInfo.GetGrantPrivilegesTemplateStringForRole(role);
         cmd.CommandText = string.Format(template, login);
         await cmd.ExecuteNonQueryAsync();
     }
@@ -136,7 +131,7 @@ public class PostgresUserManager : IUserManager
             await using var cmd = connection.CreateCommand();
             cmd.Transaction = transaction;
             cmd.CommandText = "UPDATE keys SET role = @role WHERE login = @login;";
-            cmd.AddParameter("role", request.NewRole);
+            cmd.AddParameter("role", request.NewRole.ToString().ToUpperInvariant());
             cmd.AddParameter("login", request.Login);
             success = await cmd.ExecuteNonQueryAsync() == 1;
             await transaction.CommitAsync();
@@ -150,11 +145,11 @@ public class PostgresUserManager : IUserManager
         return new ServiceResult<bool>(success, (int)HttpStatusCode.OK, success);
     }
 
-    public async Task<ServiceResult<string>> GetUserRole(string login)
+    public async Task<ServiceResult<DbRoles>> GetUserRole(string login)
     {
         var serviceResult = await _dbManager.GetConnection(login);
         if (!serviceResult.Success)
-            return new ServiceResult<string>(false, (int)HttpStatusCode.BadRequest, default, serviceResult.Description);
+            return new ServiceResult<DbRoles>(false, (int)HttpStatusCode.BadRequest, default, serviceResult.Description);
 
         var connection = serviceResult.ResponseData!;
         await using var cmd = connection.CreateCommand();
@@ -164,7 +159,7 @@ public class PostgresUserManager : IUserManager
         if (await reader.ReadAsync())
         {
             var role = reader.GetString(reader.GetOrdinal("role"));
-            return new ServiceResult<string>(true, (int)HttpStatusCode.OK, role);
+            return new ServiceResult<DbRoles>(true, (int)HttpStatusCode.OK, Enum.Parse<DbRoles>(role, true));
         }
 
         throw new ArgumentException("User with given login was not found", login);

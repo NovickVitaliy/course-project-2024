@@ -1,3 +1,5 @@
+using DatingAgencyMS.Domain.Models;
+
 namespace DatingAgencyMS.Application.DTOs.UserManagement;
 
-public record CreateUserRequest(string Login, string Password, string Role, string RequestedBy);
+public record CreateUserRequest(string Login, string Password, DbRoles Role, string RequestedBy);

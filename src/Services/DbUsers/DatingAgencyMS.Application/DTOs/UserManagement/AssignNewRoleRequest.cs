@@ -1,3 +1,5 @@
+using DatingAgencyMS.Domain.Models;
+
 namespace DatingAgencyMS.Application.DTOs.UserManagement;
 
-public record AssignNewRoleRequest(string Login, string NewRole, string RequestedBy);
+public record AssignNewRoleRequest(string Login, DbRoles NewRole, string RequestedBy);

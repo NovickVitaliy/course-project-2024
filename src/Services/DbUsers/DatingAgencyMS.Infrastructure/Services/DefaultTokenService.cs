@@ -29,7 +29,7 @@ public class DefaultTokenService : ITokenService
         [
             new Claim(JwtRegisteredClaimNames.Exp, expiresAt.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
             new Claim(ApplicationClaimTypes.DbUser, login),
-            new Claim(ApplicationClaimTypes.DbRole, serviceResult.ResponseData!)
+            new Claim(ApplicationClaimTypes.DbRole, serviceResult.ResponseData.ToString())
         ];
 
         var credentials = new SigningCredentials(

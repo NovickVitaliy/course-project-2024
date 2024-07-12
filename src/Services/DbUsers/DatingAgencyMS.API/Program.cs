@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Infrastructure;
 using DatingAgencyMS.Infrastructure.DbSetup;
@@ -9,7 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 var cfg = builder.Configuration;
 
 builder.Services.AddControllers()
-    .ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
+    .ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; })
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddKeyedSingleton("pg_conn_template",
     cfg.GetConnectionString("pg_conn_template") ?? throw new ArgumentException("pg_conn_template"));
