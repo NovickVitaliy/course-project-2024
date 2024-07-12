@@ -37,29 +37,3 @@
         </EditForm>
     </div>
 </div>
-
-@code {
-    [SupplyParameterFromForm]
-    private LoginRequest LoginRequest { get; set; } = new();
-    
-    [Inject]
-    private ILocalStorageService LocalStorageService { get; set; }
-    
-    private async Task OnValidSubmit()
-    {
-        try
-        {
-            await JsRuntime.InvokeVoidAsync("console.log", LoginRequest.ToString());
-            var response = await DbAccessService.Login(LoginRequest);
-            await JsRuntime.InvokeVoidAsync("console.log", response);
-            await LocalStorageService.SetItemAsync(UserConstants.UserLocalStorageKey, response.ToUser());
-            Dispatcher.Dispatch(new SetUserAction(response.ToUser()));
-        }
-        catch (ApiException e)
-        {
-            var apiError = e.ToApiError();
-            await JsRuntime.InvokeVoidAsync("console.log", apiError);
-            Console.WriteLine(e);
-        }
-    }
-}

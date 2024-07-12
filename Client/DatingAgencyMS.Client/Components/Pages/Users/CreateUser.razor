@@ -1,0 +1,50 @@
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent;
+@page "/users/create"
+@using DatingAgencyMS.Client.Models.Core
+@using BlazorBootstrap
+<Toasts class="p-3" Messages="Toastes" AutoHide="true" Placement="ToastsPlacement.TopCenter"></Toasts>
+<h3>Новий користувач</h3>
+<div class="row">
+    <div class="col-lg-6 col-sm-12 mb-3">
+        <EditForm FormName="createUserForm" Model="CreateUserRequest" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <div class="mb-3">
+                <label class="form-label" for="login">Логін</label>
+                <InputText id="login" @bind-Value="CreateUserRequest.Login" class="form-control"></InputText>
+                <div class="validation-message">
+                    <ValidationMessage For="() => CreateUserRequest.Login"></ValidationMessage>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Пароль</label>
+                <InputText type="password" id="password" @bind-Value="CreateUserRequest.Password" class="form-control"></InputText>
+                <div class="validation-message">
+                    <ValidationMessage For="() => CreateUserRequest.Password"></ValidationMessage>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="role">Роль</label>
+                <InputSelect class="form-select" id="role" @bind-Value="CreateUserRequest.Role">
+                    <option selected disabled>Виберіть роль</option>
+                    @if (UserState.Value.User is not null && IsOwner())
+                    {
+                        <option value="@DbRoles.Owner">Власник</option>
+                        <option value="@DbRoles.Admin">Адміністратор</option>
+                    }
+                    <option value="@DbRoles.Operator">Оператор</option>
+                    <option value="@DbRoles.Guest">Гість</option>
+                </InputSelect>
+                <div class="validation-message">
+                    <ValidationMessage For="() => CreateUserRequest.Role"></ValidationMessage>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-1">
+                <a href="/users-management" type="button" class="btn btn-secondary">Повернутись назад</a>
+                <button type="submit" class="btn btn-primary">Створити</button>
+            </div>
+        </EditForm>
+    </div>
+    <div class="col-lg-6">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur atque consequuntur, cum doloribus harum inventore quas tempora. Accusantium consequuntur et harum nobis quam quos ullam vero. Ducimus nisi saepe sequi!</p>
+    </div>
+</div>

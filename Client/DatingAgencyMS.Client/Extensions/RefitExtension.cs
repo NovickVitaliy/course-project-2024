@@ -13,4 +13,18 @@ public static class RefitExtension
             PropertyNameCaseInsensitive = true
         }) ?? new ApiError(400, "Api error occured");
     }
+
+    public static IServiceCollection AddRefitServiceWithBaseApiUrl<TService>(this IServiceCollection services, IConfiguration cfg)
+        where TService : class
+    {
+        services.AddRefitClient<TService>()
+            .ConfigureHttpClient(client =>
+            {
+                client.BaseAddress = new Uri(cfg["ApiBaseUrl"] ??
+                                             throw new ArgumentException(
+                                                 "Api base url was not found in configuration",
+                                                 "ApiBaseUrl"));
+            });
+        return services;
+    }
 }

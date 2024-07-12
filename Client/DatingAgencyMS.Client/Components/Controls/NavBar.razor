@@ -24,38 +24,3 @@
         </div>
     </div>
 </nav>
-
-@code {
-    private LoggedInUser? User { get; set; }
-
-    [Inject] private IDispatcher Dispatcher { get; set; }
-
-    [Inject] private ILocalStorageService LocalStorageService { get; set; }
-
-    [Inject] IDbAccessService DbAccessService { get; set; }
-
-    protected override void OnInitialized()
-    {
-        UserState.StateChanged += UserStateChanged;
-        base.OnInitialized();
-    }
-
-    private void UserStateChanged(object? sender, EventArgs e)
-    {
-        User = UserState.Value.User;
-    }
-
-    private async Task Logout()
-    {
-        try
-        {
-            await DbAccessService.Logout(User!.Login, User.Token);
-            Dispatcher.Dispatch(new SetUserAction(null));
-            await LocalStorageService.RemoveItemAsync(UserConstants.UserLocalStorageKey);
-        }
-        catch (Exception e)
-        {
-            //TODO: make some user notification blah blah blah
-        }
-    }
-}

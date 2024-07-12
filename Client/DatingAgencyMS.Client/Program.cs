@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using DatingAgencyMS.Client.Components;
+using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Services;
 using Fluxor;
 using Refit;
@@ -10,14 +11,9 @@ var cfg = builder.Configuration;
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddRefitClient<IDbAccessService>()
-    .ConfigureHttpClient(c =>
-    {
-        c.BaseAddress = new Uri(cfg["ApiBaseUrl"] ??
-                                throw new ArgumentException(
-                                    "Api base url was not found in configuration",
-                                    "ApiBaseUrl"));
-    });
+builder.Services
+    .AddRefitServiceWithBaseApiUrl<IDbAccessService>(cfg)
+    .AddRefitServiceWithBaseApiUrl<IUsersService>(cfg);
 
 builder.Services.AddFluxor(options =>
 {

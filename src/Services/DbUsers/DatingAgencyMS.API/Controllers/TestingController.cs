@@ -1,5 +1,4 @@
 using DatingAgencyMS.API.Controllers.Base;
-using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -10,11 +9,9 @@ namespace DatingAgencyMS.API.Controllers;
 public class TestingController : BaseApiController
 {
     private readonly string _connectionStringTemplate;
-    private readonly IUserManager _userManager;
-    public TestingController([FromKeyedServices("pg_conn_template")]string connectionStringTemplate, IUserManager userManager)
+    public TestingController([FromKeyedServices("pg_conn_template")]string connectionStringTemplate)
     {
         _connectionStringTemplate = connectionStringTemplate;
-        _userManager = userManager;
     }
     
     [HttpGet]
@@ -34,12 +31,5 @@ public class TestingController : BaseApiController
         return Ok(new {equals});
     }
 
-    [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> CreateUser(CreateUserRequest request)
-    {
-        var result = await _userManager.CreateUser(request);
 
-        return Ok(new {result.Code, result.Description});
-    }
 }

@@ -69,7 +69,7 @@ public class PostgresUserManager : IUserManager
             await transaction.RollbackAsync();
             return new ServiceResult<long>(false, (int)HttpStatusCode.BadRequest, default, e.Message);
         }
-        return new ServiceResult<long>(true, (int)HttpStatusCode.OK, id.Value);
+        return new ServiceResult<long>(true, (int)HttpStatusCode.Created, id.Value);
     }
 
     private static async Task GrantAccessRights(string login, DbRoles role, DbCommand cmd)
