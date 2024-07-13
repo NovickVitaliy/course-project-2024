@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using DatingAgencyMS.Client.Attributes.ValidationAttributes;
 using DatingAgencyMS.Client.Models.Core;
 
-namespace DatingAgencyMS.Client.Models.DTOs.User;
+namespace DatingAgencyMS.Client.Models.DTOs.User.Requests;
 
 public class CreateUserRequest
 {
