@@ -1,8 +1,6 @@
 using System.Text.Json.Serialization;
-using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Infrastructure;
 using DatingAgencyMS.Infrastructure.DbSetup;
-using DatingAgencyMS.Infrastructure.Services;
 
 [assembly: ApiController]
 

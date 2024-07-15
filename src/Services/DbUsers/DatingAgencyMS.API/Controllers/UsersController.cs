@@ -1,12 +1,8 @@
 using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
-using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Application.DTOs.UserManagement.Requests;
 using DatingAgencyMS.Application.Extensions;
-using DatingAgencyMS.Application.Shared;
 using DatingAgencyMS.Infrastructure.Constants;
-using DatingAgencyMS.Infrastructure.SqlQueryBuilder.Common;
-using DatingAgencyMS.Infrastructure.SqlQueryBuilder.Keys;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;

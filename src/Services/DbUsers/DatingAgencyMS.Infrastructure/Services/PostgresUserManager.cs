@@ -1,6 +1,6 @@
 using System.Data.Common;
-using System.Globalization;
 using System.Net;
+using System.Text;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Application.DTOs.UserManagement.Requests;
@@ -10,8 +10,6 @@ using DatingAgencyMS.Domain.Models;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Helpers;
-using DatingAgencyMS.Infrastructure.SqlQueryBuilder.Common;
-using DatingAgencyMS.Infrastructure.SqlQueryBuilder.Keys;
 
 namespace DatingAgencyMS.Infrastructure.Services;
 
@@ -64,38 +62,33 @@ public class PostgresUserManager : IUserManager
 
     private string BuildSqlQuery(GetUsersRequest request)
     {
-        var builder = UserQueryBuilder.GetUserQueryBuilder();
-        if (request.Id.HasValue || !string.IsNullOrEmpty(request.Login) || !string.IsNullOrEmpty(request.Role))
-        {
-            builder.StartConditionClause();
-        }
-
+        var builder = new StringBuilder("SELECT * FROM keys WHERE 1=1 ");
+        
         if (request.Id.HasValue)
         {
-            builder.And();
-            builder.WithIdEqual(request.Id.Value);
+            builder.Append($"AND id={request.Id} ");
         }
 
         if (!string.IsNullOrEmpty(request.Login))
         {
-            builder.And();
-            builder.WithLoginLike(request.Login);
+            builder.Append($"AND LOWER(login) LIKE LOWER('%{request.Login}%') ");
         }
 
         if (!string.IsNullOrEmpty(request.Role))
         {
-            builder.And();
-            builder.WithRoleLike(request.Role);
+            builder.Append($"AND LOWER(role) LIKE LOWER('%{request.Role}%') ");
         }
 
 
-        var pagingStage = request is { SortBy: not null, SortDirection: not null }
-            ? builder.EndConditionClause().OrderBy(request.SortBy, request.SortDirection)
-            : builder.EndConditionClause().OrderById();
+        builder = request is { SortBy: not null, SortDirection: not null }
+            ? builder.Append($"ORDER BY {request.SortBy} {request.SortDirection} ")
+            : builder.Append(' ');
+
+        var offset = (request.Page - 1) * request.Size;
 
         return request is { Page: not null, Size: not null }
-            ? pagingStage.WithPaging(request.Page.Value, request.Size.Value).ToSql()
-            : pagingStage.NoPaging().ToSql();
+            ? builder.Append($"OFFSET {offset} ROWS FETCH NEXT {request.Size} ROWS ONLY ").ToString()
+            : builder.Append(' ').ToString();
     }
 
     public async Task<ServiceResult<long>> CreateUser(CreateUserRequest request)

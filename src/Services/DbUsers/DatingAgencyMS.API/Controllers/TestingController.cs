@@ -1,9 +1,5 @@
 using DatingAgencyMS.API.Controllers.Base;
-using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Infrastructure.Helpers;
-using DatingAgencyMS.Infrastructure.SqlQueryBuilder.Common;
-using DatingAgencyMS.Infrastructure.SqlQueryBuilder.Keys;
-using Microsoft.AspNetCore.Authorization;
 using Npgsql;
 
 namespace DatingAgencyMS.API.Controllers;
@@ -32,6 +28,5 @@ public class TestingController : BaseApiController
 
         return Ok(new {equals});
     }
-
     
 }

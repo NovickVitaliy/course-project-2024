@@ -1,15 +1,11 @@
-using System.Text;
 using Common.Auth;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Domain.Models;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Services;
 using DatingAgencyMS.Infrastructure.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace DatingAgencyMS.Infrastructure;
 

@@ -1,4 +1,3 @@
-using DatingAgencyMS.Client.Models.DTOs.User;
 using DatingAgencyMS.Client.Models.DTOs.User.Requests;
 using DatingAgencyMS.Client.Models.DTOs.User.Responses;
 using Refit;

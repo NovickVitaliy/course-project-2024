@@ -1,8 +1,6 @@
-using DatingAgencyMS.Infrastructure.Helpers;
 using DbUp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
 
 namespace DatingAgencyMS.Infrastructure.DbSetup;
 

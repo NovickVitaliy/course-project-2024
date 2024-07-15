@@ -1,5 +1,3 @@
-using BlazorBootstrap;
-using DatingAgencyMS.Client.Models.Core;
 using DatingAgencyMS.Client.Models.DTOs.User;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;

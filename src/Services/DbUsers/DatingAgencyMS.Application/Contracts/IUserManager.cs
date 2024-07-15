@@ -1,5 +1,3 @@
-using DatingAgencyMS.Application.DTOs;
-using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Application.DTOs.UserManagement.Requests;
 using DatingAgencyMS.Application.DTOs.UserManagement.Responses;
 using DatingAgencyMS.Application.Shared;

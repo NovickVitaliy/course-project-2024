@@ -3,7 +3,6 @@ using DatingAgencyMS.Client.Components;
 using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Services;
 using Fluxor;
-using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 var cfg = builder.Configuration;
