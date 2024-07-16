@@ -1,10 +1,10 @@
 using System.Collections.Concurrent;
+using System.Data;
 using System.Data.Common;
 using System.Net;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.Shared;
 using DatingAgencyMS.Infrastructure.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
 namespace DatingAgencyMS.Infrastructure.Services;
@@ -14,13 +14,23 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
     private bool _disposed = false;
     private readonly string _pgConnTemplate;
     private readonly ConcurrentDictionary<string, DbConnectionInfo> _connections;
-    private const int MsDelayToAddConnectionToPool = 100;
-    private const int ExponentialDelayMultiplier = 2;
-
-    public PostgresDbManager([FromKeyedServices("pg_conn_template")] string pgConnTemplate)
+    private readonly DbConnection _rootConnection;
+    public PostgresDbManager(string pgConnTemplate, string pgRootConn)
     {
         _pgConnTemplate = pgConnTemplate;
         _connections = new ConcurrentDictionary<string, DbConnectionInfo>();
+        _rootConnection = new NpgsqlConnection(pgRootConn);
+    }
+
+
+    public async Task<DbConnection> GetRootConnection()
+    {
+        if (_rootConnection.State == ConnectionState.Closed)
+        {
+            await _rootConnection.OpenAsync();
+        }
+
+        return _rootConnection;
     }
 
     public async Task<ServiceResult<bool>> TryAccessDb(string login, string password)

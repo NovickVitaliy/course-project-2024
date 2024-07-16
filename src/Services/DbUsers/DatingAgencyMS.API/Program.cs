@@ -14,11 +14,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
-builder.Services.AddKeyedSingleton("pg_conn_template",
-    cfg.GetConnectionString("pg_conn_template") ?? throw new ArgumentException("pg_conn_template"));
-builder.Services.AddKeyedSingleton("pg_root_conn",
-    cfg.GetConnectionString("ConnectionStringForRoot") ?? throw new ArgumentException("pg_root_conn"));
-
 builder.Services.ConfigureInfrastructure(cfg);
 
 var app = builder.Build();

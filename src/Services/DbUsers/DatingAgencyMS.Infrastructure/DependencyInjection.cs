@@ -22,13 +22,21 @@ public static class DependencyInjection
         services.ConfigureAuth(configuration);
         services.AddAuthorization(options =>
         {
-            options.AddPolicy(ApplicationPolicies.IsOwnerOrAdmin, builder =>
-            {
-                builder.RequireClaim(ApplicationClaimTypes.DbRole, [DbRoles.Owner.ToString(), DbRoles.Admin.ToString()]);
-            });
+            options.AddPolicy(ApplicationPolicies.IsOwnerOrAdmin,
+                builder =>
+                {
+                    builder.RequireClaim(ApplicationClaimTypes.DbRole,
+                        [DbRoles.Owner.ToString(), DbRoles.Admin.ToString()]);
+                });
         });
         services.AddScoped<ITokenService, DefaultTokenService>();
-        services.AddSingleton<IDbManager, PostgresDbManager>();
+        
+        services.AddSingleton<IDbManager, PostgresDbManager>(_ => new PostgresDbManager(
+            pgConnTemplate: configuration.GetConnectionString("pg_conn_template") ??
+                            throw new ArgumentException("pg_conn_template"),
+            pgRootConn: configuration.GetConnectionString("ConnectionStringForRoot") ??
+                        throw new ArgumentException("ConnectionStringForRoot")));
+        
         services.AddScoped<IUserManager, PostgresUserManager>();
 
         return services;

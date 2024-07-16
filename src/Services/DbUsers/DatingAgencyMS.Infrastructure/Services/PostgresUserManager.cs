@@ -2,6 +2,7 @@ using System.Data.Common;
 using System.Net;
 using System.Text;
 using DatingAgencyMS.Application.Contracts;
+using DatingAgencyMS.Application.DTOs;
 using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Application.DTOs.UserManagement.Requests;
 using DatingAgencyMS.Application.DTOs.UserManagement.Responses;
@@ -20,6 +21,40 @@ public class PostgresUserManager : IUserManager
     public PostgresUserManager(IDbManager dbManager)
     {
         _dbManager = dbManager;
+    }
+
+    public async Task<ServiceResult<bool>> CheckUserCredentials(LoginDbRequest loginDbRequest)
+    {
+        var connection = await _dbManager.GetRootConnection();
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT * FROM keys WHERE login = @login";
+            cmd.AddParameter("login", loginDbRequest.Login);
+            
+            await using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                var passwordHash = reader.GetString(reader.GetOrdinal("password_hash"));
+                var passwordSalt = reader.GetString(reader.GetOrdinal("password_salt"));
+                var equals = PasswordHelper.VerifyPassword(loginDbRequest.Password, passwordHash, passwordSalt);
+                if (equals)
+                {
+                    return new ServiceResult<bool>(true, (int)HttpStatusCode.OK, true);
+                }
+
+                return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, true, "Неправильний пароль");
+            }
+
+            return new ServiceResult<bool>(false, (int)HttpStatusCode.NotFound, false,
+                "User with given login was not found");
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, false, e.Message);
+        }
     }
 
     public async Task<ServiceResult<GetUsersResponse>> GetUsers(GetUsersRequest request)

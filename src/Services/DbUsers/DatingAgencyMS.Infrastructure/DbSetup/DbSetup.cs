@@ -1,5 +1,6 @@
 using DbUp;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DatingAgencyMS.Infrastructure.DbSetup;
@@ -8,7 +9,7 @@ public static class DbSetup
 {
     public static Task MigrateDatabase(this WebApplication app)
     {
-        var pgRootConnection = app.Services.GetRequiredKeyedService<string>("pg_root_conn");
+        var pgRootConnection = app.Configuration.GetConnectionString("ConnectionStringForRoot");
         
         EnsureDatabase.For.PostgresqlDatabase(pgRootConnection);
 

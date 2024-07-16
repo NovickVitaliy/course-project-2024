@@ -23,7 +23,12 @@ public class DbAccessController : BaseApiController
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginDbRequest request)
     {
-        //TODO: check if user credentials are correct
+        var credentialsCheck = await _userManager.CheckUserCredentials(request);
+        if (!credentialsCheck.Success)
+        {
+            return StatusCode(credentialsCheck.Code, credentialsCheck.ToHttpErrorResponse());
+        }
+        
         var result = await _dbManager.TryAccessDb(request.Login, request.Password);
 
         if (!result.Success)
