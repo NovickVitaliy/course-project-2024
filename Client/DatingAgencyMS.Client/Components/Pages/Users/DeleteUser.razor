@@ -1,0 +1,22 @@
+@page "/users/delete"
+@using BlazorBootstrap
+<Toasts class="p-3" Messages="Toastes" AutoHide="true" Placement="ToastsPlacement.TopCenter"></Toasts>
+<h3>Видалення користувача</h3>
+<div class="row">
+    <div class="col-lg-6 col-sm-12 mb-3">
+        <EditForm FormName="deleteUserForm" Model="_deleteUserRequest" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <div class="mb-3">
+                <label for="login">Логін</label>
+                <InputText id="login" class="form-control" @bind-Value="_deleteUserRequest.Login"></InputText>
+                <div class="validation-message">
+                    <ValidationMessage For="() => _deleteUserRequest.Login"></ValidationMessage>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-1">
+                <button type="submit" class="btn btn-danger">Видалити</button>
+                <a href="/users-management" type="button" class="btn btn-secondary">Повернутись назад</a>
+            </div>
+        </EditForm>
+    </div>
+</div>

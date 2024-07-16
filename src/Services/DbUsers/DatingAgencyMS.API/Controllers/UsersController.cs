@@ -41,4 +41,16 @@ public class UsersController : BaseApiController
 
         return Ok(result.ResponseData);
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUser([FromQuery] DeleteUserRequest request)
+    {
+        var result = await _userManager.DeleteUser(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }

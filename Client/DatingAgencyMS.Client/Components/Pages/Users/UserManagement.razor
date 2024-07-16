@@ -1,7 +1,8 @@
 @page "/users-management"
 @using DatingAgencyMS.Client.Components.Controls.Users
 <h3>Керування користувачами</h3>
-<div class="d-flex w-100 mb-3">
+<div class="d-flex w-100 mb-3 gap-1">
     <a class="btn btn-primary" href="/users/create">Створити користувача</a>
+    <a class="btn btn-danger" href="/users/delete">Видалити користувача</a>
 </div>
 <UserList Users="_users"></UserList>

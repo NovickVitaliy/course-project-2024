@@ -196,10 +196,22 @@ public class PostgresUserManager : IUserManager
         try
         {
             await using var cmd = connection.CreateCommand();
+            var (allowed, serviceResult) = await IsAllowedToDeleteUser(cmd, request.Login, request.RequestedBy);
+            if (!allowed)
+            {
+                return serviceResult 
+                       ?? ServiceResult<bool>.Forbidden("Ви не можете видаляти користувача який має роль таку ж як і ви або вище");
+            }
+            
             cmd.Transaction = transaction;
             cmd.CommandText = "DELETE FROM keys WHERE login = @login";
             cmd.AddParameter("login", request.Login);
             var rowsAffected = await cmd.ExecuteNonQueryAsync();
+            
+            cmd.Parameters.Clear();
+            cmd.CommandText = "DROP ROLE @login";
+            cmd.AddParameter("login", request.Login);
+            
             success = rowsAffected == 1;
             await transaction.CommitAsync();
         }
@@ -212,6 +224,48 @@ public class PostgresUserManager : IUserManager
         return success
             ? ServiceResult<bool>.Ok(success)
             : ServiceResult<bool>.NotFound("Користувач БД", request.Login);
+    }
+
+    private static async Task<(bool Allowed, ServiceResult<bool>? ServiceResult)> IsAllowedToDeleteUser(DbCommand cmd, string login, string requestedBy)
+    {
+        var (userToDeleteRole, serviceResult) = await ReadUserRole(cmd, login);
+        if (serviceResult is not null)
+        {
+            return (false, serviceResult);
+        }
+
+        (var requestedByRole, serviceResult) = await ReadUserRole(cmd, requestedBy);
+        if (serviceResult is not null)
+        {
+            return (false, serviceResult);
+        }
+
+        //comparing like this because of the way the enum was created
+        return (requestedByRole < userToDeleteRole, null);
+    }
+
+    private static async Task<(DbRoles? Role, ServiceResult<bool>? serviceResult)> ReadUserRole(DbCommand cmd, string login)
+    {
+        cmd.CommandText = "SELECT role FROM keys WHERE login = @login";
+        cmd.AddParameter("login", login);
+
+        await using var reader = await cmd.ExecuteReaderAsync();
+        cmd.Parameters.Clear();
+        if (await reader.ReadAsync())
+        {
+            try
+            {
+                var role = Enum.Parse<DbRoles>(reader.GetString(reader.GetOrdinal("role")), true);
+                return (role, null);
+            }
+            catch (Exception e)
+            {
+                //TODO: log somewhere sometime
+                return (null, ServiceResult<bool>.ServerError(e.Message));
+            }
+        }
+        
+        return (null, ServiceResult<bool>.NotFound("Користувач БД", login));
     }
 
     public async Task<ServiceResult<bool>> AssignNewRole(AssignNewRoleRequest request)

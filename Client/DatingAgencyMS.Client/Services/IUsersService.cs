@@ -10,5 +10,8 @@ public interface IUsersService
     Task<CreateUserResponse> CreateUser(CreateUserRequest request, [Authorize] string token);
 
     [Get("/users")]
-    Task<GetUsersResponse> GetUsers([Query]GetUsersRequest request, [Authorize] string token);
+    Task<GetUsersResponse> GetUsers([Query] GetUsersRequest request, [Authorize] string token);
+
+    [Delete("/users")]
+    Task DeleteUser([Query] DeleteUserRequest request, [Authorize] string token);
 }

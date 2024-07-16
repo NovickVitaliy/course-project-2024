@@ -19,4 +19,10 @@ public record ServiceResult<TResponseData>(bool Success, int Code, TResponseData
 
     public static ServiceResult<TResponseData> Created(TResponseData responseData)
         => new(true, (int)HttpStatusCode.Created, responseData);
+
+    public static ServiceResult<TResponseData> ServerError(string description)
+        => new(false, (int)HttpStatusCode.InternalServerError, default, description);
+
+    public static ServiceResult<bool> Forbidden(string description)
+        => new(false, (int)HttpStatusCode.Forbidden, default, description);
 }
