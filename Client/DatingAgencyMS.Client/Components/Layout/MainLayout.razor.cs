@@ -45,6 +45,6 @@ public partial class MainLayout
     {
         var jwt = new JwtSecurityTokenHandler().ReadJwtToken(jwtToken);
 
-        return jwt.ValidTo >= DateTime.Now;
+        return jwt.ValidTo >= DateTime.UtcNow;
     }
 }

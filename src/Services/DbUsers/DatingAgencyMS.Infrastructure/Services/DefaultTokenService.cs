@@ -22,7 +22,7 @@ public class DefaultTokenService : ITokenService
     public async Task<string> GenerateJwtToken(string login)
     {
         var serviceResult = await _userManager.GetUserRole(login);
-        var now = DateTimeOffset.Now;
+        var now = DateTimeOffset.UtcNow;
         var expiresAt = now.AddMinutes(_jwtSettings.LifeTimeInMinutes);
 
         Claim[] claims =
