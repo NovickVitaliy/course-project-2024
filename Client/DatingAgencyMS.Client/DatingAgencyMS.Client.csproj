@@ -13,6 +13,7 @@
       <PackageReference Include="Fluxor.Blazor.Web" Version="6.0.0" />
       <PackageReference Include="Refit" Version="7.1.2" />
       <PackageReference Include="Refit.HttpClientFactory" Version="7.1.2" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
     </ItemGroup>
 
 </Project>

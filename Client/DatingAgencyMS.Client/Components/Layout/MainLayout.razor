@@ -19,31 +19,3 @@
         </article>
     </main>
 </div>
-
-@code
-{
-    [Inject] private IDispatcher Dispatcher { get; set; }
-
-    [Inject] private ILocalStorageService LocalStorageService { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-    }
-
-    private async Task LoadUserFromStorage()
-    {
-        var user = await LocalStorageService.GetItemAsync<LoggedInUser?>(UserConstants.UserLocalStorageKey);
-        if (user is not null)
-        {
-            Dispatcher.Dispatch(new SetUserAction(user));
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await LoadUserFromStorage();
-        }
-    }
-}

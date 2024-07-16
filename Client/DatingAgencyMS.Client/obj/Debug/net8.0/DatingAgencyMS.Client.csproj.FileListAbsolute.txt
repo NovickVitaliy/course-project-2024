@@ -35,3 +35,8 @@ C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\
 C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\Fluxor.Blazor.Web.dll
 C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\Blazored.LocalStorage.dll
 C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\BlazorBootstrap.dll
+C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\User\Desktop\projects\course-project-2024\Client\DatingAgencyMS.Client\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
