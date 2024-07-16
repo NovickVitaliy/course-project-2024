@@ -9,8 +9,9 @@ using Npgsql;
 
 namespace DatingAgencyMS.Infrastructure.Services;
 
-public class PostgresDbManager : IDbManager
+public class PostgresDbManager : IDbManager, IAsyncDisposable
 {
+    private bool _disposed = false;
     private readonly string _pgConnTemplate;
     private readonly ConcurrentDictionary<string, DbConnectionInfo> _connections;
     private const int MsDelayToAddConnectionToPool = 100;
@@ -73,5 +74,30 @@ public class PostgresDbManager : IDbManager
         await connection.Connection.CloseAsync();
         _connections.Remove(login, out _);
         return new ServiceResult<bool>(true, (int)HttpStatusCode.OK, true);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DisposeAsyncCore();
+        
+        GC.SuppressFinalize(this);
+    }
+
+    private async ValueTask DisposeAsyncCore()
+    {
+        if (_disposed)
+            return;
+        
+        foreach (var (_, dbConnectionInfo) in _connections)
+        {
+            await dbConnectionInfo.Connection.CloseAsync();
+        }
+
+        _disposed = true;
+    }
+
+    ~PostgresDbManager()
+    {
+        DisposeAsyncCore().AsTask().GetAwaiter().GetResult();
     }
 }
