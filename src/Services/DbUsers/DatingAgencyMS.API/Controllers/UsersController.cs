@@ -23,19 +23,22 @@ public class UsersController : BaseApiController
     public async Task<IActionResult> CreateUser(CreateUserRequest request)
     {
         var result = await _userManager.CreateUser(request);
-
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
         return Ok(new {result.Code, result.Description});
     }
 
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequest request)
     {
-        var serviceResult = await _userManager.GetUsers(request);
-        if (!serviceResult.Success)
+        var result = await _userManager.GetUsers(request);
+        if (!result.Success)
         {
-            return BadRequest(serviceResult.ToHttpErrorResponse());
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
         }
 
-        return Ok(serviceResult.ResponseData);
+        return Ok(result.ResponseData);
     }
 }

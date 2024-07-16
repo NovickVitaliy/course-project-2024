@@ -15,6 +15,7 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
     private readonly string _pgConnTemplate;
     private readonly ConcurrentDictionary<string, DbConnectionInfo> _connections;
     private readonly DbConnection _rootConnection;
+
     public PostgresDbManager(string pgConnTemplate, string pgRootConn)
     {
         _pgConnTemplate = pgConnTemplate;
@@ -45,51 +46,50 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
         }
         catch (Exception e)
         {
-            return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, false, e.Message);
+            return ServiceResult<bool>.BadRequest(e.Message);
         }
 
         if (_connections.ContainsKey(login))
         {
-            return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, false,
-                "Підключення до БД вже встановлене для даного користувача");
+            return ServiceResult<bool>.BadRequest("Підключення до БД вже встановлене для даного користувача");
         }
 
         _connections.TryAdd(login, new DbConnectionInfo(connection));
 
-        return new ServiceResult<bool>(true, (int)HttpStatusCode.OK, true);
+        return ServiceResult<bool>.Ok(true);
     }
 
     public Task<ServiceResult<DbConnection>> GetConnection(string login)
     {
         if (!_connections.TryGetValue(login, out var connection))
         {
-            return Task.FromResult(new ServiceResult<DbConnection>(false, (int)HttpStatusCode.BadRequest, null,
-                "Невдалось отримати підключення до БД. Спробуйте перезайти в аккаунт"));
+            return Task.FromResult(
+                ServiceResult<DbConnection>.BadRequest(
+                    "Невдалось отримати підключення до БД. Спробуйте перезайти в аккаунт"));
         }
 
         connection.CurrentlyInUse = true;
         connection.LastAccessed = DateTime.Now;
-        return Task.FromResult(new ServiceResult<DbConnection>(true, (int)HttpStatusCode.OK, connection.Connection));
+        return Task.FromResult(ServiceResult<DbConnection>.Ok(connection.Connection));
     }
 
     public async Task<ServiceResult<bool>> CloseConnection(string login)
     {
         if (!_connections.TryGetValue(login, out var connection))
         {
-            return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, false,
-                "Не вдалось отримати та закрити підключення до БД");
+            return ServiceResult<bool>.BadRequest("Не вдалось отримати та закрити підключення до БД");
         }
 
         connection.CurrentlyInUse = false;
         await connection.Connection.CloseAsync();
         _connections.Remove(login, out _);
-        return new ServiceResult<bool>(true, (int)HttpStatusCode.OK, true);
+        return ServiceResult<bool>.Ok(true);
     }
 
     public async ValueTask DisposeAsync()
     {
         await DisposeAsyncCore();
-        
+
         GC.SuppressFinalize(this);
     }
 
@@ -97,7 +97,7 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
     {
         if (_disposed)
             return;
-        
+
         foreach (var (_, dbConnectionInfo) in _connections)
         {
             await dbConnectionInfo.Connection.CloseAsync();

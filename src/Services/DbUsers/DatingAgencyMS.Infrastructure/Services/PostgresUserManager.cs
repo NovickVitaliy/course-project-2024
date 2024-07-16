@@ -32,7 +32,7 @@ public class PostgresUserManager : IUserManager
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
             cmd.CommandText = "SELECT * FROM keys WHERE login = @login";
             cmd.AddParameter("login", loginDbRequest.Login);
-            
+
             await using var reader = await cmd.ExecuteReaderAsync();
             if (await reader.ReadAsync())
             {
@@ -41,19 +41,18 @@ public class PostgresUserManager : IUserManager
                 var equals = PasswordHelper.VerifyPassword(loginDbRequest.Password, passwordHash, passwordSalt);
                 if (equals)
                 {
-                    return new ServiceResult<bool>(true, (int)HttpStatusCode.OK, true);
+                    return ServiceResult<bool>.Ok(true);
                 }
 
-                return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, true, "Неправильний пароль");
+                return ServiceResult<bool>.BadRequest("Неправильний пароль");
             }
 
-            return new ServiceResult<bool>(false, (int)HttpStatusCode.NotFound, false,
-                "Користувач з даним логіном не був знайдений");
+            return ServiceResult<bool>.NotFound("Користувач БД", loginDbRequest.Login);
         }
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-            return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, false, e.Message);
+            return ServiceResult<bool>.BadRequest(e.Message);
         }
     }
 
@@ -87,15 +86,13 @@ public class PostgresUserManager : IUserManager
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-            return new ServiceResult<GetUsersResponse>(false, (int)HttpStatusCode.BadRequest, default,
-                e.Message);
+            return ServiceResult<GetUsersResponse>.BadRequest(e.Message);
         }
 
-        return new ServiceResult<GetUsersResponse>(true, (int)HttpStatusCode.OK,
-            new GetUsersResponse(users.AsReadOnly(), totalCount!.Value));
+        return ServiceResult<GetUsersResponse>.Ok(new GetUsersResponse(users.AsReadOnly(), totalCount!.Value));
     }
 
-    private string BuildSqlQuery(GetUsersRequest request)
+    private static string BuildSqlQuery(GetUsersRequest request)
     {
         var builder = new StringBuilder("SELECT * FROM keys WHERE 1=1 ");
         
@@ -138,8 +135,7 @@ public class PostgresUserManager : IUserManager
             if (await UserWithLoginExists(request.Login, cmd))
             {
                 await transaction.RollbackAsync();
-                return new ServiceResult<long>(false, (int)HttpStatusCode.BadRequest, default,
-                    "Користувач з даним логіном вже існує");
+                return ServiceResult<long>.BadRequest("Користувач з даним логіном вже існує");
             }
 
             var (hashedPassword, salt) = PasswordHelper.HashPasword(request.Password);
@@ -154,8 +150,7 @@ public class PostgresUserManager : IUserManager
             if (id is null)
             {
                 await transaction.RollbackAsync();
-                return new ServiceResult<long>(false, (int)HttpStatusCode.BadRequest, default,
-                    "Помилка при створенні користувача");
+                return ServiceResult<long>.BadRequest("Помилка при створенні користувача");
             }
 
             cmd.Parameters.Clear();
@@ -170,10 +165,10 @@ public class PostgresUserManager : IUserManager
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-            return new ServiceResult<long>(false, (int)HttpStatusCode.BadRequest, default, e.Message);
+            return ServiceResult<long>.BadRequest(e.Message);
         }
 
-        return new ServiceResult<long>(true, (int)HttpStatusCode.Created, id.Value);
+        return ServiceResult<long>.Created(id.Value);
     }
 
     private static async Task GrantAccessRights(string login, DbRoles role, DbCommand cmd)
@@ -211,11 +206,12 @@ public class PostgresUserManager : IUserManager
         catch (DbException e)
         {
             await transaction.RollbackAsync();
-            return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, default, e.Message);
+            return ServiceResult<bool>.BadRequest(e.Message);
         }
 
-        return new ServiceResult<bool>(success, (int)HttpStatusCode.OK, success,
-            !success ? "Користувач з таким Id не був знайдений" : "");
+        return success
+            ? ServiceResult<bool>.Ok(success)
+            : ServiceResult<bool>.NotFound("Користувач БД", request.Login);
     }
 
     public async Task<ServiceResult<bool>> AssignNewRole(AssignNewRoleRequest request)
@@ -236,10 +232,10 @@ public class PostgresUserManager : IUserManager
         catch (DbException e)
         {
             await transaction.RollbackAsync();
-            return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, default, e.Message);
+            return ServiceResult<bool>.BadRequest(e.Message);
         }
 
-        return new ServiceResult<bool>(success, (int)HttpStatusCode.OK, success);
+        return ServiceResult<bool>.Ok(success);
     }
 
     public async Task<ServiceResult<DbRoles>> GetUserRole(string login)
@@ -252,7 +248,7 @@ public class PostgresUserManager : IUserManager
         if (await reader.ReadAsync())
         {
             var role = reader.GetString(reader.GetOrdinal("role"));
-            return new ServiceResult<DbRoles>(true, (int)HttpStatusCode.OK, Enum.Parse<DbRoles>(role, true));
+            return ServiceResult<DbRoles>.Ok(Enum.Parse<DbRoles>(role, true));
         }
 
         throw new ArgumentException("Користувач з таким логіном не був знайдений", login);

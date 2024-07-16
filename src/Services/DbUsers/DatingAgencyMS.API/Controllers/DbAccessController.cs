@@ -33,7 +33,7 @@ public class DbAccessController : BaseApiController
 
         if (!result.Success)
         {
-            return BadRequest(result.ToHttpErrorResponse());
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
         }
 
         var token = await _tokenService.GenerateJwtToken(request.Login);
@@ -49,7 +49,7 @@ public class DbAccessController : BaseApiController
 
         if (!result.Success)
         {
-            return BadRequest(result.ToHttpErrorResponse());
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
         }
 
         return Ok();
@@ -64,7 +64,7 @@ public class DbAccessController : BaseApiController
 
         if (!result.Success)
         {
-            return BadRequest(result.ToHttpErrorResponse());
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
         }
 
         return Ok();
