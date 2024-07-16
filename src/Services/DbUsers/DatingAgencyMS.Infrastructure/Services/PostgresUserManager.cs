@@ -48,7 +48,7 @@ public class PostgresUserManager : IUserManager
             }
 
             return new ServiceResult<bool>(false, (int)HttpStatusCode.NotFound, false,
-                "User with given login was not found");
+                "Користувач з даним логіном не був знайдений");
         }
         catch (Exception e)
         {
@@ -139,7 +139,7 @@ public class PostgresUserManager : IUserManager
             {
                 await transaction.RollbackAsync();
                 return new ServiceResult<long>(false, (int)HttpStatusCode.BadRequest, default,
-                    "User with given login already exists");
+                    "Користувач з даним логіном вже існує");
             }
 
             var (hashedPassword, salt) = PasswordHelper.HashPasword(request.Password);
@@ -155,7 +155,7 @@ public class PostgresUserManager : IUserManager
             {
                 await transaction.RollbackAsync();
                 return new ServiceResult<long>(false, (int)HttpStatusCode.BadRequest, default,
-                    "Error adding user to table");
+                    "Помилка при створенні користувача");
             }
 
             cmd.Parameters.Clear();
@@ -215,7 +215,7 @@ public class PostgresUserManager : IUserManager
         }
 
         return new ServiceResult<bool>(success, (int)HttpStatusCode.OK, success,
-            !success ? "User with given id was not found" : "");
+            !success ? "Користувач з таким Id не був знайдений" : "");
     }
 
     public async Task<ServiceResult<bool>> AssignNewRole(AssignNewRoleRequest request)
@@ -255,7 +255,7 @@ public class PostgresUserManager : IUserManager
             return new ServiceResult<DbRoles>(true, (int)HttpStatusCode.OK, Enum.Parse<DbRoles>(role, true));
         }
 
-        throw new ArgumentException("User with given login was not found", login);
+        throw new ArgumentException("Користувач з таким логіном не був знайдений", login);
     }
 
     private async Task<DbConnection> GetConnection(string requestedBy)
@@ -264,7 +264,7 @@ public class PostgresUserManager : IUserManager
         if (!serviceResult.Success || serviceResult.ResponseData is null)
         {
             throw new InvalidOperationException(
-                "Could not get access to database connection for specified user. Try to log in again.");
+                "Не вдалося отримати підключення до БД для даного користувача. Спробуйте увійти в аккаунт знову");
         }
 
         return serviceResult.ResponseData;

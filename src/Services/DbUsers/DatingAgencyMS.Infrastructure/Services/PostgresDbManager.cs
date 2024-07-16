@@ -51,7 +51,7 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
         if (_connections.ContainsKey(login))
         {
             return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, false,
-                "Connection is alredy established for given user.");
+                "Підключення до БД вже встановлене для даного користувача");
         }
 
         _connections.TryAdd(login, new DbConnectionInfo(connection));
@@ -64,7 +64,7 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
         if (!_connections.TryGetValue(login, out var connection))
         {
             return Task.FromResult(new ServiceResult<DbConnection>(false, (int)HttpStatusCode.BadRequest, null,
-                "Could not resolve connection to DB. Try to log in again."));
+                "Невдалось отримати підключення до БД. Спробуйте перезайти в аккаунт"));
         }
 
         connection.CurrentlyInUse = true;
@@ -77,7 +77,7 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
         if (!_connections.TryGetValue(login, out var connection))
         {
             return new ServiceResult<bool>(false, (int)HttpStatusCode.BadRequest, false,
-                "Could not resolve and close the connection.");
+                "Не вдалось отримати та закрити підключення до БД");
         }
 
         connection.CurrentlyInUse = false;
