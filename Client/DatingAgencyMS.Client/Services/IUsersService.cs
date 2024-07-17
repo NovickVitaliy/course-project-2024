@@ -14,4 +14,7 @@ public interface IUsersService
 
     [Delete("/users")]
     Task DeleteUser([Query] DeleteUserRequest request, [Authorize] string token);
+
+    [Get("/users/{login}")]
+    Task<GetUserResponse> GetUser(string login, [Authorize] string token);
 }

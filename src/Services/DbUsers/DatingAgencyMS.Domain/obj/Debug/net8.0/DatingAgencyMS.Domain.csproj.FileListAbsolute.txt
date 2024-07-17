@@ -9,3 +9,4 @@ C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAg
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.Domain\obj\Debug\net8.0\refint\DatingAgencyMS.Domain.dll
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.Domain\obj\Debug\net8.0\DatingAgencyMS.Domain.pdb
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.Domain\obj\Debug\net8.0\ref\DatingAgencyMS.Domain.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.Domain\obj\Debug\net8.0\DatingAgencyMS.Domain.sourcelink.json

@@ -173,8 +173,8 @@ public class PostgresUserManager : IUserManager
 
     private static async Task GrantAccessRights(string login, DbRoles role, DbCommand cmd)
     {
-        var template = DbRolesInfo.GetGrantPrivilegesTemplateStringForRole(role);
-        cmd.CommandText = string.Format(template, login);
+        var cmdText = DbRolesInfo.GetGrantRoleForUserString(role, login);
+        cmd.CommandText = cmdText;
         await cmd.ExecuteNonQueryAsync();
     }
 
@@ -281,6 +281,20 @@ public class PostgresUserManager : IUserManager
             cmd.AddParameter("role", request.NewRole.ToString().ToUpperInvariant());
             cmd.AddParameter("login", request.Login);
             success = await cmd.ExecuteNonQueryAsync() == 1;
+            if (!success)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.BadRequest("Не вдалося поміняти роль для користувача");
+            }
+            
+            cmd.Parameters.Clear();
+            
+            cmd.CommandText = DbRolesInfo.GetRevokeRoleFromUserString(request.OldRole, request.Login);
+            await cmd.ExecuteNonQueryAsync();
+            
+            cmd.CommandText = DbRolesInfo.GetGrantRoleForUserString(request.NewRole, request.Login);
+            await cmd.ExecuteNonQueryAsync();
+            
             await transaction.CommitAsync();
         }
         catch (DbException e)
