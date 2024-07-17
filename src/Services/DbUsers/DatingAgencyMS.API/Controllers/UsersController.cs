@@ -3,6 +3,7 @@ using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.UserManagement.Requests;
 using DatingAgencyMS.Application.Extensions;
 using DatingAgencyMS.Infrastructure.Constants;
+using DatingAgencyMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
@@ -42,6 +43,20 @@ public class UsersController : BaseApiController
         return Ok(result.ResponseData);
     }
 
+    [HttpGet("{login}")]
+    public async Task<IActionResult> GetUser(string login)
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var request = new GetUserRequest(login, requestedBy);
+        var result = await _userManager.GetUser(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
+    
     [HttpDelete]
     public async Task<IActionResult> DeleteUser([FromQuery] DeleteUserRequest request)
     {

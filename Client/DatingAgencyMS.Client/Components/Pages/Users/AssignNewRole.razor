@@ -29,7 +29,9 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Стара роль</label>
-                <InputSelect class="form-select" readonly @bind-Value="_assignNewRoleRequest.OldRole"></InputSelect>
+                <InputSelect class="form-select" readonly @bind-Value="_assignNewRoleRequest.OldRole">
+                    <option value="@_assignNewRoleRequest.OldRole" selected>@_assignNewRoleRequest.OldRole</option>
+                </InputSelect>
             </div>
             <div class="mb-3">
                 <label class="form-label">Нова роль</label>

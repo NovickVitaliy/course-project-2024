@@ -1,5 +1,6 @@
 using System.Data.Common;
 using System.Net;
+using System.Data;
 using System.Text;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs;
@@ -90,6 +91,34 @@ public class PostgresUserManager : IUserManager
         }
 
         return ServiceResult<GetUsersResponse>.Ok(new GetUsersResponse(users.AsReadOnly(), totalCount!.Value));
+    }
+
+    public async Task<ServiceResult<GetUserResponse>> GetUser(GetUserRequest request)
+    {
+        var connection = await GetConnection(request.RequestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT * FROM keys WHERE login = @login";
+            cmd.AddParameter("login", request.Login);
+            await using var reader = await cmd.ExecuteReaderAsync();
+            if (!await reader.ReadAsync())
+            {
+                return ServiceResult<GetUserResponse>.NotFound("Користувач БД", request.Login);
+            }
+            var id = reader.GetInt32("id");
+            var login = reader.GetString("login");
+            var role = reader.GetString("role");
+
+            var response = new GetUserResponse(new DbUserDto(id, login, role));
+            return ServiceResult<GetUserResponse>.Ok(response);
+        }
+        catch (DbException e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<GetUserResponse>.BadRequest(e.Message);
+        }
     }
 
     private static string BuildSqlQuery(GetUsersRequest request)
