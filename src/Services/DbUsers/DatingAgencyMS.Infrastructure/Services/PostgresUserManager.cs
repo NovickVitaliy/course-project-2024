@@ -1,5 +1,4 @@
 using System.Data.Common;
-using System.Net;
 using System.Data;
 using System.Text;
 using DatingAgencyMS.Application.Contracts;
@@ -35,20 +34,23 @@ public class PostgresUserManager : IUserManager
             cmd.AddParameter("login", loginDbRequest.Login);
 
             await using var reader = await cmd.ExecuteReaderAsync();
-            if (await reader.ReadAsync())
+            if (!await reader.ReadAsync())
             {
-                var passwordHash = reader.GetString(reader.GetOrdinal("password_hash"));
-                var passwordSalt = reader.GetString(reader.GetOrdinal("password_salt"));
-                var equals = PasswordHelper.VerifyPassword(loginDbRequest.Password, passwordHash, passwordSalt);
-                if (equals)
-                {
-                    return ServiceResult<bool>.Ok(true);
-                }
-
-                return ServiceResult<bool>.BadRequest("Неправильний пароль");
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Користувач БД", loginDbRequest.Login);
+            }
+            
+            var passwordHash = reader.GetString(reader.GetOrdinal("password_hash"));
+            var passwordSalt = reader.GetString(reader.GetOrdinal("password_salt"));
+            var equals = PasswordHelper.VerifyPassword(loginDbRequest.Password, passwordHash, passwordSalt);
+            if (equals)
+            {
+                await transaction.CommitAsync();
+                return ServiceResult<bool>.Ok(true);
             }
 
-            return ServiceResult<bool>.NotFound("Користувач БД", loginDbRequest.Login);
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest("Неправильний пароль");
         }
         catch (Exception e)
         {
@@ -105,12 +107,14 @@ public class PostgresUserManager : IUserManager
             await using var reader = await cmd.ExecuteReaderAsync();
             if (!await reader.ReadAsync())
             {
+                await transaction.RollbackAsync();
                 return ServiceResult<GetUserResponse>.NotFound("Користувач БД", request.Login);
             }
             var id = reader.GetInt32("id");
             var login = reader.GetString("login");
             var role = reader.GetString("role");
-
+            
+            await transaction.CommitAsync();
             var response = new GetUserResponse(new DbUserDto(id, login, role));
             return ServiceResult<GetUserResponse>.Ok(response);
         }
@@ -139,8 +143,7 @@ public class PostgresUserManager : IUserManager
         {
             builder.Append($"AND LOWER(role) LIKE LOWER('%{request.Role}%') ");
         }
-
-
+        
         builder = request is { SortBy: not null, SortDirection: not null }
             ? builder.Append($"ORDER BY {request.SortBy} {request.SortDirection} ")
             : builder.Append(' ');
@@ -228,6 +231,7 @@ public class PostgresUserManager : IUserManager
             var (allowed, serviceResult) = await IsAllowedToDeleteUser(cmd, request.Login, request.RequestedBy);
             if (!allowed)
             {
+                await transaction.RollbackAsync();
                 return serviceResult 
                        ?? ServiceResult<bool>.Forbidden("Ви не можете видаляти користувача який має роль таку ж як і ви або вище");
             }
