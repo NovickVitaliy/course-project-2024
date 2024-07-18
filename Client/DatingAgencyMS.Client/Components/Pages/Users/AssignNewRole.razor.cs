@@ -38,6 +38,7 @@ public partial class AssignNewRole : ComponentBase
             catch (ApiException e)
             {
                 //notify
+                _assignNewRoleRequest = null;
             }
         }
         else

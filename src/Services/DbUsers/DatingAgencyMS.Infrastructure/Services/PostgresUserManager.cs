@@ -11,6 +11,7 @@ using DatingAgencyMS.Domain.Models;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Helpers;
+using Npgsql;
 
 namespace DatingAgencyMS.Infrastructure.Services;
 
@@ -33,15 +34,19 @@ public class PostgresUserManager : IUserManager
             cmd.CommandText = "SELECT * FROM keys WHERE login = @login";
             cmd.AddParameter("login", loginDbRequest.Login);
 
-            await using var reader = await cmd.ExecuteReaderAsync();
+            var reader = await cmd.ExecuteReaderAsync();
             if (!await reader.ReadAsync())
             {
+                await reader.DisposeAsync();
                 await transaction.RollbackAsync();
                 return ServiceResult<bool>.NotFound("Користувач БД", loginDbRequest.Login);
             }
             
             var passwordHash = reader.GetString(reader.GetOrdinal("password_hash"));
             var passwordSalt = reader.GetString(reader.GetOrdinal("password_salt"));
+            
+            await reader.DisposeAsync();
+            
             var equals = PasswordHelper.VerifyPassword(loginDbRequest.Password, passwordHash, passwordSalt);
             if (equals)
             {
@@ -67,9 +72,10 @@ public class PostgresUserManager : IUserManager
         long? totalCount = null;
         try
         {
-            var sqlQuery = BuildSqlQuery(request);
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            var sqlQuery = BuildSqlQuery(request);
             cmd.CommandText = sqlQuery;
+            
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
@@ -104,9 +110,10 @@ public class PostgresUserManager : IUserManager
             var cmd = transaction.CreateCommandWithAssignedTransaction();
             cmd.CommandText = "SELECT * FROM keys WHERE login = @login";
             cmd.AddParameter("login", request.Login);
-            await using var reader = await cmd.ExecuteReaderAsync();
+            var reader = await cmd.ExecuteReaderAsync();
             if (!await reader.ReadAsync())
             {
+                await reader.DisposeAsync();
                 await transaction.RollbackAsync();
                 return ServiceResult<GetUserResponse>.NotFound("Користувач БД", request.Login);
             }
@@ -114,7 +121,9 @@ public class PostgresUserManager : IUserManager
             var login = reader.GetString("login");
             var role = reader.GetString("role");
             
+            await reader.DisposeAsync();
             await transaction.CommitAsync();
+            
             var response = new GetUserResponse(new DbUserDto(id, login, role));
             return ServiceResult<GetUserResponse>.Ok(response);
         }
@@ -162,8 +171,8 @@ public class PostgresUserManager : IUserManager
         long? id = null;
         try
         {
-            await using var cmd = connection.CreateCommand();
-            cmd.Transaction = transaction;
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            
             if (await UserWithLoginExists(request.Login, cmd))
             {
                 await transaction.RollbackAsync();
@@ -172,12 +181,14 @@ public class PostgresUserManager : IUserManager
 
             var (hashedPassword, salt) = PasswordHelper.HashPasword(request.Password);
             var role = request.Role.ToString().ToUpperInvariant();
+            
             cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, role) VALUES " +
                               "(@login, @passwordHash, @passwordSalt, @role) RETURNING id;";
             cmd.AddParameter("login", request.Login);
             cmd.AddParameter("passwordHash", hashedPassword);
             cmd.AddParameter("passwordSalt", salt);
             cmd.AddParameter("role", role);
+            
             id = (int?)await cmd.ExecuteScalarAsync();
             if (id is null)
             {
@@ -227,7 +238,7 @@ public class PostgresUserManager : IUserManager
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
-            await using var cmd = connection.CreateCommand();
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
             var (allowed, serviceResult) = await IsAllowedToDeleteUser(cmd, request.Login, request.RequestedBy);
             if (!allowed)
             {
@@ -236,14 +247,13 @@ public class PostgresUserManager : IUserManager
                        ?? ServiceResult<bool>.Forbidden("Ви не можете видаляти користувача який має роль таку ж як і ви або вище");
             }
             
-            cmd.Transaction = transaction;
             cmd.CommandText = "DELETE FROM keys WHERE login = @login";
             cmd.AddParameter("login", request.Login);
             var rowsAffected = await cmd.ExecuteNonQueryAsync();
             
             cmd.Parameters.Clear();
-            cmd.CommandText = "DROP ROLE @login";
-            cmd.AddParameter("login", request.Login);
+            cmd.CommandText = $"DROP ROLE {request.Login}";
+            await cmd.ExecuteNonQueryAsync();
             
             success = rowsAffected == 1;
             await transaction.CommitAsync();
@@ -308,11 +318,12 @@ public class PostgresUserManager : IUserManager
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
-            await using var cmd = connection.CreateCommand();
-            cmd.Transaction = transaction;
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            
             cmd.CommandText = "UPDATE keys SET role = @role WHERE login = @login;";
             cmd.AddParameter("role", request.NewRole.ToString().ToUpperInvariant());
             cmd.AddParameter("login", request.Login);
+            
             success = await cmd.ExecuteNonQueryAsync() == 1;
             if (!success)
             {
