@@ -15,17 +15,14 @@ namespace DatingAgencyMS.Client.Components.Pages.Users;
 
 public partial class CreateUser : FluxorComponent
 {
-    [Inject]
-    public IJSRuntime JsRuntime { get; set; }
-    
-    [Inject]
-    public IState<UserState> UserState { get; set; }
-    
-    [Inject]
-    private IUsersService UsersService { get; set; }
+    [Inject] public IJSRuntime JsRuntime { get; init; }
 
-    private List<ToastMessage> Toastes { get; set; } = [];
-    
+    [Inject] public IState<UserState> UserState { get; init; }
+
+    [Inject] private IUsersService UsersService { get; init; }
+
+    [Inject] private ToastService ToastService { get; init; }
+
     [SupplyParameterFromForm] public CreateUserRequest CreateUserRequest { get; set; } = new();
 
     public async Task OnValidSubmit()
@@ -36,7 +33,7 @@ public partial class CreateUser : FluxorComponent
             var response = await UsersService.CreateUser(CreateUserRequest, UserState.Value.User!.Token);
             if (response.Code == (int)HttpStatusCode.Created)
             {
-                Toastes.Add(new ToastMessage()
+                ToastService.Notify(new ToastMessage()
                 {
                     Type = ToastType.Success,
                     Message = "Користувач був успішно створений"
@@ -44,7 +41,7 @@ public partial class CreateUser : FluxorComponent
             }
             else
             {
-                Toastes.Add(new ToastMessage()
+                ToastService.Notify(new ToastMessage()
                 {
                     Type = ToastType.Danger,
                     Message = response.Description
@@ -54,7 +51,7 @@ public partial class CreateUser : FluxorComponent
         catch (ApiException apiException)
         {
             var error = apiException.ToApiError();
-            Toastes.Add(new ToastMessage()
+            ToastService.Notify(new ToastMessage()
             {
                 Type = ToastType.Danger,
                 Message = error.Description

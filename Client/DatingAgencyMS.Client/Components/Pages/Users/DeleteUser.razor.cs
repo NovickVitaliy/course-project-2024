@@ -11,16 +11,13 @@ namespace DatingAgencyMS.Client.Components.Pages.Users;
 
 public partial class DeleteUser : ComponentBase
 {
-    private readonly DeleteUserRequest _deleteUserRequest = new ();
- 
-    private List<ToastMessage> Toastes { get; set; } = [];
-    
-    [Inject]
-    private IState<UserState> UserState { get; init; }
-    
-    [Inject]
-    private IUsersService UsersService { get; init; }
-    
+    private readonly DeleteUserRequest _deleteUserRequest = new();
+
+    [Inject] private ToastService ToastService { get; init; }
+    [Inject] private IState<UserState> UserState { get; init; }
+
+    [Inject] private IUsersService UsersService { get; init; }
+
     private async Task OnValidSubmit()
     {
         var user = UserState.Value.User;
@@ -28,7 +25,7 @@ public partial class DeleteUser : ComponentBase
         try
         {
             await UsersService.DeleteUser(_deleteUserRequest, user.Token);
-            Toastes.Add(new ToastMessage()
+            ToastService.Notify(new ToastMessage()
             {
                 Type = ToastType.Success,
                 Message = "Користувача було видалено"
@@ -37,7 +34,7 @@ public partial class DeleteUser : ComponentBase
         catch (ApiException e)
         {
             var apiError = e.ToApiError();
-            Toastes.Add(new ToastMessage()
+            ToastService.Notify(new ToastMessage()
             {
                 Type = ToastType.Danger,
                 Message = apiError.Description,
