@@ -35,9 +35,9 @@ public class DbAccessController : BaseApiController
         {
             return StatusCode(result.Code, result.ToHttpErrorResponse());
         }
-
-        var token = await _tokenService.GenerateJwtToken(request.Login);
+        
         var role = (await _userManager.GetUserRole(request.Login)).ResponseData;
+        var token = await _tokenService.GenerateJwtToken(request.Login, role);
         return Ok(new { login = request.Login, token, role });
     }
 

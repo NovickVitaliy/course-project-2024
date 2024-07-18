@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DatingAgencyMS.Application.Contracts;
+using DatingAgencyMS.Domain.Models;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
@@ -19,9 +20,8 @@ public class DefaultTokenService : ITokenService
         _jwtSettings = options.Value;
     }
 
-    public async Task<string> GenerateJwtToken(string login)
+    public Task<string> GenerateJwtToken(string login, DbRoles role)
     {
-        var serviceResult = await _userManager.GetUserRole(login);
         var now = DateTimeOffset.UtcNow;
         var expiresAt = now.AddMinutes(_jwtSettings.LifeTimeInMinutes);
 
@@ -29,7 +29,7 @@ public class DefaultTokenService : ITokenService
         [
             new Claim(JwtRegisteredClaimNames.Exp, expiresAt.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
             new Claim(ApplicationClaimTypes.DbUser, login),
-            new Claim(ApplicationClaimTypes.DbRole, serviceResult.ResponseData.ToString())
+            new Claim(ApplicationClaimTypes.DbRole, role.ToString())
         ];
 
         var credentials = new SigningCredentials(
@@ -43,6 +43,6 @@ public class DefaultTokenService : ITokenService
             signingCredentials: credentials
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+        return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken));
     }
 }
