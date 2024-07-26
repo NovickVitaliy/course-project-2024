@@ -1,6 +1,7 @@
 using Common.Auth;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Domain.Models;
+using DatingAgencyMS.Domain.Models.DbManagement;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Services;
 using DatingAgencyMS.Infrastructure.Settings;

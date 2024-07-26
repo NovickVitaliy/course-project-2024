@@ -3,6 +3,7 @@ using DatingAgencyMS.Application.DTOs.UserManagement.Requests;
 using DatingAgencyMS.Application.DTOs.UserManagement.Responses;
 using DatingAgencyMS.Application.Shared;
 using DatingAgencyMS.Domain.Models;
+using DatingAgencyMS.Domain.Models.DbManagement;
 
 namespace DatingAgencyMS.Application.Contracts;
 

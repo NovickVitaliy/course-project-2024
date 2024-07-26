@@ -1,4 +1,4 @@
-namespace DatingAgencyMS.Domain.Models;
+namespace DatingAgencyMS.Domain.Models.DbManagement;
 
 public class DbUser
 {
