@@ -37,6 +37,8 @@ public partial class UserList : ComponentBase
             sortBy = sort.SortString;
             sortDirection = sort.SortDirection == SortDirection.Ascending ? "ASC" : "DESC";
         }
+
+        await JsRuntime.InvokeVoidAsync("console.log", request.Filters);
         
         var req = new GetUsersRequest(
             id == null ? null : int.Parse(id), 

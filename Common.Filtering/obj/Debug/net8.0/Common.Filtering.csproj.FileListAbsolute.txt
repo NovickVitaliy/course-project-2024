@@ -1,0 +1,12 @@
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\obj\Debug\net8.0\Common.Filtering.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\obj\Debug\net8.0\Common.Filtering.AssemblyInfoInputs.cache
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\obj\Debug\net8.0\Common.Filtering.AssemblyInfo.cs
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\obj\Debug\net8.0\Common.Filtering.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\obj\Debug\net8.0\Common.Filtering.sourcelink.json
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\bin\Debug\net8.0\Common.Filtering.deps.json
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\bin\Debug\net8.0\Common.Filtering.dll
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\bin\Debug\net8.0\Common.Filtering.pdb
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\obj\Debug\net8.0\Common.Filtering.dll
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\obj\Debug\net8.0\refint\Common.Filtering.dll
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\obj\Debug\net8.0\Common.Filtering.pdb
+C:\Users\User\Desktop\projects\course-project-2024\Common.Filtering\obj\Debug\net8.0\ref\Common.Filtering.dll

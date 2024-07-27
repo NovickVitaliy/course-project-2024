@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using DatingAgencyMS.Client.Components;
 using DatingAgencyMS.Client.Extensions;
+using DatingAgencyMS.Client.Features.Clients.Services;
 using DatingAgencyMS.Client.Services;
 using Fluxor;
 
@@ -12,7 +13,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services
     .AddRefitServiceWithBaseApiUrl<IDbAccessService>(cfg)
-    .AddRefitServiceWithBaseApiUrl<IUsersService>(cfg);
+    .AddRefitServiceWithBaseApiUrl<IUsersService>(cfg)
+    .AddRefitServiceWithBaseApiUrl<IClientsService>(cfg);
 
 builder.Services.AddFluxor(options =>
 {

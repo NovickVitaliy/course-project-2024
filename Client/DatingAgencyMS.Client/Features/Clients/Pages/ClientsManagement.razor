@@ -1,0 +1,7 @@
+@page "/tables/clients"
+@using DatingAgencyMS.Client.Features.Clients.Components
+<h3>Керування клієнтами</h3>
+<div class="d-flex w-100 mb-3 gap-1">
+    <a class="btn btn-primary" href="/users/create">Створити користувача</a>
+</div>
+<ClientsList LoggedInUser="UserState.Value.User"></ClientsList>

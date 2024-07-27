@@ -3,6 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/src/Services/DbUsers/DatingAgencyMS.API/Controllers/TestingController.cs" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/Services/DbUsers/DatingAgencyMS.Infrastructure/DbSetup/DbSetup.cs" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/Services/DbUsers/DatingAgencyMS.Infrastructure/DbSetup/Scripts/Script_0004 - Seed Tables.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/Services/DbUsers/DatingAgencyMS.Infrastructure/Services/PostgresUserManager.cs" dialect="PostgreSQL" />
   </component>
 </project>

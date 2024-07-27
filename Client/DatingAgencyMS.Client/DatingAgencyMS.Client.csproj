@@ -16,4 +16,8 @@
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Common.Filtering\Common.Filtering.csproj" />
+    </ItemGroup>
+
 </Project>

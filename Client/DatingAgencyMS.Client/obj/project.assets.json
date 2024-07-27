@@ -626,6 +626,16 @@
         "build": {
           "buildTransitive/net6.0/System.Text.Json.targets": {}
         }
+      },
+      "Common.Filtering/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Common.Filtering.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Common.Filtering.dll": {}
+        }
       }
     }
   },
@@ -1640,12 +1650,18 @@
         "system.text.json.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "Common.Filtering/1.0.0": {
+      "type": "project",
+      "path": "../../Common.Filtering/Common.Filtering.csproj",
+      "msbuildProject": "../../Common.Filtering/Common.Filtering.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "Blazor.Bootstrap >= 2.2.0",
       "Blazored.LocalStorage >= 4.5.0",
+      "Common.Filtering >= 1.0.0",
       "Fluxor >= 6.0.0",
       "Fluxor.Blazor.Web >= 6.0.0",
       "Refit >= 7.1.2",
@@ -1679,7 +1695,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\User\\Desktop\\projects\\course-project-2024\\Common.Filtering\\Common.Filtering.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\projects\\course-project-2024\\Common.Filtering\\Common.Filtering.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

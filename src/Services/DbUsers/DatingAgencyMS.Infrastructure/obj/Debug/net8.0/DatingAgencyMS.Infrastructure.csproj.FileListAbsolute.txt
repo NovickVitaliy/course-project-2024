@@ -18,3 +18,5 @@ C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAg
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.Infrastructure\obj\Debug\net8.0\DatingAgencyMS.Infrastructure.pdb
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.Infrastructure\obj\Debug\net8.0\ref\DatingAgencyMS.Infrastructure.dll
 C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.Infrastructure\obj\Debug\net8.0\DatingAgencyMS.Infrastructure.sourcelink.json
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.Infrastructure\bin\Debug\net8.0\Common.Filtering.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Services\DbUsers\DatingAgencyMS.Infrastructure\bin\Debug\net8.0\Common.Filtering.pdb

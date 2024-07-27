@@ -18,12 +18,19 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Домашня
             </NavLink>
         </div>
-        @if (User is not null && IsInRoleAllowedToManageUsers())
+        @if (User is not null)
         {
+            @if (IsInRoleAllowedToManageUsers())
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" style="line-height: 1.2rem" href="/users-management" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Керування користувачами
+                    </NavLink>
+                </div>
+            }
             <div class="nav-item px-3">
-
-                <NavLink class="nav-link" style="line-height: 1.2rem" href="/users-management" Match="NavLinkMatch.All">
-                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Керування користувачами
+                <NavLink class="nav-link" href="/tables/clients" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Clients
                 </NavLink>
             </div>
         }

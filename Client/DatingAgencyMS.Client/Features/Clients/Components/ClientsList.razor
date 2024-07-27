@@ -1,0 +1,58 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Models.Core
+<Grid TItem="ClientDto"
+      Class="table table-sm table-hover table-bordered table-striped"
+      DataProvider="ClientDataProvider"
+      AllowPaging="true"
+      AllowSorting="true"
+      AllowFiltering="true"
+      PageSize="10"
+      Responsive="true">
+    <GridColumn TItem="ClientDto" HeaderText="Client Id" PropertyName="ClientId" SortString="id" SortKeySelector="c => c.ClientId">
+        @context.ClientId
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="First Name" PropertyName="FirstName" SortString="first_name" SortKeySelector="c => c.FirstName">
+        @context.FirstName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Last Name" PropertyName="LastName" SortString="last_name" SortKeySelector="c => c.LastName">
+        @context.LastName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Gender" PropertyName="Gender" SortString="gender" SortKeySelector="c => c.Gender">
+        @context.Gender
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Sexual Orientation" PropertyName="SexualOrientation" SortString="sexual_orientation" SortKeySelector="c => c.SexualOrientation">
+        @context.SexualOrientation
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Registration Number" PropertyName="RegistrationNumber" SortString="registration_number" SortKeySelector="c => c.RegistrationNumber">
+        @context.RegistrationNumber
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Registered On" PropertyName="RegisteredOn" SortString="registered_on" SortKeySelector="c => c.RegisteredOn">
+        @context.RegisteredOn
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Age" PropertyName="Age" SortString="age" SortKeySelector="c => c.Age">
+        @context.Age
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Height" PropertyName="Height" SortString="height" SortKeySelector="c => c.Height">
+        @context.Height
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Weight" PropertyName="Weight" SortString="weight" SortKeySelector="c => c.Weight">
+        @context.Weight
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Zodiac Sign" PropertyName="ZodiacSign" SortString="zodiac_sign" SortKeySelector="c => c.ZodiacSign">
+        @context.ZodiacSign
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Description" PropertyName="Description" SortString="description" SortKeySelector="c => c.Description">
+        @context.Description
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+        <HeaderContent>
+            Options
+        </HeaderContent>
+        <ChildContent>
+            <div class="d-flex gap-1">
+                <a class="btn btn-danger">Delete</a>
+                <a class="btn btn-success">Update</a>
+            </div>
+        </ChildContent>
+    </GridColumn>
+</Grid>

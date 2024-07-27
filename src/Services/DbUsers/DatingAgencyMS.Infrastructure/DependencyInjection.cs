@@ -39,6 +39,7 @@ public static class DependencyInjection
                         throw new ArgumentException("ConnectionStringForRoot")));
         
         services.AddScoped<IUserManager, PostgresUserManager>();
+        services.AddScoped<IClientsService, PostgresClientsService>();
 
         return services;
     }

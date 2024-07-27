@@ -572,10 +572,21 @@
           "bin/placeholder/Common.Auth.dll": {}
         }
       },
+      "Common.Filtering/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Common.Filtering.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Common.Filtering.dll": {}
+        }
+      },
       "DatingAgencyMS.Application/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "Common.Filtering": "1.0.0",
           "DatingAgencyMS.Domain": "1.0.0"
         },
         "compile": {
@@ -2162,6 +2173,11 @@
       "type": "project",
       "path": "../../../Common/Common.Auth/Common.Auth.csproj",
       "msbuildProject": "../../../Common/Common.Auth/Common.Auth.csproj"
+    },
+    "Common.Filtering/1.0.0": {
+      "type": "project",
+      "path": "../../../../Common.Filtering/Common.Filtering.csproj",
+      "msbuildProject": "../../../../Common.Filtering/Common.Filtering.csproj"
     },
     "DatingAgencyMS.Application/1.0.0": {
       "type": "project",

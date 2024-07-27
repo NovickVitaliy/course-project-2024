@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS Clients
     first_name          VARCHAR(50)  NOT NULL,
     last_name           VARCHAR(50)  NOT NULL,
     gender              VARCHAR(50)  NOT NULL,
+    sexual_orientation  VARCHAR(50)  NOT NULL,
     registration_number VARCHAR(50)  NOT NULL,
     registered_on       DATE         NOT NULL,
     age                 SMALLINT     NOT NULL,
@@ -30,6 +31,7 @@ CREATE TABLE IF NOT EXISTS Clients
 CREATE TABLE IF NOT EXISTS PartnerRequirements
 (
     requirement_id SERIAL,
+    gender         VARCHAR(50),
     min_age        SMALLINT,
     max_age        SMALLINT,
     min_height     SMALLINT,
