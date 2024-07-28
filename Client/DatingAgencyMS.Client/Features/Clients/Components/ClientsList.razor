@@ -1,4 +1,5 @@
 @using BlazorBootstrap
+@using DatingAgencyMS.Client.Helpers
 @using DatingAgencyMS.Client.Models.Core
 @using Microsoft.AspNetCore.Components.Web
 @rendermode @(new InteractiveServerRenderMode(false))
@@ -41,21 +42,24 @@
     <GridColumn TItem="ClientDto" HeaderText="Weight" PropertyName="Weight" SortString="weight" SortKeySelector="c => c.Weight" FilterTextboxWidth="80">
         @context.Weight
     </GridColumn>
-    <GridColumn TItem="ClientDto" HeaderText="Zodiac Sign" PropertyName="ZodiacSign" SortString="zodiac_sign" SortKeySelector="c => c.ZodiacSign" FilterTextboxWidth="80" >
+    <GridColumn TItem="ClientDto" HeaderText="Zodiac Sign" PropertyName="ZodiacSign" SortString="zodiac_sign" SortKeySelector="c => c.ZodiacSign" FilterTextboxWidth="80">
         @context.ZodiacSign
     </GridColumn>
     <GridColumn TItem="ClientDto" HeaderText="Description" PropertyName="Description" SortString="description" SortKeySelector="c => c.Description" FilterTextboxWidth="80">
         @context.Description
     </GridColumn>
-    <GridColumn TItem="ClientDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
-        <HeaderContent>
-            Options
-        </HeaderContent>
-        <ChildContent>
-            <div class="d-flex gap-1">
-                <button @onclick="() => DeleteClient(context.ClientId)" class="btn btn-danger">Delete</button>
-                <a href="/tables/clients/@context.ClientId/update" class="btn btn-success">Update</a>
-            </div>
-        </ChildContent>
-    </GridColumn>
+    @if (LoggedInUser.IsAllowedToUpdateAndDeleteEntities())
+    {
+        <GridColumn TItem="ClientDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+            <HeaderContent>
+                Options
+            </HeaderContent>
+            <ChildContent>
+                <div class="d-flex gap-1">
+                    <button @onclick="() => DeleteClient(context.ClientId)" class="btn btn-danger">Delete</button>
+                    <a href="/tables/clients/@context.ClientId/update" class="btn btn-success">Update</a>
+                </div>
+            </ChildContent>
+        </GridColumn>
+    }
 </Grid>

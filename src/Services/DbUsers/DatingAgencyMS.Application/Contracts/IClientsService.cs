@@ -10,4 +10,6 @@ public interface IClientsService
     Task<ServiceResult<GetClientsResponse>> GetClients(GetClientsRequest request);
     Task<ServiceResult<CreateClientResponse>> CreateClient(CreateClientRequest request);
     Task<ServiceResult<bool>> DeleteClient(int clientId, string requestedBy);
+    Task<ServiceResult<bool>> UpdateClient(int clientId, UpdateClientRequest request);
+    Task<ServiceResult<GetClientResponse>> GetClientById(GetClientRequest getClientRequest);
 }

@@ -18,6 +18,20 @@ public class ClientsController : BaseApiController
         _clientsService = clientsService;
     }
 
+    [HttpGet("{clientId:int}")]
+    public async Task<IActionResult> GetClient(int clientId)
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var result = await _clientsService.GetClientById(new GetClientRequest(clientId, requestedBy));
+
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetClients([FromQuery] GetClientsRequest request)
     {
@@ -51,6 +65,18 @@ public class ClientsController : BaseApiController
         var requestedBy = User.GetDbUserLogin();
         var result = await _clientsService.DeleteClient(clientId, requestedBy);
 
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return NoContent();
+    }
+
+    [HttpPut("{clientId:int}")]
+    public async Task<IActionResult> UpdateClient([FromRoute] int clientId, [FromBody] UpdateClientRequest request)
+    {
+        var result = await _clientsService.UpdateClient(clientId, request);
         if (!result.Success)
         {
             return StatusCode(result.Code, result.ToHttpErrorResponse());

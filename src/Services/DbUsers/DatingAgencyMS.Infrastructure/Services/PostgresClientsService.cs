@@ -165,6 +165,96 @@ public class PostgresClientsService : IClientsService
         }
     }
 
+    public async Task<ServiceResult<bool>> UpdateClient(int clientId, UpdateClientRequest request)
+    {
+        var connection = await GetConnection(request.RequestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "UPDATE clients SET " +
+                              "first_name = @firstName, " +
+                              "last_name = @lastName, " +
+                              "gender = @gender, " +
+                              "sexual_orientation = @sexualOrientation, " +
+                              "registration_number = @registrationNumber, " +
+                              "age = @age, " +
+                              "height = @height, " +
+                              "weight = @weight, " +
+                              "zodiac_sign = @zodiacSign," +
+                              "description = @description " +
+                              "WHERE id = @clientId";
+            cmd.AddParameter("firstName", request.FirstName);
+            cmd.AddParameter("lastName", request.LastName);
+            cmd.AddParameter("gender", request.Gender);
+            cmd.AddParameter("sexualOrientation", request.SexualOrientation);
+            cmd.AddParameter("registrationNumber", request.RegistrationNumber);
+            cmd.AddParameter("age", request.Age);
+            cmd.AddParameter("height", request.Height);
+            cmd.AddParameter("weight", request.Weight);
+            cmd.AddParameter("zodiacSign", request.ZodiacSign.ToString());
+            cmd.AddParameter("description", request.Description);
+            cmd.AddParameter("clientId", clientId);
+
+            var rowsAffected = await cmd.ExecuteNonQueryAsync();
+            await transaction.CommitAsync();
+
+            if (rowsAffected == 0)
+            {
+                return ServiceResult<bool>.BadRequest("Не вдалося оновити запис клієнта");
+            }
+
+            return ServiceResult<bool>.NoContent();
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
+    public async Task<ServiceResult<GetClientResponse>> GetClientById(GetClientRequest getClientRequest)
+    {
+        var connection = await GetConnection(getClientRequest.RequestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT * FROM clients WHERE id = @clientId";
+            cmd.AddParameter("clientId", getClientRequest.ClientId);
+            var reader = await cmd.ExecuteReaderAsync();
+            if (!await reader.ReadAsync())
+            {
+                await reader.CloseAsync();
+                return ServiceResult<GetClientResponse>.NotFound("Клієнт", getClientRequest.ClientId);
+            }
+            
+            var clientId = getClientRequest.ClientId;
+            var firstName = reader.GetString("first_name");
+            var lastName = reader.GetString("last_name");
+            var gender = reader.GetString("gender");
+            var sexualOrientation = reader.GetString("sexual_orientation");
+            var registrationNumber = reader.GetString("registration_number");
+            var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
+            var age = reader.GetInt32("age");
+            var height = reader.GetInt32("height");
+            var weight = reader.GetInt32("weight");
+            var zodiacSign = Enum.Parse<ZodiacSign>(reader.GetString("zodiac_sign"), true);
+            var description = reader.GetString("description");
+            await reader.CloseAsync();
+            await transaction.CommitAsync();
+
+            var clientDto = new ClientDto(clientId, firstName, lastName, gender, sexualOrientation, registrationNumber,
+                registeredOn, age, height, weight, zodiacSign, description);
+            return ServiceResult<GetClientResponse>.Ok(new GetClientResponse(clientDto));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<GetClientResponse>.BadRequest(e.Message);
+        }
+    }
+
 
     private async Task<DbConnection> GetConnection(string requestedBy)
     {

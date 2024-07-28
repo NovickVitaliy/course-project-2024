@@ -6,6 +6,8 @@ namespace DatingAgencyMS.Client.Features.Clients.Services;
 
 public interface IClientsService
 {
+    [Get("/clients/{clientId}")]
+    Task<GetClientResponse> GetClientById(int clientId, [Authorize] string token);
     [Get("/clients")]
     Task<GetClientsResponse> GetClients([Query]GetClientsRequest request, [Authorize] string token);
     
@@ -14,4 +16,7 @@ public interface IClientsService
 
     [Delete("/clients/{clientId}")]
     Task DeleteClient(int clientId, [Authorize] string token);
+
+    [Put("/clients/{clientId}")]
+    Task UpdateClient(int clientId, UpdateClientRequest request, [Authorize] string token);
 }
