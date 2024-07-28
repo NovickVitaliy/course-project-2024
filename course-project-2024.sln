@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatingAgencyMS.Client", "Cl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Filtering", "Common.Filtering\Common.Filtering.csproj", "{90CA40B9-814C-49DB-B393-5CBA9F4740A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Business", "Common.Business\Common.Business.csproj", "{918E5F3A-AD4A-4994-9E93-C936B1CA28D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,7 @@ Global
 		{6A6B6DD6-324A-4D99-BDF3-3F8156C1F3A3} = {C423B0F4-9FFE-4FB6-A335-B04265989500}
 		{E5D16F7E-2C62-4829-8285-B55173B6C0D7} = {6A6B6DD6-324A-4D99-BDF3-3F8156C1F3A3}
 		{90CA40B9-814C-49DB-B393-5CBA9F4740A8} = {4371B756-DC38-40EF-9510-375885ABBD6D}
+		{918E5F3A-AD4A-4994-9E93-C936B1CA28D6} = {4371B756-DC38-40EF-9510-375885ABBD6D}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{12391B55-B738-4D4B-A9F5-8A2854592173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -78,5 +81,9 @@ Global
 		{90CA40B9-814C-49DB-B393-5CBA9F4740A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90CA40B9-814C-49DB-B393-5CBA9F4740A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90CA40B9-814C-49DB-B393-5CBA9F4740A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{918E5F3A-AD4A-4994-9E93-C936B1CA28D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{918E5F3A-AD4A-4994-9E93-C936B1CA28D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{918E5F3A-AD4A-4994-9E93-C936B1CA28D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{918E5F3A-AD4A-4994-9E93-C936B1CA28D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Common.Business\Common.Business.csproj" />
       <ProjectReference Include="..\..\Common.Filtering\Common.Filtering.csproj" />
     </ItemGroup>
 
