@@ -29,4 +29,17 @@ public class ClientsController : BaseApiController
         
         return Ok(result.ResponseData);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateClient([FromBody] CreateClientRequest request)
+    {
+        var result = await _clientsService.CreateClient(request);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }

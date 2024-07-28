@@ -8,4 +8,7 @@ public interface IClientsService
 {
     [Get("/clients")]
     Task<GetClientsResponse> GetClients([Query]GetClientsRequest request, [Authorize] string token);
+    
+    [Post("/clients")]
+    Task<CreateClientResponse> CreateClient(CreateClientRequest request, [Authorize] string token);
 }

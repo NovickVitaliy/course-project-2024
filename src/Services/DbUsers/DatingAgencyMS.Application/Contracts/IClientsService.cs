@@ -8,4 +8,5 @@ namespace DatingAgencyMS.Application.Contracts;
 public interface IClientsService
 {
     Task<ServiceResult<GetClientsResponse>> GetClients(GetClientsRequest request);
+    Task<ServiceResult<CreateClientResponse>> CreateClient(CreateClientRequest request);
 }

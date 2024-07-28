@@ -47,7 +47,8 @@ public class PostgresClientsService : IClientsService
                 var zodiacSign = Enum.Parse<ZodiacSign>(reader.GetString("zodiac_sign"), true);
                 var description = reader.GetString("description");
 
-                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sexualOrientation, registrationNumber, registeredOn,
+                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sexualOrientation,
+                    registrationNumber, registeredOn,
                     age, height, weight, zodiacSign, description));
             }
 
@@ -55,7 +56,7 @@ public class PostgresClientsService : IClientsService
 
             cmd.CommandText = string.Concat("SELECT COUNT(*) FROM Clients ", sql.WhereQuery);
             var totalCount = (long)await cmd.ExecuteScalarAsync()!;
-            
+
             await transaction.CommitAsync();
             return ServiceResult<GetClientsResponse>.Ok(new GetClientsResponse(clientDtos, totalCount));
         }
@@ -66,7 +67,7 @@ public class PostgresClientsService : IClientsService
         }
     }
 
-    private (string FullQuery, string WhereQuery) BuildClientsSqlQuery(GetClientsRequest request)
+    private static (string FullQuery, string WhereQuery) BuildClientsSqlQuery(GetClientsRequest request)
     {
         var selectFrom = "SELECT * FROM Clients ";
         var initialCondition = "WHERE 1=1 ";
@@ -75,7 +76,8 @@ public class PostgresClientsService : IClientsService
         var lastNameCondition = request.LastNameFilter.BuildConditionForString("last_name");
         var genderCondition = request.GenderFilter.BuildConditionForString("gender");
         var sexualOrientationCondition = request.SexualOrientationFilter.BuildConditionForString("sexual_orientation");
-        var registrationNumberCondition = request.RegistrationNumberFilter.BuildConditionForString("registration_number");
+        var registrationNumberCondition =
+            request.RegistrationNumberFilter.BuildConditionForString("registration_number");
         var registeredOnCondition = request.RegisteredOnFilter.BuildConditionForDateOnly("registered_on");
         var ageCondition = request.AgeFilter.BuildConditionForInteger("age");
         var heightCondition = request.HeightFilter.BuildConditionForInteger("height");
@@ -83,15 +85,59 @@ public class PostgresClientsService : IClientsService
         var zodiacSignCondition = request.ZodiacSignFilter.BuildConditionForString("zodiac_sign");
         var descriptionFilter = request.DescriptionFilter.BuildConditionForString("description");
         var sortingString = request.SortingInfo.BuildSortingString();
-        
+
         var skipItems = ((request.PaginationInfo.PageNumber - 1) * request.PaginationInfo.PageSize);
         var pagination = $"OFFSET {skipItems} ROWS FETCH NEXT {request.PaginationInfo.PageSize} ROWS ONLY";
 
-        return (string.Concat(selectFrom, initialCondition, idCondition, firstNameCondition, lastNameCondition, genderCondition, sexualOrientationCondition, registrationNumberCondition, registeredOnCondition, ageCondition, heightCondition,
-            weightCondition, zodiacSignCondition, descriptionFilter, sortingString, pagination),
-            string.Concat(initialCondition, idCondition, firstNameCondition, lastNameCondition, genderCondition, sexualOrientationCondition, registrationNumberCondition, registeredOnCondition, ageCondition, heightCondition,
+        return (string.Concat(selectFrom, initialCondition, idCondition, firstNameCondition, lastNameCondition,
+                genderCondition, sexualOrientationCondition, registrationNumberCondition, registeredOnCondition,
+                ageCondition, heightCondition,
+                weightCondition, zodiacSignCondition, descriptionFilter, sortingString, pagination),
+            string.Concat(initialCondition, idCondition, firstNameCondition, lastNameCondition, genderCondition,
+                sexualOrientationCondition, registrationNumberCondition, registeredOnCondition, ageCondition,
+                heightCondition,
                 weightCondition, zodiacSignCondition, descriptionFilter));
     }
+
+    public async Task<ServiceResult<CreateClientResponse>> CreateClient(CreateClientRequest request)
+    {
+        var connection = await GetConnection(request.RequestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText =
+                "INSERT INTO clients (first_name, last_name, gender, sexual_orientation, registration_number, registered_on, age, height, weight, zodiac_sign, description) " +
+                "VALUES (@firstName, @lastName, @gender, @sexualOrientation, @registrationNumber, @registeredOn, @age, @height, @weight, @zodiacSign, @description)";
+            cmd.AddParameter("firstName", request.FirstName);
+            cmd.AddParameter("lastName", request.LastName);
+            cmd.AddParameter("gender", request.Gender);
+            cmd.AddParameter("sexualOrientation", request.SexualOrientation);
+            cmd.AddParameter("registrationNumber", request.RegistrationNumber);
+            cmd.AddParameter("registeredOn", DateOnly.FromDateTime(DateTime.Today));
+            cmd.AddParameter("age", request.Age);
+            cmd.AddParameter("height", request.Height);
+            cmd.AddParameter("weight", request.Weight);
+            cmd.AddParameter("zodiacSign", request.ZodiacSign.ToString());
+            cmd.AddParameter("description", request.Description);
+
+            var rowsAffected = await cmd.ExecuteNonQueryAsync();
+            await transaction.CommitAsync();
+
+            if (rowsAffected != 1)
+            {
+                return ServiceResult<CreateClientResponse>.BadRequest("Невдала спроба створення клієнта.");
+            }
+
+            return ServiceResult<CreateClientResponse>.Created(new CreateClientResponse(true));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<CreateClientResponse>.BadRequest(e.Message);
+        }
+    }
+
 
     private async Task<DbConnection> GetConnection(string requestedBy)
     {
