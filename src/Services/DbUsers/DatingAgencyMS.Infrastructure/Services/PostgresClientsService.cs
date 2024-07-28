@@ -138,6 +138,33 @@ public class PostgresClientsService : IClientsService
         }
     }
 
+    public async Task<ServiceResult<bool>> DeleteClient(int clientId, string requestedBy)
+    {
+        var connection = await GetConnection(requestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "DELETE FROM clients WHERE id = @clientId";
+            cmd.AddParameter("clientId", clientId);
+
+            var rowsAffected = await cmd.ExecuteNonQueryAsync();
+            await transaction.CommitAsync();
+
+            if (rowsAffected == 0)
+            {
+                return ServiceResult<bool>.NotFound("Клієнт", clientId);
+            }
+
+            return ServiceResult<bool>.NoContent();
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
 
     private async Task<DbConnection> GetConnection(string requestedBy)
     {

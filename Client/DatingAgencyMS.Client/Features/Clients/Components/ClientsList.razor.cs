@@ -4,6 +4,7 @@ using Common.Filtering.Filters.NumberFilters;
 using Common.Filtering.FiltersOptions;
 using Common.Filtering.Pagination;
 using Common.Filtering.Sorting;
+using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Features.Clients.Models.Dto.Requests;
 using DatingAgencyMS.Client.Features.Clients.Services;
 using DatingAgencyMS.Client.Helpers;
@@ -11,6 +12,7 @@ using DatingAgencyMS.Client.Models.Core;
 using DatingAgencyMS.Client.Store.UserUseCase;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Refit;
 
 namespace DatingAgencyMS.Client.Features.Clients.Components;
 
@@ -22,7 +24,12 @@ public partial class ClientsList : ComponentBase
 
     [Inject] private IClientsService ClientsService { get; init; }
 
+    [Inject] private ToastService ToastService { get; init; }
 
+    private Grid<ClientDto> _grid;
+
+    private ConfirmDialog _confirmDialog = default!;
+    
     private async Task<GridDataProviderResult<ClientDto>> ClientDataProvider(GridDataProviderRequest<ClientDto> request)
     {
         var clientsRequest = BuildRequest(request);
@@ -64,5 +71,34 @@ public partial class ClientsList : ComponentBase
             registrationNumberFilter,
             registeredOnFilter,
             ageFilter, heightFilter, weightFilter, zodiasSignFilter, description, sortingInfo, paginationInfo, LoggedInUser.Login);
+    }
+
+    private async Task DeleteClient(int clientId)
+    {
+        var confirmation = await _confirmDialog.ShowAsync(
+            title:$"Ви сравді хочете видалити клієнта з Id - {clientId}?",
+            message1:"Це видалить запис з БД. Ця дія незворотня.",
+            confirmDialogOptions: new ConfirmDialogOptions()
+            {
+                YesButtonText = "Видалити",
+                YesButtonColor = ButtonColor.Danger,
+                NoButtonText = "Назад",
+                NoButtonColor = ButtonColor.Secondary
+            });
+
+        if (confirmation)
+        {
+            try
+            {
+                await ClientsService.DeleteClient(clientId, LoggedInUser.Token);
+                ToastService.Notify(new ToastMessage(ToastType.Success, $"Клієнта з Id - {clientId} було успішно видалено"));
+                await _grid.RefreshDataAsync();
+            }
+            catch (ApiException e)
+            {
+                var apiError = e.ToApiError();
+                ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
+            }
+        }
     }
 }

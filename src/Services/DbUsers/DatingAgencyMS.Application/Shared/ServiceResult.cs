@@ -10,7 +10,7 @@ public record ServiceResult<TResponseData>(bool Success, int Code, TResponseData
     public static ServiceResult<TResponseData> BadRequest(string description)
         => new(false, (int)HttpStatusCode.BadRequest, default, description);
 
-    public static ServiceResult<TResponseData> NotFound(string entityName, string identifier)
+    public static ServiceResult<TResponseData> NotFound(string entityName, object identifier)
         => new(false, (int)HttpStatusCode.NotFound, default,
             $"Сутність '{entityName}' з ключем: {identifier} не була знайдена");
 
@@ -23,6 +23,9 @@ public record ServiceResult<TResponseData>(bool Success, int Code, TResponseData
     public static ServiceResult<TResponseData> ServerError(string description)
         => new(false, (int)HttpStatusCode.InternalServerError, default, description);
 
-    public static ServiceResult<bool> Forbidden(string description)
+    public static ServiceResult<TResponseData> Forbidden(string description)
         => new(false, (int)HttpStatusCode.Forbidden, default, description);
+
+    public static ServiceResult<TResponseData> NoContent()
+        => new(true, (int)HttpStatusCode.NoContent, default);
 }

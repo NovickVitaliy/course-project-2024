@@ -11,4 +11,7 @@ public interface IClientsService
     
     [Post("/clients")]
     Task<CreateClientResponse> CreateClient(CreateClientRequest request, [Authorize] string token);
+
+    [Delete("/clients/{clientId}")]
+    Task DeleteClient(int clientId, [Authorize] string token);
 }

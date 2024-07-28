@@ -1,6 +1,9 @@
 @using BlazorBootstrap
 @using DatingAgencyMS.Client.Models.Core
-<Grid TItem="ClientDto"
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+<ConfirmDialog @ref="_confirmDialog"></ConfirmDialog>
+<Grid @ref="_grid" TItem="ClientDto"
       Class="table table-hover table-bordered table-striped"
       DataProvider="ClientDataProvider"
       AllowPaging="true"
@@ -50,8 +53,8 @@
         </HeaderContent>
         <ChildContent>
             <div class="d-flex gap-1">
-                <a class="btn btn-danger">Delete</a>
-                <a class="btn btn-success">Update</a>
+                <button @onclick="() => DeleteClient(context.ClientId)" class="btn btn-danger">Delete</button>
+                <a href="/tables/clients/@context.ClientId/update" class="btn btn-success">Update</a>
             </div>
         </ChildContent>
     </GridColumn>

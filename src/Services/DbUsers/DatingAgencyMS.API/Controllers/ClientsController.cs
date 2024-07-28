@@ -2,6 +2,7 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Clients.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
@@ -40,6 +41,21 @@ public class ClientsController : BaseApiController
             return StatusCode(result.Code, result.ToHttpErrorResponse());
         }
 
+        //TODO: refactor return
         return Ok(result.ResponseData);
+    }
+
+    [HttpDelete("{clientId:int}")]
+    public async Task<IActionResult> DeleteClient(int clientId)
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var result = await _clientsService.DeleteClient(clientId, requestedBy);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return NoContent();
     }
 }

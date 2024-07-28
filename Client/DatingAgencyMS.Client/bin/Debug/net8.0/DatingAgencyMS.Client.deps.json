@@ -10,6 +10,7 @@
         "dependencies": {
           "Blazor.Bootstrap": "2.2.0",
           "Blazored.LocalStorage": "4.5.0",
+          "Common.Business": "1.0.0",
           "Common.Filtering": "1.0.0",
           "Fluxor": "6.0.0",
           "Fluxor.Blazor.Web": "6.0.0",
@@ -259,6 +260,11 @@
       "System.Text.Json/8.0.0": {
         "dependencies": {
           "System.Text.Encodings.Web": "8.0.0"
+        }
+      },
+      "Common.Business/1.0.0": {
+        "runtime": {
+          "Common.Business.dll": {}
         }
       },
       "Common.Filtering/1.0.0": {
@@ -525,6 +531,11 @@
       "sha512": "sha512-OdrZO2WjkiEG6ajEFRABTRCi/wuXQPxeV6g8xvUJqdxMvvuCCEk86zPla8UiIQJz3durtUEbNyY/3lIhS0yZvQ==",
       "path": "system.text.json/8.0.0",
       "hashPath": "system.text.json.8.0.0.nupkg.sha512"
+    },
+    "Common.Business/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "Common.Filtering/1.0.0": {
       "type": "project",
