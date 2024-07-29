@@ -3,19 +3,21 @@ using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Features.Clients.Services;
 using DatingAgencyMS.Client.Store.UserUseCase;
 using Fluxor;
+using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
 namespace DatingAgencyMS.Client.Features.Clients.Pages;
 
-public partial class ClientsManagement : ComponentBase
+public partial class ClientsManagement : FluxorComponent
 {
     private ConfirmDialog _dialog = default!;
 
     [Inject] private IState<UserState> UserState { get; init; }
 
     [Inject] private IClientsService ClientsService { get; init; }
-
+    
+    
     private async Task CalculateNumberWhoDeclinedService()
     {
         try

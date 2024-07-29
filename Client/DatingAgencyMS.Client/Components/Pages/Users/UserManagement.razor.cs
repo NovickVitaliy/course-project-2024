@@ -1,4 +1,6 @@
 using DatingAgencyMS.Client.Models.DTOs.User;
+using DatingAgencyMS.Client.Store.UserUseCase;
+using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -8,6 +10,9 @@ public partial class UserManagement : ComponentBase
 {
     [Inject]
     public IJSRuntime JsRuntime { get; set; }
+    
+    [Inject]
+    public IState<UserState> UserState { get; init; }
     private readonly List<DbUser> _users = [
         new DbUser(1, "user1", "Admin"),
         new DbUser(2, "user2", "User"),
@@ -30,4 +35,15 @@ public partial class UserManagement : ComponentBase
         new DbUser(19, "user19", "User"),
         new DbUser(20, "user20", "User")
     ];
+
+    protected override void OnInitialized()
+    {
+        UserState.StateChanged += UserPushed;
+        base.OnInitialized();
+    }
+
+    private void UserPushed(object? sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
 }

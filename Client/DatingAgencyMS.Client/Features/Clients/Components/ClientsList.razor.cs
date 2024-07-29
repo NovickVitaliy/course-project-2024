@@ -10,6 +10,7 @@ using DatingAgencyMS.Client.Features.Clients.Services;
 using DatingAgencyMS.Client.Helpers;
 using DatingAgencyMS.Client.Models.Core;
 using DatingAgencyMS.Client.Store.UserUseCase;
+using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Refit;
@@ -18,7 +19,7 @@ namespace DatingAgencyMS.Client.Features.Clients.Components;
 
 public partial class ClientsList : ComponentBase
 {
-    [Parameter, EditorRequired] public LoggedInUser LoggedInUser { get; init; }
+    [Inject] private IState<UserState> UserState { get; init; } 
 
     [Inject] private IJSRuntime JsRuntime { get; init; }
 
@@ -33,8 +34,7 @@ public partial class ClientsList : ComponentBase
     private async Task<GridDataProviderResult<ClientDto>> ClientDataProvider(GridDataProviderRequest<ClientDto> request)
     {
         var clientsRequest = BuildRequest(request);
-        var response = await ClientsService.GetClients(clientsRequest, LoggedInUser.Token);
-        await JsRuntime.InvokeVoidAsync("console.log", clientsRequest);
+        var response = await ClientsService.GetClients(clientsRequest, UserState.Value.User.Token);
 
         return new GridDataProviderResult<ClientDto>()
         {
@@ -67,12 +67,14 @@ public partial class ClientsList : ComponentBase
                 ? "ASC"
                 : "DESC");
         }
+        
+
 
         var paginationInfo = new PaginationInfo(request.PageNumber, request.PageSize);
         return new GetClientsRequest(idFilter, firstNameFilter, lastNameFilter, genderFilter, sexFilter, sexualOrientationFilter,
             registrationNumberFilter,
             registeredOnFilter,
-            ageFilter, heightFilter, weightFilter, zodiasSignFilter, description, hasDeclinedServiceFilter, sortingInfo, paginationInfo, LoggedInUser.Login);
+            ageFilter, heightFilter, weightFilter, zodiasSignFilter, description, hasDeclinedServiceFilter, sortingInfo, paginationInfo, UserState.Value.User.Login);
     }
 
     private async Task DeleteClient(int clientId)
@@ -92,7 +94,7 @@ public partial class ClientsList : ComponentBase
         {
             try
             {
-                await ClientsService.DeleteClient(clientId, LoggedInUser.Token);
+                await ClientsService.DeleteClient(clientId, UserState.Value.User.Token);
                 ToastService.Notify(new ToastMessage(ToastType.Success, $"Клієнта з Id - {clientId} було успішно видалено"));
                 await _grid.RefreshDataAsync();
             }

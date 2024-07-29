@@ -54,7 +54,7 @@
     <GridColumn TItem="ClientDto" HeaderText="Відмова від сервісу" PropertyName="HasDeclinedService" SortString="has_declined_service" SortKeySelector="c => c.HasDeclinedService" FilterTextboxWidth="40">
         @context.HasDeclinedService
     </GridColumn>
-    @if (LoggedInUser.IsAllowedToUpdateAndDeleteEntities())
+    @if (UserState.Value.User.IsAllowedToUpdateAndDeleteEntities())
     {
         <GridColumn TItem="ClientDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
             <HeaderContent>

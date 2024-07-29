@@ -3,6 +3,7 @@
 @using DatingAgencyMS.Client.Helpers
 @using BlazorBootstrap
 @using Microsoft.AspNetCore.Components.Web
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @rendermode @(new InteractiveServerRenderMode(false))
 <ConfirmDialog @ref="_dialog"></ConfirmDialog>
 <h3>Керування клієнтами</h3>
@@ -13,4 +14,4 @@
     }
     <button class="btn btn-secondary" @onclick="CalculateNumberWhoDeclinedService">К-сть клієнтів, що відмовились від послуг</button>
 </div>
-<ClientsList LoggedInUser="UserState.Value.User"></ClientsList>
+<ClientsList></ClientsList>

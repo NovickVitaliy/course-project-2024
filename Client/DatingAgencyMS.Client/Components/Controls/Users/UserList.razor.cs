@@ -22,6 +22,7 @@ public partial class UserList : ComponentBase
     
     [Inject]
     private IState<UserState> UserState { get; set; }
+
     private async Task<GridDataProviderResult<DbUser>> UserDataProvider(GridDataProviderRequest<DbUser> request)
     {
         var id = request.Filters.FirstOrDefault(x => x.PropertyName == "Id")?.Value;
@@ -38,7 +39,6 @@ public partial class UserList : ComponentBase
             sortDirection = sort.SortDirection == SortDirection.Ascending ? "ASC" : "DESC";
         }
 
-        await JsRuntime.InvokeVoidAsync("console.log", request.Filters);
         
         var req = new GetUsersRequest(
             id == null ? null : int.Parse(id), 

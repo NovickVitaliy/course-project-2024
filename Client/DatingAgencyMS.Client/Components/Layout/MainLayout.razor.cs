@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using Blazored.LocalStorage;
 using DatingAgencyMS.Client.Constants;
+using DatingAgencyMS.Client.Helpers;
 using DatingAgencyMS.Client.Models.Core;
 using DatingAgencyMS.Client.Models.DTOs.Auth;
 using DatingAgencyMS.Client.Services;
@@ -15,6 +16,8 @@ public partial class MainLayout
     [Inject] private IDispatcher Dispatcher { get; init; }
     [Inject] private ILocalStorageService LocalStorageService { get; init; }
     [Inject] private IDbAccessService DbAccessService { get; init; }
+    [Inject] private IState<UserState> UserState { get; init; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -25,12 +28,14 @@ public partial class MainLayout
         if (firstRender)
         {
             await LoadUserFromStorage();
+            StateHasChanged();
         }
     }
-    
+
     private async Task LoadUserFromStorage()
     {
         var user = await LocalStorageService.GetItemAsync<LoggedInUser?>(UserConstants.UserLocalStorageKey);
+
         if (user is not null && IsJwtTokenValid(user.Token))
         {
             Dispatcher.Dispatch(new SetUserAction(user));

@@ -21,6 +21,7 @@ builder.Services.AddFluxor(options =>
     options.ScanAssemblies(typeof(Program).Assembly);
 });
 
+
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddBlazoredLocalStorage();
 
