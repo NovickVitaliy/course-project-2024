@@ -58,8 +58,8 @@ CREATE TABLE IF NOT EXISTS PlannedMeetings
     date             TIMESTAMP   NOT NULL,
     location         VARCHAR(50) NOT NULL,
     PRIMARY KEY (meeting_id),
-    FOREIGN KEY (first_client_id) REFERENCES Clients (id),
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id)
+    FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS FinishedMeetings
@@ -75,8 +75,8 @@ CREATE TABLE IF NOT EXISTS FinishedMeetings
     second_client_review VARCHAR(50) NOT NULL,
     result               VARCHAR(50) NOT NULL,
     PRIMARY KEY (meeting_id),
-    FOREIGN KEY (first_client_id) REFERENCES Clients (id),
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id)
+    FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE 
 );
 
 CREATE TABLE IF NOT EXISTS CoupleArchive
@@ -88,8 +88,8 @@ CREATE TABLE IF NOT EXISTS CoupleArchive
     additional_info   VARCHAR(50) NOT NULL,
     archived_on       TIMESTAMP   NOT NULL,
     PRIMARY KEY (couple_archive_id),
-    FOREIGN KEY (first_client_id) REFERENCES Clients (id),
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id)
+    FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS MeetingArchive
@@ -106,8 +106,8 @@ CREATE TABLE IF NOT EXISTS MeetingArchive
     result               VARCHAR(50) NOT NULL,
     archived_on          TIMESTAMP   NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (first_client_id) REFERENCES Clients (id),
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id)
+    FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ClientRatings
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS ClientRatings
     comment     VARCHAR(50) NOT NULL,
     rating_date TIMESTAMP   NOT NULL,
     PRIMARY KEY (rating_id),
-    FOREIGN KEY (client_id) REFERENCES Clients (id)
+    FOREIGN KEY (client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Invitations
@@ -129,8 +129,8 @@ CREATE TABLE IF NOT EXISTS Invitations
     invitee_id    INTEGER,
     location      VARCHAR(50) NOT NULL,
     PRIMARY KEY (invitation_id),
-    FOREIGN KEY (inviter_id) REFERENCES Clients (id),
-    FOREIGN KEY (invitee_id) REFERENCES Clients (id)
+    FOREIGN KEY (inviter_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (invitee_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Complaints
@@ -142,8 +142,8 @@ CREATE TABLE IF NOT EXISTS Complaints
     text             VARCHAR(50) NOT NULL,
     complaint_status VARCHAR(50) NOT NULL,
     PRIMARY KEY (complaint_id),
-    FOREIGN KEY (complainant_id) REFERENCES Clients (id),
-    FOREIGN KEY (complainee_id) REFERENCES Clients (id)
+    FOREIGN KEY (complainant_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (complainee_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS AdditionalContacts
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS AdditionalContacts
     instagram VARCHAR(50),
     tiktok    VARCHAR(50),
     PRIMARY KEY (id),
-    FOREIGN KEY (client_id) REFERENCES Clients (id)
+    FOREIGN KEY (client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS PhoneNumbers
@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS PhoneNumbers
     phone_number           VARCHAR(50) NOT NULL,
     additional_contacts_id INTEGER,
     PRIMARY KEY (id),
-    FOREIGN KEY (additional_contacts_id) REFERENCES AdditionalContacts (id)
+    FOREIGN KEY (additional_contacts_id) REFERENCES AdditionalContacts (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Friendship
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS Friendship
     second_client_id INTEGER,
     established_on   TIMESTAMP NOT NULL,
     PRIMARY KEY (first_client_id, second_client_id),
-    FOREIGN KEY (first_client_id) REFERENCES Clients (id),
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id),
+    FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (first_client_id, second_client_id)
 );
