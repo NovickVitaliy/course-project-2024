@@ -12,7 +12,7 @@ namespace DatingAgencyMS.Client.Components.Pages.Auth;
 
 public partial class Login
 {
-    [SupplyParameterFromForm] private LoginRequest LoginRequest { get; } = new();
+    [SupplyParameterFromForm] private LoginRequest LoginRequest { get; set; } = new();
 
     [Inject] private ILocalStorageService LocalStorageService { get; init; }
     [Inject] private NavigationManager NavigationManager { get; init; }

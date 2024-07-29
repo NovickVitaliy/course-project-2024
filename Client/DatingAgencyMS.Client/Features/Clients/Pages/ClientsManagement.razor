@@ -1,11 +1,16 @@
 @page "/tables/clients"
 @using DatingAgencyMS.Client.Features.Clients.Components
 @using DatingAgencyMS.Client.Helpers
+@using BlazorBootstrap
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+<ConfirmDialog @ref="_dialog"></ConfirmDialog>
 <h3>Керування клієнтами</h3>
 <div class="d-flex w-100 mb-3 gap-1">
     @if (UserState.Value.User!.IsAllowedToCreateEntities())
     {
         <a class="btn btn-primary" href="/tables/clients/create">Створити клієнта</a>
     }
+    <button class="btn btn-secondary" @onclick="CalculateNumberWhoDeclinedService">К-сть клієнтів, що відмовились від послуг</button>
 </div>
 <ClientsList LoggedInUser="UserState.Value.User"></ClientsList>

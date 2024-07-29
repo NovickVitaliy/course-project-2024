@@ -12,4 +12,5 @@ public interface IClientsService
     Task<ServiceResult<bool>> DeleteClient(int clientId, string requestedBy);
     Task<ServiceResult<bool>> UpdateClient(int clientId, UpdateClientRequest request);
     Task<ServiceResult<GetClientResponse>> GetClientById(GetClientRequest getClientRequest);
+    Task<ServiceResult<long>> GetCountOfClientsWhoDeclinedService(string requestedBy);
 }

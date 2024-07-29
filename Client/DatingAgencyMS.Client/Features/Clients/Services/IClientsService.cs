@@ -19,4 +19,7 @@ public interface IClientsService
 
     [Put("/clients/{clientId}")]
     Task UpdateClient(int clientId, UpdateClientRequest request, [Authorize] string token);
+
+    [Get("/clients/declined/count")]
+    Task<int> CalculateNumberWhoDeclinedService([Authorize] string token);
 }

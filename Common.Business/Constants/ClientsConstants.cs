@@ -24,7 +24,7 @@ public static class ClientsConstants
         "Трансгендерний чоловік"
     ];
 
-    public static readonly string[] Sexes = ["Чоловік", "Жінка"];
+    public static readonly string[] Sexes = ["Чоловік", "Жінка", "Інтерсекс"];
 
     public static readonly string[] Orientations =
     [

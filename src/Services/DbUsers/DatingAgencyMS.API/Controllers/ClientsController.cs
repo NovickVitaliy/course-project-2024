@@ -84,4 +84,17 @@ public class ClientsController : BaseApiController
 
         return NoContent();
     }
+
+    [HttpGet("declined/count")]
+    public async Task<IActionResult> GetCountOfClientsWhoDeclinedService()
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var result = await _clientsService.GetCountOfClientsWhoDeclinedService(requestedBy);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }

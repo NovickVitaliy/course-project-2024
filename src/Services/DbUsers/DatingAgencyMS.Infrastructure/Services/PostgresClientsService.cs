@@ -267,6 +267,30 @@ public class PostgresClientsService : IClientsService
         }
     }
 
+    public async Task<ServiceResult<long>> GetCountOfClientsWhoDeclinedService(string requestedBy)
+    {
+        var connection = await GetConnection(requestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE has_declined_service = TRUE";
+            var count = (long?) await cmd.ExecuteScalarAsync();
+            await transaction.CommitAsync();
+            if (!count.HasValue)
+            {
+                return ServiceResult<long>.BadRequest("Щось пішло не так");
+            }
+            
+            return ServiceResult<long>.Ok(count.Value);
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<long>.BadRequest(e.Message);
+        }
+    }
+
 
     private async Task<DbConnection> GetConnection(string requestedBy)
     {
