@@ -45,6 +45,26 @@
             </div>
 
             <div class="mb-3">
+                <label for="sex" class="form-label">Стать</label>
+                <InputSelect id="sex" @bind-Value="_request.Sex" class="form-control">
+                    @foreach (var sex in ClientsConstants.Sexes)
+                    {
+                        @if (sex == _request.Sex)
+                        {
+                            <option selected value="@sex">@sex</option>
+                        }
+                        else
+                        {
+                            <option value="@sex">@sex</option>
+                        }
+                    }
+                </InputSelect>
+                <div class="validation-message">
+                    <ValidationMessage For="() => _request.Gender"></ValidationMessage>
+                </div>
+            </div>
+            
+            <div class="mb-3">
                 <label for="sexualOrientation" class="form-label">Сексуальна орієнтація</label>
                 <InputSelect id="sexualOrientation" @bind-Value="_request.SexualOrientation" class="form-control">
                     @foreach (var orientation in ClientsConstants.Orientations)
@@ -119,6 +139,11 @@
                 <div class="validation-message">
                     <ValidationMessage For="() => _request.Description"></ValidationMessage>
                 </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="hasDeclinedService" class="form-label">Відмова від сервісу</label>
+                <InputCheckbox id="hasDeclinedService" @bind-Value="_request.HasDeclinedService" class="form-check-input"></InputCheckbox>
             </div>
 
             <div class="d-flex justify-content-end gap-1">

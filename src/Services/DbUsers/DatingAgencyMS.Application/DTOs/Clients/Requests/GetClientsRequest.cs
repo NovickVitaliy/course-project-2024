@@ -13,6 +13,7 @@ public record GetClientsRequest(
     StringFilter FirstNameFilter,
     StringFilter LastNameFilter,
     StringFilter GenderFilter,
+    StringFilter SexFilter,
     StringFilter SexualOrientationFilter,
     StringFilter RegistrationNumberFilter,
     DateOnlyFilter RegisteredOnFilter,
@@ -21,6 +22,7 @@ public record GetClientsRequest(
     IntegerFilter WeightFilter,
     StringFilter ZodiacSignFilter,
     StringFilter DescriptionFilter,
+    BooleanFilter HasDeclinedServiceFilter,
     SortingInfo? SortingInfo,
     PaginationInfo PaginationInfo,
     string RequestedBy

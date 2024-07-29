@@ -6,7 +6,7 @@ namespace DatingAgencyMS.Client.Extensions;
 public static class ClientExtensions
 {
     public static UpdateClientRequest ToUpdateClientRequest(this ClientDto clientDto)
-        => new UpdateClientRequest()
+        => new()
         {
             FirstName = clientDto.FirstName,
             LastName = clientDto.LastName,
@@ -17,6 +17,7 @@ public static class ClientExtensions
             Height = clientDto.Height,
             Weight = clientDto.Weight,
             RegistrationNumber = clientDto.RegistrationNumber,
-            SexualOrientation = clientDto.SexualOrientation
+            SexualOrientation = clientDto.SexualOrientation,
+            Sex = clientDto.Sex
         };
 }

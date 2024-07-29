@@ -69,8 +69,8 @@ public static class SqlFilterHelper
         booleanFilter.Option switch
         {
             BooleanFilterOption.None => string.Empty,
-            BooleanFilterOption.Equals => $"AND {propertyName} = {booleanFilter.Value}",
-            BooleanFilterOption.NotEquals => $"AND {propertyName} != {booleanFilter.Value}",
+            BooleanFilterOption.Equals => $"AND {propertyName} = {booleanFilter.Value} ",
+            BooleanFilterOption.NotEquals => $"AND {propertyName} != {booleanFilter.Value} ",
             BooleanFilterOption.Clear => string.Empty,
             _ => throw new ArgumentOutOfRangeException()
         };

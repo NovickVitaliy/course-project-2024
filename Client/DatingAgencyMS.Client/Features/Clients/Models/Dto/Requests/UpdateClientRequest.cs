@@ -14,6 +14,9 @@ public class UpdateClientRequest
     [Required(ErrorMessage = "Гендер не може бути відстунім")]
     public string Gender { get; set; }
     
+    [Required(ErrorMessage = "Стать не може бути відсутня")]
+    public string Sex { get; set; }
+    
     [Required(ErrorMessage = "Сексуальна орієнтація не може бути відсутньою")]
     public string SexualOrientation { get; set; }
     
@@ -38,6 +41,8 @@ public class UpdateClientRequest
     [Required(ErrorMessage = "Опис не може бути відсутнім")]
     [MaxLength(255)]
     public string Description { get; set; } = "";
+
+    public bool HasDeclinedService { get; set; } = false;
     
     public string RequestedBy { get; set; }
 };

@@ -10,18 +10,20 @@ CREATE TABLE IF NOT EXISTS Keys
 
 CREATE TABLE IF NOT EXISTS Clients
 (
-    id                  SERIAL,
-    first_name          VARCHAR(50)  NOT NULL,
-    last_name           VARCHAR(50)  NOT NULL,
-    gender              VARCHAR(50)  NOT NULL,
-    sexual_orientation  VARCHAR(50)  NOT NULL,
-    registration_number VARCHAR(50)  NOT NULL,
-    registered_on       DATE         NOT NULL,
-    age                 SMALLINT     NOT NULL,
-    height              SMALLINT     NOT NULL,
-    weight              SMALLINT     NOT NULL,
-    zodiac_sign         VARCHAR(50)  NOT NULL,
-    description         VARCHAR(255) NOT NULL,
+    id                   SERIAL,
+    first_name           VARCHAR(50)  NOT NULL,
+    last_name            VARCHAR(50)  NOT NULL,
+    gender               VARCHAR(50)  NOT NULL,
+    sex                  VARCHAR(50)  NOT NULL,
+    sexual_orientation   VARCHAR(50)  NOT NULL,
+    registration_number  VARCHAR(50)  NOT NULL,
+    registered_on        DATE         NOT NULL,
+    age                  SMALLINT     NOT NULL,
+    height               SMALLINT     NOT NULL,
+    weight               SMALLINT     NOT NULL,
+    zodiac_sign          VARCHAR(50)  NOT NULL,
+    description          VARCHAR(255) NOT NULL,
+    has_declined_service BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id),
     CONSTRAINT clients_age_check CHECK (age > 0),
     CONSTRAINT clients_height_check CHECK (height > 0),
@@ -32,6 +34,7 @@ CREATE TABLE IF NOT EXISTS PartnerRequirements
 (
     requirement_id SERIAL,
     gender         VARCHAR(50),
+    sex            VARCHAR(50),
     min_age        SMALLINT,
     max_age        SMALLINT,
     min_height     SMALLINT,
@@ -76,7 +79,7 @@ CREATE TABLE IF NOT EXISTS FinishedMeetings
     result               VARCHAR(50) NOT NULL,
     PRIMARY KEY (meeting_id),
     FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE 
+    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS CoupleArchive

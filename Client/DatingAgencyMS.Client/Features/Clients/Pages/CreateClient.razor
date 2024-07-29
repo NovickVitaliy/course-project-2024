@@ -39,6 +39,20 @@
             </div>
 
             <div class="mb-3">
+                <label for="sex" class="form-label">Стать</label>
+                <InputSelect id="sex" @bind-Value="_request.Sex" class="form-control">
+                    <option selected disabled>Виберіть стать</option>
+                    @foreach (var sex in ClientsConstants.Sexes)
+                    {
+                        <option value="@sex">@sex</option>
+                    }
+                </InputSelect>
+                <div class="validation-message">
+                    <ValidationMessage For="() => _request.Gender"></ValidationMessage>
+                </div>
+            </div>
+
+            <div class="mb-3">
                 <label for="sexualOrientation" class="form-label">Сексуальна орієнтація</label>
                 <InputSelect id="sexualOrientation" @bind-Value="_request.SexualOrientation" class="form-control">
                     <option selected disabled>Виберіть орієнтацію</option>

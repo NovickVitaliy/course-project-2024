@@ -38,6 +38,7 @@ public class PostgresClientsService : IClientsService
                 var firstName = reader.GetString("first_name");
                 var lastName = reader.GetString("last_name");
                 var gender = reader.GetString("gender");
+                var sex = reader.GetString("sex");
                 var sexualOrientation = reader.GetString("sexual_orientation");
                 var registrationNumber = reader.GetString("registration_number");
                 var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
@@ -46,10 +47,11 @@ public class PostgresClientsService : IClientsService
                 var weight = reader.GetInt32("weight");
                 var zodiacSign = ZodiacSignHelper.FromUkrainianToZodiacSign(reader.GetString("zodiac_sign"));
                 var description = reader.GetString("description");
+                var hasDeclinedService = reader.GetBoolean("has_declined_service");
 
-                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sexualOrientation,
+                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation,
                     registrationNumber, registeredOn,
-                    age, height, weight, zodiacSign, description));
+                    age, height, weight, zodiacSign, description, hasDeclinedService));
             }
 
             await reader.CloseAsync();
@@ -75,6 +77,7 @@ public class PostgresClientsService : IClientsService
         var firstNameCondition = request.FirstNameFilter.BuildConditionForString("first_name");
         var lastNameCondition = request.LastNameFilter.BuildConditionForString("last_name");
         var genderCondition = request.GenderFilter.BuildConditionForString("gender");
+        var sexCondition = request.SexFilter.BuildConditionForString("sex");
         var sexualOrientationCondition = request.SexualOrientationFilter.BuildConditionForString("sexual_orientation");
         var registrationNumberCondition =
             request.RegistrationNumberFilter.BuildConditionForString("registration_number");
@@ -84,19 +87,21 @@ public class PostgresClientsService : IClientsService
         var weightCondition = request.WeightFilter.BuildConditionForInteger("weight");
         var zodiacSignCondition = request.ZodiacSignFilter.BuildConditionForString("zodiac_sign");
         var descriptionFilter = request.DescriptionFilter.BuildConditionForString("description");
+        var hasDeclinedServiceFilter =
+            request.HasDeclinedServiceFilter.BuildConditionForBoolean("has_declined_service");
         var sortingString = request.SortingInfo.BuildSortingString();
 
         var skipItems = ((request.PaginationInfo.PageNumber - 1) * request.PaginationInfo.PageSize);
         var pagination = $"OFFSET {skipItems} ROWS FETCH NEXT {request.PaginationInfo.PageSize} ROWS ONLY";
 
         return (string.Concat(selectFrom, initialCondition, idCondition, firstNameCondition, lastNameCondition,
-                genderCondition, sexualOrientationCondition, registrationNumberCondition, registeredOnCondition,
+                genderCondition, sexCondition, sexualOrientationCondition, registrationNumberCondition, registeredOnCondition,
                 ageCondition, heightCondition,
-                weightCondition, zodiacSignCondition, descriptionFilter, sortingString, pagination),
-            string.Concat(initialCondition, idCondition, firstNameCondition, lastNameCondition, genderCondition,
+                weightCondition, zodiacSignCondition, descriptionFilter, hasDeclinedServiceFilter, sortingString, pagination),
+            string.Concat(initialCondition, idCondition, firstNameCondition, lastNameCondition, genderCondition, sexCondition,
                 sexualOrientationCondition, registrationNumberCondition, registeredOnCondition, ageCondition,
                 heightCondition,
-                weightCondition, zodiacSignCondition, descriptionFilter));
+                weightCondition, zodiacSignCondition, descriptionFilter, hasDeclinedServiceFilter));
     }
 
     public async Task<ServiceResult<CreateClientResponse>> CreateClient(CreateClientRequest request)
@@ -107,11 +112,12 @@ public class PostgresClientsService : IClientsService
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
             cmd.CommandText =
-                "INSERT INTO clients (first_name, last_name, gender, sexual_orientation, registration_number, registered_on, age, height, weight, zodiac_sign, description) " +
-                "VALUES (@firstName, @lastName, @gender, @sexualOrientation, @registrationNumber, @registeredOn, @age, @height, @weight, @zodiacSign, @description)";
+                "INSERT INTO clients (first_name, last_name, gender, sex, sexual_orientation, registration_number, registered_on, age, height, weight, zodiac_sign, description) " +
+                "VALUES (@firstName, @lastName, @gender, @sex, @sexualOrientation, @registrationNumber, @registeredOn, @age, @height, @weight, @zodiacSign, @description)";
             cmd.AddParameter("firstName", request.FirstName);
             cmd.AddParameter("lastName", request.LastName);
             cmd.AddParameter("gender", request.Gender);
+            cmd.AddParameter("sex", request.Sex);
             cmd.AddParameter("sexualOrientation", request.SexualOrientation);
             cmd.AddParameter("registrationNumber", request.RegistrationNumber);
             cmd.AddParameter("registeredOn", DateOnly.FromDateTime(DateTime.Today));
@@ -176,24 +182,28 @@ public class PostgresClientsService : IClientsService
                               "first_name = @firstName, " +
                               "last_name = @lastName, " +
                               "gender = @gender, " +
+                              "sex = @sex," +
                               "sexual_orientation = @sexualOrientation, " +
                               "registration_number = @registrationNumber, " +
                               "age = @age, " +
                               "height = @height, " +
                               "weight = @weight, " +
                               "zodiac_sign = @zodiacSign," +
-                              "description = @description " +
+                              "description = @description," +
+                              "has_declined_service = @hasDeclinedService " +
                               "WHERE id = @clientId";
             cmd.AddParameter("firstName", request.FirstName);
             cmd.AddParameter("lastName", request.LastName);
             cmd.AddParameter("gender", request.Gender);
+            cmd.AddParameter("sex", request.Sex);
             cmd.AddParameter("sexualOrientation", request.SexualOrientation);
             cmd.AddParameter("registrationNumber", request.RegistrationNumber);
             cmd.AddParameter("age", request.Age);
             cmd.AddParameter("height", request.Height);
             cmd.AddParameter("weight", request.Weight);
-            cmd.AddParameter("zodiacSign", request.ZodiacSign.ToString());
+            cmd.AddParameter("zodiacSign", ZodiacSignHelper.GetUkrainianTranslation(request.ZodiacSign));
             cmd.AddParameter("description", request.Description);
+            cmd.AddParameter("hasDeclinedService", request.HasDeclinedService);
             cmd.AddParameter("clientId", clientId);
 
             var rowsAffected = await cmd.ExecuteNonQueryAsync();
@@ -233,19 +243,21 @@ public class PostgresClientsService : IClientsService
             var firstName = reader.GetString("first_name");
             var lastName = reader.GetString("last_name");
             var gender = reader.GetString("gender");
+            var sex = reader.GetString("sex");
             var sexualOrientation = reader.GetString("sexual_orientation");
             var registrationNumber = reader.GetString("registration_number");
             var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
             var age = reader.GetInt32("age");
             var height = reader.GetInt32("height");
             var weight = reader.GetInt32("weight");
-            var zodiacSign = Enum.Parse<ZodiacSign>(reader.GetString("zodiac_sign"), true);
+            var zodiacSign = ZodiacSignHelper.FromUkrainianToZodiacSign(reader.GetString("zodiac_sign"));
             var description = reader.GetString("description");
+            var hasDeclinedService = reader.GetBoolean("has_declined_service");
             await reader.CloseAsync();
             await transaction.CommitAsync();
 
-            var clientDto = new ClientDto(clientId, firstName, lastName, gender, sexualOrientation, registrationNumber,
-                registeredOn, age, height, weight, zodiacSign, description);
+            var clientDto = new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation, registrationNumber,
+                registeredOn, age, height, weight, zodiacSign, description, hasDeclinedService);
             return ServiceResult<GetClientResponse>.Ok(new GetClientResponse(clientDto));
         }
         catch (Exception e)

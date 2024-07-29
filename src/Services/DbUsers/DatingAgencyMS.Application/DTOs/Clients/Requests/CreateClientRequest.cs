@@ -7,6 +7,7 @@ public record CreateClientRequest(
     string FirstName,
     string LastName,
     string Gender,
+    string Sex,
     string SexualOrientation,
     string RegistrationNumber,
     int Age,

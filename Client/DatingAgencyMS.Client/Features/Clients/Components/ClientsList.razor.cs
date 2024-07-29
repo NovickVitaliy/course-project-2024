@@ -49,6 +49,7 @@ public partial class ClientsList : ComponentBase
         var firstNameFilter = request.Filters.GetStringFilter("FirstName");
         var lastNameFilter = request.Filters.GetStringFilter("LastName");
         var genderFilter = request.Filters.GetStringFilter("Gender");
+        var sexFilter = request.Filters.GetStringFilter("Sex");
         var sexualOrientationFilter = request.Filters.GetStringFilter("SexualOrientation");
         var registrationNumberFilter = request.Filters.GetStringFilter("RegistrationNumber");
         var registeredOnFilter = request.Filters.GetDateOnlyFilter("RegisteredOn");
@@ -57,6 +58,7 @@ public partial class ClientsList : ComponentBase
         var weightFilter = request.Filters.GetIntegerFilter("Weight");
         var zodiasSignFilter = request.Filters.GetStringFilter("ZodiacSign");
         var description = request.Filters.GetStringFilter("Description");
+        var hasDeclinedServiceFilter = request.Filters.GetBooleanFilter("HasDeclinedService");
         var sorting = request.Sorting.FirstOrDefault();
         SortingInfo? sortingInfo = null;
         if (sorting is not null)
@@ -67,10 +69,10 @@ public partial class ClientsList : ComponentBase
         }
 
         var paginationInfo = new PaginationInfo(request.PageNumber, request.PageSize);
-        return new GetClientsRequest(idFilter, firstNameFilter, lastNameFilter, genderFilter, sexualOrientationFilter,
+        return new GetClientsRequest(idFilter, firstNameFilter, lastNameFilter, genderFilter, sexFilter, sexualOrientationFilter,
             registrationNumberFilter,
             registeredOnFilter,
-            ageFilter, heightFilter, weightFilter, zodiasSignFilter, description, sortingInfo, paginationInfo, LoggedInUser.Login);
+            ageFilter, heightFilter, weightFilter, zodiasSignFilter, description, hasDeclinedServiceFilter, sortingInfo, paginationInfo, LoggedInUser.Login);
     }
 
     private async Task DeleteClient(int clientId)

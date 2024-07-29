@@ -6,6 +6,7 @@ public record UpdateClientRequest(
     string FirstName,
     string LastName,
     string Gender,
+    string Sex,
     string SexualOrientation,
     string RegistrationNumber,
     int Age,
@@ -13,4 +14,5 @@ public record UpdateClientRequest(
     int Weight,
     ZodiacSign ZodiacSign,
     string Description,
+    bool HasDeclinedService,
     string RequestedBy);

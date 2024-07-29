@@ -24,6 +24,9 @@
     <GridColumn TItem="ClientDto" HeaderText="Гендер" PropertyName="Gender" SortString="gender" SortKeySelector="c => c.Gender" FilterTextboxWidth="80">
         @context.Gender
     </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Стать" PropertyName="Sex" SortString="sex" SortKeySelector="c => c.Sex" FilterTextboxWidth="80">
+        @context.Sex
+    </GridColumn>
     <GridColumn TItem="ClientDto" HeaderText="Сексуальна орієнтація" PropertyName="SexualOrientation" SortString="sexual_orientation" SortKeySelector="c => c.SexualOrientation" FilterTextboxWidth="80">
         @context.SexualOrientation
     </GridColumn>
@@ -47,6 +50,9 @@
     </GridColumn>
     <GridColumn TItem="ClientDto" HeaderText="Опис" PropertyName="Description" SortString="description" SortKeySelector="c => c.Description" FilterTextboxWidth="80">
         @context.Description
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Відмова від сервісу" PropertyName="HasDeclinedService" SortString="has_declined_service" SortKeySelector="c => c.HasDeclinedService" FilterTextboxWidth="40">
+        @context.HasDeclinedService
     </GridColumn>
     @if (LoggedInUser.IsAllowedToUpdateAndDeleteEntities())
     {

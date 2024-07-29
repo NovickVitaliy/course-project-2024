@@ -7,6 +7,7 @@ public record ClientDto(
     string FirstName,
     string LastName,
     string Gender,
+    string Sex,
     string SexualOrientation,
     string RegistrationNumber,
     DateOnly RegisteredOn,
@@ -14,4 +15,5 @@ public record ClientDto(
     int Height,
     int Weight,
     ZodiacSign ZodiacSign,
-    string Description);
+    string Description,
+    bool HasDeclinedService);

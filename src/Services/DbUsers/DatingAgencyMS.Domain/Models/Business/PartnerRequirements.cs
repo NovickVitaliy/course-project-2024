@@ -4,6 +4,7 @@ public class PartnerRequirements
 {
     public int RequirementsId { get; init; }
     public string Gender { get; set; } = string.Empty;
+    public string Sex { get; set; } = string.Empty;
     public int MinAge { get; set; }
     public int MaxAge { get; set; }
     public int MinHeight { get; set; }
