@@ -27,12 +27,12 @@ public static class SqlFilterHelper
         stringFilter.Option switch
         {
             StringFilterOption.None => string.Empty,
-            StringFilterOption.Contains => $"AND {propertyName} LIKE '%{stringFilter.Value}%' ",
-            StringFilterOption.DoesNotContain => $"AND {propertyName} NOT LIKE '%{stringFilter.Value}%' ",
-            StringFilterOption.StartsWith => $"AND {propertyName} LIKE '{stringFilter.Value}%' ",
-            StringFilterOption.EndWith => $"AND {propertyName} LIKE '%{stringFilter.Value}' ",
-            StringFilterOption.Equals => $"AND {propertyName} = '{stringFilter.Value}' ",
-            StringFilterOption.NotEquals => $"AND {propertyName} != '{stringFilter.Value}' ",
+            StringFilterOption.Contains => $"AND LOWER({propertyName}) LIKE LOWER('%{stringFilter.Value}%') ",
+            StringFilterOption.DoesNotContain => $"AND LOWER({propertyName}) NOT LIKE LOWER('%{stringFilter.Value}%') ",
+            StringFilterOption.StartsWith => $"AND LOWER({propertyName}) LIKE LOWER('{stringFilter.Value}%') ",
+            StringFilterOption.EndWith => $"AND LOWER({propertyName}) LIKE LOWER('%{stringFilter.Value}') ",
+            StringFilterOption.Equals => $"AND LOWER({propertyName}) = LOWER('{stringFilter.Value}') ",
+            StringFilterOption.NotEquals => $"AND LOWER({propertyName}) != LOWER('{stringFilter.Value}') ",
             StringFilterOption.Clear => string.Empty,
             _ => throw new ArgumentOutOfRangeException()
         };

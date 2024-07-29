@@ -44,7 +44,7 @@ public class PostgresClientsService : IClientsService
                 var age = reader.GetInt32("age");
                 var height = reader.GetInt32("height");
                 var weight = reader.GetInt32("weight");
-                var zodiacSign = Enum.Parse<ZodiacSign>(reader.GetString("zodiac_sign"), true);
+                var zodiacSign = ZodiacSignHelper.FromUkrainianToZodiacSign(reader.GetString("zodiac_sign"));
                 var description = reader.GetString("description");
 
                 clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sexualOrientation,
