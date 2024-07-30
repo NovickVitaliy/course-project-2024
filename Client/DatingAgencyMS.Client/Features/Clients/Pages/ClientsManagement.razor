@@ -6,6 +6,22 @@
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @rendermode @(new InteractiveServerRenderMode(false))
 <ConfirmDialog @ref="_dialog"></ConfirmDialog>
+
+<Modal @ref="_byYearQuartersModal" Title="Клієнти за кварталами року">
+    <BodyTemplate>
+        <p>Вкажіть рік, за кварталами якого ви бажаєте побачити клієнтів</p>
+        <input class="form-control" type="number" min="2000" @bind-value="_yearForClientsByQuarters">
+        @if (!string.IsNullOrEmpty(_yearForClientByQuartersErrorMessage))
+        {
+            <p class="validation-message">@_yearForClientByQuartersErrorMessage</p>
+        }
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Закрити</Button>
+        <Button Color="ButtonColor.Primary" @onclick="OnModalSuccessClick">Показати</Button>
+    </FooterTemplate>
+</Modal>
+
 <h3>Керування клієнтами</h3>
 <div class="d-flex w-100 mb-3 gap-1">
     @if (UserState.Value.User!.IsAllowedToCreateEntities())
@@ -13,5 +29,6 @@
         <a class="btn btn-primary" href="/tables/clients/create">Створити клієнта</a>
     }
     <button class="btn btn-secondary" @onclick="CalculateNumberWhoDeclinedService">К-сть клієнтів, що відмовились від послуг</button>
+    <button class="btn btn-secondary" @onclick="OnShowModalClick">Клієнти за кварталами року</button>
 </div>
 <ClientsList></ClientsList>

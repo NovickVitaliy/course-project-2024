@@ -13,4 +13,5 @@ public interface IClientsService
     Task<ServiceResult<bool>> UpdateClient(int clientId, UpdateClientRequest request);
     Task<ServiceResult<GetClientResponse>> GetClientById(GetClientRequest getClientRequest);
     Task<ServiceResult<long>> GetCountOfClientsWhoDeclinedService(string requestedBy);
+    Task<ServiceResult<GetClientsResponse>> GetClientsByYearQuarter(GetClientsByYearQuarterRequest request);
 }

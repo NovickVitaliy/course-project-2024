@@ -14,6 +14,7 @@ namespace DatingAgencyMS.Infrastructure.Services;
 public class PostgresClientsService : IClientsService
 {
     private readonly IDbManager _dbManager;
+    static SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1,1);
 
     public PostgresClientsService(IDbManager dbManager)
     {
@@ -95,10 +96,13 @@ public class PostgresClientsService : IClientsService
         var pagination = $"OFFSET {skipItems} ROWS FETCH NEXT {request.PaginationInfo.PageSize} ROWS ONLY";
 
         return (string.Concat(selectFrom, initialCondition, idCondition, firstNameCondition, lastNameCondition,
-                genderCondition, sexCondition, sexualOrientationCondition, registrationNumberCondition, registeredOnCondition,
+                genderCondition, sexCondition, sexualOrientationCondition, registrationNumberCondition,
+                registeredOnCondition,
                 ageCondition, heightCondition,
-                weightCondition, zodiacSignCondition, descriptionFilter, hasDeclinedServiceFilter, sortingString, pagination),
-            string.Concat(initialCondition, idCondition, firstNameCondition, lastNameCondition, genderCondition, sexCondition,
+                weightCondition, zodiacSignCondition, descriptionFilter, hasDeclinedServiceFilter, sortingString,
+                pagination),
+            string.Concat(initialCondition, idCondition, firstNameCondition, lastNameCondition, genderCondition,
+                sexCondition,
                 sexualOrientationCondition, registrationNumberCondition, registeredOnCondition, ageCondition,
                 heightCondition,
                 weightCondition, zodiacSignCondition, descriptionFilter, hasDeclinedServiceFilter));
@@ -238,7 +242,7 @@ public class PostgresClientsService : IClientsService
                 await reader.CloseAsync();
                 return ServiceResult<GetClientResponse>.NotFound("Клієнт", getClientRequest.ClientId);
             }
-            
+
             var clientId = getClientRequest.ClientId;
             var firstName = reader.GetString("first_name");
             var lastName = reader.GetString("last_name");
@@ -256,7 +260,8 @@ public class PostgresClientsService : IClientsService
             await reader.CloseAsync();
             await transaction.CommitAsync();
 
-            var clientDto = new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation, registrationNumber,
+            var clientDto = new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation,
+                registrationNumber,
                 registeredOn, age, height, weight, zodiacSign, description, hasDeclinedService);
             return ServiceResult<GetClientResponse>.Ok(new GetClientResponse(clientDto));
         }
@@ -275,19 +280,94 @@ public class PostgresClientsService : IClientsService
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
             cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE has_declined_service = TRUE";
-            var count = (long?) await cmd.ExecuteScalarAsync();
+            var count = (long?)await cmd.ExecuteScalarAsync();
             await transaction.CommitAsync();
             if (!count.HasValue)
             {
                 return ServiceResult<long>.BadRequest("Щось пішло не так");
             }
-            
+
             return ServiceResult<long>.Ok(count.Value);
         }
         catch (Exception e)
         {
             await transaction.RollbackAsync();
             return ServiceResult<long>.BadRequest(e.Message);
+        }
+    }
+
+    public async Task<ServiceResult<GetClientsResponse>> GetClientsByYearQuarter(GetClientsByYearQuarterRequest request)
+    {
+        await _semaphoreSlim.WaitAsync();
+        var connection = await GetConnection(request.RequestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            var lengthOfQuarterInMonths = 3;
+            List<ClientDto> clientDtos = [];
+
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+
+            var startMonthOfQuarter = request.Quarter * 3 - 2;
+            var endMonthOfQuarter = request.Quarter * 3;
+            var skip = (request.PaginationInfo.PageNumber - 1) * request.PaginationInfo.PageSize;
+            var take = request.PaginationInfo.PageSize;
+            cmd.CommandText = "SELECT * FROM clients " +
+                              "WHERE EXTRACT(YEAR FROM registered_on) = @year " +
+                              "AND EXTRACT(MONTH FROM registered_on) BETWEEN @start AND @end " +
+                              "OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY ";
+
+            cmd.AddParameter("year", request.Year);
+            cmd.AddParameter("start", startMonthOfQuarter);
+            cmd.AddParameter("end", endMonthOfQuarter);
+            cmd.AddParameter("skip", skip);
+            cmd.AddParameter("take", take);
+            var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var clientId = reader.GetInt32("id");
+                var firstName = reader.GetString("first_name");
+                var lastName = reader.GetString("last_name");
+                var gender = reader.GetString("gender");
+                var sex = reader.GetString("sex");
+                var sexualOrientation = reader.GetString("sexual_orientation");
+                var registrationNumber = reader.GetString("registration_number");
+                var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
+                var age = reader.GetInt32("age");
+                var height = reader.GetInt32("height");
+                var weight = reader.GetInt32("weight");
+                var zodiacSign = ZodiacSignHelper.FromUkrainianToZodiacSign(reader.GetString("zodiac_sign"));
+                var description = reader.GetString("description");
+                var hasDeclinedService = reader.GetBoolean("has_declined_service");
+
+                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation,
+                    registrationNumber, registeredOn, age, height, weight, zodiacSign, description,
+                    hasDeclinedService));
+            }
+
+            cmd.Parameters.Clear();
+            await reader.CloseAsync();
+
+            cmd.CommandText = "SELECT COUNT(*) FROM clients " +
+                              "WHERE EXTRACT(YEAR FROM registered_on) = @year " +
+                              "AND EXTRACT(MONTH FROM registered_on) BETWEEN @start AND @end";
+            cmd.AddParameter("year", request.Year);
+            cmd.AddParameter("start", startMonthOfQuarter);
+            cmd.AddParameter("end", endMonthOfQuarter);
+
+            var totalCount = (long?)await cmd.ExecuteScalarAsync();
+            await transaction.CommitAsync();
+
+            return ServiceResult<GetClientsResponse>.Ok(new GetClientsResponse(clientDtos, totalCount!.Value));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<GetClientsResponse>.BadRequest(e.Message);
+        }
+        finally
+        {
+            _semaphoreSlim.Release();
         }
     }
 

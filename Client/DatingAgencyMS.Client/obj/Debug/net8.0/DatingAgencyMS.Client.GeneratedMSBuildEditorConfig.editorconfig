@@ -71,6 +71,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcQ2xpZW50c1xDb21wb25lbnRzXENsaWVudHNMaXN0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Clients/Pages/ClientByYearQuarters.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcQ2xpZW50c1xQYWdlc1xDbGllbnRCeVllYXJRdWFydGVycy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Clients/Pages/ClientsManagement.razor]
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcQ2xpZW50c1xQYWdlc1xDbGllbnRzTWFuYWdlbWVudC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

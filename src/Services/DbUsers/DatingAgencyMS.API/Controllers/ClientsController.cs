@@ -97,4 +97,16 @@ public class ClientsController : BaseApiController
 
         return Ok(result.ResponseData);
     }
+
+    [HttpGet("by-year-quarter")]
+    public async Task<IActionResult> GetClientsByYearQuarters([FromQuery] GetClientsByYearQuarterRequest request)
+    {
+        var result = await _clientsService.GetClientsByYearQuarter(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }

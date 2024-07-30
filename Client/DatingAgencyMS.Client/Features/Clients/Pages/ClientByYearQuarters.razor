@@ -1,0 +1,220 @@
+@page "/tables/clients/by-year-quarters"
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Helpers
+@using DatingAgencyMS.Client.Models.Core
+<h1>Клієнти за кварталами <b>@Year</b> року</h1>
+
+<div class="mb-5">
+    <h2>Клієнти за I квартал</h2>
+    <Grid TItem="ClientDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="(item) => GetClientsByYearQuarter(item, 1)"
+          AllowPaging="true"
+          PageSize="10"
+          Responsive="true">
+    <GridColumn TItem="ClientDto" HeaderText="Id Клієнта">
+        @context.ClientId
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Ім'я">
+        @context.FirstName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Прізвище">
+        @context.LastName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Гендер">
+        @context.Gender
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Стать">
+        @context.Sex
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Сексуальна орієнтація">
+        @context.SexualOrientation
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Реєстраційний номер">
+        @context.RegistrationNumber
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Зареєстрований" >
+        @context.RegisteredOn
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Вік">
+        @context.Age
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Ріст">
+        @context.Height
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Вага">
+        @context.Weight
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Знак Зодіаку">
+        @ZodiacSignHelper.GetUkrainianTranslation(context.ZodiacSign)
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Опис">
+        @context.Description
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Відмова від сервісу">
+        @context.HasDeclinedService
+    </GridColumn>
+    </Grid>
+</div>
+
+
+<div class="mb-5">
+    <h2>Клієнти за II квартал</h2>
+    <Grid TItem="ClientDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="(item) => GetClientsByYearQuarter(item, 2)"
+          AllowPaging="true"
+          PageSize="10"
+          Responsive="true">
+    <GridColumn TItem="ClientDto" HeaderText="Id Клієнта">
+        @context.ClientId
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Ім'я">
+        @context.FirstName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Прізвище">
+        @context.LastName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Гендер">
+        @context.Gender
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Стать">
+        @context.Sex
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Сексуальна орієнтація">
+        @context.SexualOrientation
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Реєстраційний номер">
+        @context.RegistrationNumber
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Зареєстрований" >
+        @context.RegisteredOn
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Вік">
+        @context.Age
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Ріст">
+        @context.Height
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Вага">
+        @context.Weight
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Знак Зодіаку">
+        @ZodiacSignHelper.GetUkrainianTranslation(context.ZodiacSign)
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Опис">
+        @context.Description
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Відмова від сервісу">
+        @context.HasDeclinedService
+    </GridColumn>
+    </Grid>
+</div>
+
+
+<div class="mb-5">
+    <h2>Клієнти за III квартал</h2>
+    <Grid TItem="ClientDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="(item) => GetClientsByYearQuarter(item, 3)"
+          AllowPaging="true"
+          PageSize="10"
+          Responsive="true">
+    <GridColumn TItem="ClientDto" HeaderText="Id Клієнта">
+        @context.ClientId
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Ім'я">
+        @context.FirstName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Прізвище">
+        @context.LastName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Гендер">
+        @context.Gender
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Стать">
+        @context.Sex
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Сексуальна орієнтація">
+        @context.SexualOrientation
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Реєстраційний номер">
+        @context.RegistrationNumber
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Зареєстрований" >
+        @context.RegisteredOn
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Вік">
+        @context.Age
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Ріст">
+        @context.Height
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Вага">
+        @context.Weight
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Знак Зодіаку">
+        @ZodiacSignHelper.GetUkrainianTranslation(context.ZodiacSign)
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Опис">
+        @context.Description
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Відмова від сервісу">
+        @context.HasDeclinedService
+    </GridColumn>
+    </Grid>
+</div>
+
+
+<div class="mb-5">
+    <h2>Клієнти за IV квартал</h2>
+    <Grid TItem="ClientDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="(item) => GetClientsByYearQuarter(item, 4)"
+          AllowPaging="true"
+          PageSize="10"
+          Responsive="true">
+    <GridColumn TItem="ClientDto" HeaderText="Id Клієнта">
+        @context.ClientId
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Ім'я">
+        @context.FirstName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Прізвище">
+        @context.LastName
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Гендер">
+        @context.Gender
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Стать">
+        @context.Sex
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Сексуальна орієнтація">
+        @context.SexualOrientation
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Реєстраційний номер">
+        @context.RegistrationNumber
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Зареєстрований" >
+        @context.RegisteredOn
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Вік">
+        @context.Age
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Ріст">
+        @context.Height
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Вага">
+        @context.Weight
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Знак Зодіаку">
+        @ZodiacSignHelper.GetUkrainianTranslation(context.ZodiacSign)
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Опис">
+        @context.Description
+    </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Відмова від сервісу">
+        @context.HasDeclinedService
+    </GridColumn>
+    </Grid>
+</div>

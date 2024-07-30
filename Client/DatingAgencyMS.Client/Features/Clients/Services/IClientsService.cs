@@ -8,6 +8,7 @@ public interface IClientsService
 {
     [Get("/clients/{clientId}")]
     Task<GetClientResponse> GetClientById(int clientId, [Authorize] string token);
+    
     [Get("/clients")]
     Task<GetClientsResponse> GetClients([Query]GetClientsRequest request, [Authorize] string token);
     
@@ -22,4 +23,7 @@ public interface IClientsService
 
     [Get("/clients/declined/count")]
     Task<int> CalculateNumberWhoDeclinedService([Authorize] string token);
+
+    [Get("/clients/by-year-quarter")]
+    Task<GetClientsResponse> GetClientsByYearQuarter(GetClientsByYearQuarterRequest clientsRequest, [Authorize] string token);
 }
