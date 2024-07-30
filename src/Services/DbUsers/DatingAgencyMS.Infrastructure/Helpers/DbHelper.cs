@@ -8,7 +8,7 @@ public static class DbHelper
     {
         var param = cmd.CreateParameter();
         param.ParameterName = parameterName;
-        param.Value = value;
+        param.Value = value ?? DBNull.Value;
         cmd.Parameters.Add(param);
     }
 }

@@ -1,0 +1,17 @@
+using DatingAgencyMS.Domain.Models.Business;
+
+namespace DatingAgencyMS.Application.DTOs.PartnerRequirements.Requests;
+
+public record CreatePartnerRequirementsRequest(
+    string? Gender,
+    string? Sex,
+    int? MinAge,
+    int? MaxAge,
+    int? MinHeight,
+    int? MaxHeight,
+    int? MinWeight,
+    int? MaxWeight,
+    ZodiacSign? ZodiacSign,
+    string? City,
+    int ClientId,
+    string RequestedBy);

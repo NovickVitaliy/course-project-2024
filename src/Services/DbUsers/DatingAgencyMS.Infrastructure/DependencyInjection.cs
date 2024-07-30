@@ -40,6 +40,7 @@ public static class DependencyInjection
         
         services.AddScoped<IUserManager, PostgresUserManager>();
         services.AddScoped<IClientsService, PostgresClientsService>();
+        services.AddScoped<IPartnerRequirementsService, PostgresPartnerRequirementsService>();
 
         return services;
     }
