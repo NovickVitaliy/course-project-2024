@@ -2,6 +2,7 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.PartnerRequirements.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
@@ -34,6 +35,19 @@ public class PartnerRequirementsController : BaseApiController
     public async Task<IActionResult> GetPartnerRequirements([FromQuery] GetPartnersRequirementRequest request)
     {
         var result = await _partnerRequirementsService.GetPartnersRequirement(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
+
+    [HttpGet("{partnerRequirementId:int}")]
+    public async Task<IActionResult> GetPartnerRequirementId(int partnerRequirementId)
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var result = await _partnerRequirementsService.GetPartnerRequirementById(partnerRequirementId, requestedBy);
         if (!result.Success)
         {
             return StatusCode(result.Code, result.ToHttpErrorResponse());

@@ -8,4 +8,5 @@ public interface IPartnerRequirementsService
 {
     Task<ServiceResult<bool>> CreatePartnerRequirements(CreatePartnerRequirementsRequest request);
     Task<ServiceResult<GetPartnersRequirementResponse>> GetPartnersRequirement(GetPartnersRequirementRequest request);
+    Task<ServiceResult<GetPartnerRequirementResponse>> GetPartnerRequirementById(int id, string requestedBy);
 }

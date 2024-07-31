@@ -104,6 +104,54 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
         }
     }
 
+    public async Task<ServiceResult<GetPartnerRequirementResponse>> GetPartnerRequirementById(int id, string requestedBy)
+    {
+        var connection = await GetConnection(requestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT * FROM partnerrequirements WHERE requirement_id = @id";
+            cmd.AddParameter("id", id);
+            
+            var reader = await cmd.ExecuteReaderAsync();
+            if (!await reader.ReadAsync())
+            {
+                await reader.CloseAsync();
+                await transaction.CommitAsync();
+                return ServiceResult<GetPartnerRequirementResponse>.NotFound("Вимоги до партнера", id);
+            }
+            
+            var gender = await reader.IsDBNullAsync("gender") ? null : reader.GetString("gender");
+            var sex = await reader.IsDBNullAsync("sex") ? null : reader.GetString("sex");
+            int? minAge = await reader.IsDBNullAsync("min_age") ? null : reader.GetInt32("min_age");
+            int? maxAge = await reader.IsDBNullAsync("max_age") ? null : reader.GetInt32("max_age");
+            int? minHeight = await reader.IsDBNullAsync("min_height") ? null : reader.GetInt32("min_height");
+            int? maxHeight = await reader.IsDBNullAsync("max_height") ? null : reader.GetInt32("max_height");
+            int? minWeight = await reader.IsDBNullAsync("min_weight") ? null : reader.GetInt32("min_weight");
+            int? maxWeight = await reader.IsDBNullAsync("max_weight") ? null : reader.GetInt32("max_weight");
+            var ukrainianZodiac = await reader.IsDBNullAsync("zodiac_sign") ? null : reader.GetString("zodiac_sign");
+            ZodiacSign? zodiacSign = ukrainianZodiac is not null
+                ? ZodiacSignHelper.FromUkrainianToZodiacSign(ukrainianZodiac)
+                : null;
+            var location = await reader.IsDBNullAsync("location") ? null :reader.GetString("location");
+            var clientId = reader.GetInt32("client_id");
+            
+            var partnerRequirementsDto = new PartnerRequirementsDto(id, gender, sex, minAge, maxAge, minHeight, 
+                maxHeight, minWeight, maxWeight, zodiacSign, location, clientId);
+
+            await reader.CloseAsync();
+            await transaction.CommitAsync();
+
+            return ServiceResult<GetPartnerRequirementResponse>.Ok(new GetPartnerRequirementResponse(partnerRequirementsDto));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<GetPartnerRequirementResponse>.BadRequest(e.Message);
+        }
+    }
+
     private (string FullSqlQuery, string ConditionOnlySqlQuery) BuildSqlQueries(GetPartnersRequirementRequest request)
     {
         var selectFrom = "SELECT * FROM partnerrequirements ";
