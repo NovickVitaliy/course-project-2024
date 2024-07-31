@@ -15,6 +15,7 @@ public record GetClientsRequest(
     StringFilter GenderFilter,
     StringFilter SexFilter,
     StringFilter SexualOrientationFilter,
+    StringFilter LocationFilter,
     StringFilter RegistrationNumberFilter,
     DateOnlyFilter RegisteredOnFilter,
     IntegerFilter AgeFilter,

@@ -30,6 +30,9 @@
     <GridColumn TItem="ClientDto" HeaderText="Сексуальна орієнтація" PropertyName="SexualOrientation" SortString="sexual_orientation" SortKeySelector="c => c.SexualOrientation" FilterTextboxWidth="80">
         @context.SexualOrientation
     </GridColumn>
+    <GridColumn TItem="ClientDto" HeaderText="Місцезнаходження" PropertyName="Location" SortString="location" SortKeySelector="c => c.Location" FilterTextboxWidth="80">
+        @context.Location
+    </GridColumn>
     <GridColumn TItem="ClientDto" HeaderText="Реєстраційний номер" PropertyName="RegistrationNumber" SortString="registration_number" SortKeySelector="c => c.RegistrationNumber" FilterTextboxWidth="80">
         @context.RegistrationNumber
     </GridColumn>

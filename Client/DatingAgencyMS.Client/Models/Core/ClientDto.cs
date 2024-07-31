@@ -7,6 +7,7 @@ public record ClientDto(
     string Gender,
     string Sex,
     string SexualOrientation,
+    string Location,
     string RegistrationNumber,
     DateOnly RegisteredOn,
     int Age,

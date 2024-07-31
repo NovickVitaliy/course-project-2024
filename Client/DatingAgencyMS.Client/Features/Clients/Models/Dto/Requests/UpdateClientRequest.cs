@@ -20,6 +20,9 @@ public class UpdateClientRequest
     [Required(ErrorMessage = "Сексуальна орієнтація не може бути відсутньою")]
     public string SexualOrientation { get; set; }
     
+    [Required(ErrorMessage = "Місцезнаходження не може бути відсутнім")]
+    public string Location { get; set; }
+    
     [Required(ErrorMessage = "Реєстраційний номер не може бути відстунім")]
     public string RegistrationNumber { get; set; }
     

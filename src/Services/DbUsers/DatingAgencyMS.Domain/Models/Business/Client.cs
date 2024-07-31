@@ -8,6 +8,7 @@ public class Client
     public string Gender { get; set; } = string.Empty;
     public string Sex { get; set; } = string.Empty;
     public string SexualOrientation { get; set; } = string.Empty;
+    public string Location { get; set; }
     public string RegistrationNumber { get; set; } = string.Empty;
     public DateOnly RegisteredOn { get; set; }
     public int Age { get; set; }

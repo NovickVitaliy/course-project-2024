@@ -14,7 +14,7 @@ namespace DatingAgencyMS.Infrastructure.Services;
 public class PostgresClientsService : IClientsService
 {
     private readonly IDbManager _dbManager;
-    static SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1,1);
+    static readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1,1);
 
     public PostgresClientsService(IDbManager dbManager)
     {
@@ -41,6 +41,7 @@ public class PostgresClientsService : IClientsService
                 var gender = reader.GetString("gender");
                 var sex = reader.GetString("sex");
                 var sexualOrientation = reader.GetString("sexual_orientation");
+                var location = reader.GetString("location");
                 var registrationNumber = reader.GetString("registration_number");
                 var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
                 var age = reader.GetInt32("age");
@@ -50,7 +51,7 @@ public class PostgresClientsService : IClientsService
                 var description = reader.GetString("description");
                 var hasDeclinedService = reader.GetBoolean("has_declined_service");
 
-                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation,
+                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation, location,
                     registrationNumber, registeredOn,
                     age, height, weight, zodiacSign, description, hasDeclinedService));
             }
@@ -80,6 +81,7 @@ public class PostgresClientsService : IClientsService
         var genderCondition = request.GenderFilter.BuildConditionForString("gender");
         var sexCondition = request.SexFilter.BuildConditionForString("sex");
         var sexualOrientationCondition = request.SexualOrientationFilter.BuildConditionForString("sexual_orientation");
+        var locationCondition = request.LocationFilter.BuildConditionForString("location");
         var registrationNumberCondition =
             request.RegistrationNumberFilter.BuildConditionForString("registration_number");
         var registeredOnCondition = request.RegisteredOnFilter.BuildConditionForDateOnly("registered_on");
@@ -96,14 +98,14 @@ public class PostgresClientsService : IClientsService
         var pagination = $"OFFSET {skipItems} ROWS FETCH NEXT {request.PaginationInfo.PageSize} ROWS ONLY";
 
         return (string.Concat(selectFrom, initialCondition, idCondition, firstNameCondition, lastNameCondition,
-                genderCondition, sexCondition, sexualOrientationCondition, registrationNumberCondition,
+                genderCondition, sexCondition, sexualOrientationCondition, locationCondition, registrationNumberCondition,
                 registeredOnCondition,
                 ageCondition, heightCondition,
                 weightCondition, zodiacSignCondition, descriptionFilter, hasDeclinedServiceFilter, sortingString,
                 pagination),
             string.Concat(initialCondition, idCondition, firstNameCondition, lastNameCondition, genderCondition,
                 sexCondition,
-                sexualOrientationCondition, registrationNumberCondition, registeredOnCondition, ageCondition,
+                sexualOrientationCondition, locationCondition, registrationNumberCondition, registeredOnCondition, ageCondition,
                 heightCondition,
                 weightCondition, zodiacSignCondition, descriptionFilter, hasDeclinedServiceFilter));
     }
@@ -116,13 +118,14 @@ public class PostgresClientsService : IClientsService
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
             cmd.CommandText =
-                "INSERT INTO clients (first_name, last_name, gender, sex, sexual_orientation, registration_number, registered_on, age, height, weight, zodiac_sign, description) " +
-                "VALUES (@firstName, @lastName, @gender, @sex, @sexualOrientation, @registrationNumber, @registeredOn, @age, @height, @weight, @zodiacSign, @description)";
+                "INSERT INTO clients (first_name, last_name, gender, sex, sexual_orientation, location, registration_number, registered_on, age, height, weight, zodiac_sign, description) " +
+                "VALUES (@firstName, @lastName, @gender, @sex, @sexualOrientation, @location, @registrationNumber, @registeredOn, @age, @height, @weight, @zodiacSign, @description)";
             cmd.AddParameter("firstName", request.FirstName);
             cmd.AddParameter("lastName", request.LastName);
             cmd.AddParameter("gender", request.Gender);
             cmd.AddParameter("sex", request.Sex);
             cmd.AddParameter("sexualOrientation", request.SexualOrientation);
+            cmd.AddParameter("location", request.Location);
             cmd.AddParameter("registrationNumber", request.RegistrationNumber);
             cmd.AddParameter("registeredOn", DateOnly.FromDateTime(DateTime.Today));
             cmd.AddParameter("age", request.Age);
@@ -188,6 +191,7 @@ public class PostgresClientsService : IClientsService
                               "gender = @gender, " +
                               "sex = @sex," +
                               "sexual_orientation = @sexualOrientation, " +
+                              "location = @location," +
                               "registration_number = @registrationNumber, " +
                               "age = @age, " +
                               "height = @height, " +
@@ -201,6 +205,7 @@ public class PostgresClientsService : IClientsService
             cmd.AddParameter("gender", request.Gender);
             cmd.AddParameter("sex", request.Sex);
             cmd.AddParameter("sexualOrientation", request.SexualOrientation);
+            cmd.AddParameter("location", request.Location);
             cmd.AddParameter("registrationNumber", request.RegistrationNumber);
             cmd.AddParameter("age", request.Age);
             cmd.AddParameter("height", request.Height);
@@ -249,6 +254,7 @@ public class PostgresClientsService : IClientsService
             var gender = reader.GetString("gender");
             var sex = reader.GetString("sex");
             var sexualOrientation = reader.GetString("sexual_orientation");
+            var location = reader.GetString("location");
             var registrationNumber = reader.GetString("registration_number");
             var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
             var age = reader.GetInt32("age");
@@ -260,7 +266,7 @@ public class PostgresClientsService : IClientsService
             await reader.CloseAsync();
             await transaction.CommitAsync();
 
-            var clientDto = new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation,
+            var clientDto = new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation, location,
                 registrationNumber,
                 registeredOn, age, height, weight, zodiacSign, description, hasDeclinedService);
             return ServiceResult<GetClientResponse>.Ok(new GetClientResponse(clientDto));
@@ -331,6 +337,7 @@ public class PostgresClientsService : IClientsService
                 var gender = reader.GetString("gender");
                 var sex = reader.GetString("sex");
                 var sexualOrientation = reader.GetString("sexual_orientation");
+                var location = reader.GetString("location");
                 var registrationNumber = reader.GetString("registration_number");
                 var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
                 var age = reader.GetInt32("age");
@@ -340,7 +347,7 @@ public class PostgresClientsService : IClientsService
                 var description = reader.GetString("description");
                 var hasDeclinedService = reader.GetBoolean("has_declined_service");
 
-                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation,
+                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation, location,
                     registrationNumber, registeredOn, age, height, weight, zodiacSign, description,
                     hasDeclinedService));
             }

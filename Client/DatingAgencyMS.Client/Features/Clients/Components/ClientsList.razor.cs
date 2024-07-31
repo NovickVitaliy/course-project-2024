@@ -51,6 +51,7 @@ public partial class ClientsList : ComponentBase
         var genderFilter = request.Filters.GetStringFilter("Gender");
         var sexFilter = request.Filters.GetStringFilter("Sex");
         var sexualOrientationFilter = request.Filters.GetStringFilter("SexualOrientation");
+        var locationFilter = request.Filters.GetStringFilter("Location");
         var registrationNumberFilter = request.Filters.GetStringFilter("RegistrationNumber");
         var registeredOnFilter = request.Filters.GetDateOnlyFilter("RegisteredOn");
         var ageFilter = request.Filters.GetIntegerFilter("Age");
@@ -71,7 +72,7 @@ public partial class ClientsList : ComponentBase
 
 
         var paginationInfo = new PaginationInfo(request.PageNumber, request.PageSize);
-        return new GetClientsRequest(idFilter, firstNameFilter, lastNameFilter, genderFilter, sexFilter, sexualOrientationFilter,
+        return new GetClientsRequest(idFilter, firstNameFilter, lastNameFilter, genderFilter, sexFilter, sexualOrientationFilter, locationFilter,
             registrationNumberFilter,
             registeredOnFilter,
             ageFilter, heightFilter, weightFilter, zodiasSignFilter, description, hasDeclinedServiceFilter, sortingInfo, paginationInfo, UserState.Value.User.Login);

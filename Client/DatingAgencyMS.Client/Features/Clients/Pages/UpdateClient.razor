@@ -85,6 +85,14 @@
             </div>
 
             <div class="mb-3">
+                <label for="location" class="form-label">Місцезнаходження</label>
+                <InputText id="location" @bind-Value="_request.Location" class="form-control"></InputText>
+                <div class="validation-message">
+                    <ValidationMessage For="() => _request.Location"></ValidationMessage>
+                </div>
+            </div>
+            
+            <div class="mb-3">
                 <label for="registrationNumber" class="form-label">Реєстраційний номер</label>
                 <InputText id="registrationNumber" @bind-Value="_request.RegistrationNumber" class="form-control"></InputText>
                 <div class="validation-message">
