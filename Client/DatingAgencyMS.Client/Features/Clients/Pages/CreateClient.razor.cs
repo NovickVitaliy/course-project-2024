@@ -34,6 +34,7 @@ public partial class CreateClient : ComponentBase
     {
         try
         {
+            
             var result = await ClientsService.CreateClient(_request, UserState.Value.User!.Token);
             if (result.Success)
             {

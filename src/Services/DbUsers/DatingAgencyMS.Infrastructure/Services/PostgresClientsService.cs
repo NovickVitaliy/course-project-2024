@@ -131,7 +131,7 @@ public class PostgresClientsService : IClientsService
             cmd.AddParameter("age", request.Age);
             cmd.AddParameter("height", request.Height);
             cmd.AddParameter("weight", request.Weight);
-            cmd.AddParameter("zodiacSign", request.ZodiacSign.ToString());
+            cmd.AddParameter("zodiacSign", ZodiacSignHelper.GetUkrainianTranslation(request.ZodiacSign));
             cmd.AddParameter("description", request.Description);
 
             var rowsAffected = await cmd.ExecuteNonQueryAsync();
