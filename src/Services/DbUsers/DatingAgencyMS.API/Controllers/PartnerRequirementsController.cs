@@ -29,4 +29,16 @@ public class PartnerRequirementsController : BaseApiController
 
         return Created();
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPartnerRequirements([FromQuery] GetPartnersRequirementRequest request)
+    {
+        var result = await _partnerRequirementsService.GetPartnersRequirement(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }

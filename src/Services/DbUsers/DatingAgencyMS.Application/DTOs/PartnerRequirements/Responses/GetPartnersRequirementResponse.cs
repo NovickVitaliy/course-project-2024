@@ -1,0 +1,3 @@
+namespace DatingAgencyMS.Application.DTOs.PartnerRequirements.Responses;
+
+public record GetPartnersRequirementResponse(IReadOnlyList<PartnerRequirementsDto> PartnerRequirements, long Count);

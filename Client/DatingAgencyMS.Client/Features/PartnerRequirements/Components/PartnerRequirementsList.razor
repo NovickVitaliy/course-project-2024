@@ -1,0 +1,52 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.PartnerRequirements.Models.Dto
+@using DatingAgencyMS.Client.Helpers
+@using DatingAgencyMS.Client.Models.Core
+@using DatingAgencyMS.Client.Store.UserUseCase
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+<Grid TItem="PartnerRequirementsDto"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="PartnerRequirementsDataProvider"
+      AllowPaging="true"
+      AllowSorting="true"
+      AllowFiltering="true"
+      PageSize="10"
+      Responsive="true">
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Id" PropertyName="Id" SortString="requirement_id" SortKeySelector="c => c.Id" FilterTextboxWidth="80">
+        @context.Id
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Гендер" PropertyName="Gender" SortString="gender" SortKeySelector="c => c.Gender" FilterTextboxWidth="80">
+        @context.Gender
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Стать" PropertyName="Sex" SortString="sex" SortKeySelector="c => c.Sex" FilterTextboxWidth="80">
+        @context.Sex
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Мін. Вік" PropertyName="MinAge" SortString="min_age" SortKeySelector="c => c.MinAge" FilterTextboxWidth="60">
+        @context.MinAge
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Макс. Вік" PropertyName="MaxAge" SortString="max_age" SortKeySelector="c => c.MaxAge" FilterTextboxWidth="60">
+        @context.MaxAge
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Мін. Ріст" PropertyName="MinHeight" SortString="min_height" SortKeySelector="c => c.MinHeight" FilterTextboxWidth="60">
+        @context.MinHeight
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Макс. Ріст" PropertyName="MaxHeight" SortString="max_height" SortKeySelector="c => c.MaxHeight" FilterTextboxWidth="60">
+        @context.MaxHeight
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Мін. Вага" PropertyName="MinWeight" SortString="min_weight" SortKeySelector="c => c.MinWeight" FilterTextboxWidth="60">
+        @context.MinWeight
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Макс. Вага" PropertyName="MaxWeight" SortString="max_weight" SortKeySelector="c => c.MaxWeight" FilterTextboxWidth="60">
+        @context.MaxWeight
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Знак Зодіаку" PropertyName="ZodiacSign" SortString="zodiac_sign" SortKeySelector="c => c.ZodiacSign" FilterTextboxWidth="60">
+        @(context.ZodiacSign is not null ? ZodiacSignHelper.GetUkrainianTranslation(context.ZodiacSign.Value) : "")
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Місцезнаходження" PropertyName="Location" SortString="location" SortKeySelector="c => c.Location" FilterTextboxWidth="60">
+        @context.Location
+    </GridColumn>
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Id Клієнта" PropertyName="ClientId" SortString="client_id" SortKeySelector="c => c.Location" FilterTextboxWidth="60">
+        @context.ClientId
+    </GridColumn>
+</Grid>

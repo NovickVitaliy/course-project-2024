@@ -12,8 +12,4 @@
       <ProjectReference Include="..\DatingAgencyMS.Domain\DatingAgencyMS.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="DTOs\PartnerRequirements\Responses\" />
-    </ItemGroup>
-
 </Project>
