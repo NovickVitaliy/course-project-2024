@@ -1,0 +1,3 @@
+namespace DatingAgencyMS.Client.Features.PartnerRequirements.Models.Dto.Responses;
+
+public record GetPartnerRequirementByIdResponse(PartnerRequirementsDto PartnerRequirements);

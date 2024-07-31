@@ -49,4 +49,17 @@
     <GridColumn TItem="PartnerRequirementsDto" HeaderText="Id Клієнта" PropertyName="ClientId" SortString="client_id" SortKeySelector="c => c.Location" FilterTextboxWidth="60">
         @context.ClientId
     </GridColumn>
+    @if (UserState.Value.User.IsAllowedToUpdateAndDeleteEntities())
+    {
+    <GridColumn TItem="PartnerRequirementsDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+        <HeaderContent>
+            Опції
+        </HeaderContent>
+        <ChildContent>
+            <div class="d-flex gap-1">
+                <a href="/tables/partner-requirements/@context.Id/update" class="btn btn-success">Оновити</a>
+            </div>
+        </ChildContent>
+    </GridColumn>
+    }
 </Grid>

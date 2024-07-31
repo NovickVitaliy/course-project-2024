@@ -13,4 +13,5 @@ public class PartnerRequirements
     public int? MaxWeight { get; set; }
     public ZodiacSign? ZodiacSign { get; set; }
     public string? Location { get; set; } = string.Empty;
+    public int ClientId { get; set; }
 }

@@ -55,4 +55,17 @@ public class PartnerRequirementsController : BaseApiController
 
         return Ok(result.ResponseData);
     }
+
+    [HttpPut("{partnerRequirementId:int}")]
+    public async Task<IActionResult> UpdatePartnerRequirement([FromRoute] int partnerRequirementId,
+        [FromBody] UpdatePartnerRequirementRequest request)
+    {
+        var result = await _partnerRequirementsService.UpdatePartnerRequirement(partnerRequirementId, request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return NoContent();
+    }
 }

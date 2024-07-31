@@ -152,6 +152,53 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
         }
     }
 
+    public async Task<ServiceResult<bool>> UpdatePartnerRequirement(int partnerRequirementId, UpdatePartnerRequirementRequest request)
+    {
+        var connection = await GetConnection(request.RequestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "UPDATE partnerrequirements SET " +
+                              "gender = @gender, " +
+                              "sex = @sex, " +
+                              "min_age = @minAge, " +
+                              "max_age = @maxAge, " +
+                              "min_height = @minHeight, " +
+                              "max_height = @maxHeight, " +
+                              "min_weight = @minWeight, " +
+                              "max_weight = @maxWeight, " +
+                              "zodiac_sign = @zodiacSign, " +
+                              "location = @location, " +
+                              "client_id = @clientId " +
+                              "WHERE requirement_id = @requirementId";
+            cmd.AddParameter("gender", request.Gender)
+                .AddParameter("sex", request.Sex)
+                .AddParameter("minAge", request.MinAge)
+                .AddParameter("maxAge", request.MaxAge)
+                .AddParameter("minHeight", request.MinHeight)
+                .AddParameter("maxHeight", request.MaxHeight)
+                .AddParameter("minWeight", request.MinWeight)
+                .AddParameter("maxWeight", request.MaxWeight)
+                .AddParameter("zodiacSign", request.ZodiacSign is not null 
+                    ? ZodiacSignHelper.GetUkrainianTranslation(request.ZodiacSign.Value) 
+                    : null)
+                .AddParameter("location", request.City)
+                .AddParameter("clientId", request.ClientId)
+                .AddParameter("requirementId", partnerRequirementId);
+
+            await cmd.ExecuteNonQueryAsync();
+
+            await transaction.CommitAsync();
+            return ServiceResult<bool>.Ok(true);
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
     private (string FullSqlQuery, string ConditionOnlySqlQuery) BuildSqlQueries(GetPartnersRequirementRequest request)
     {
         var selectFrom = "SELECT * FROM partnerrequirements ";
