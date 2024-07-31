@@ -1,11 +1,10 @@
 @using BlazorBootstrap
 @using DatingAgencyMS.Client.Features.PartnerRequirements.Models.Dto
 @using DatingAgencyMS.Client.Helpers
-@using DatingAgencyMS.Client.Models.Core
-@using DatingAgencyMS.Client.Store.UserUseCase
 @using Microsoft.AspNetCore.Components.Web
 @rendermode @(new InteractiveServerRenderMode(false))
-<Grid TItem="PartnerRequirementsDto"
+<ConfirmDialog @ref="_confirmDialog"></ConfirmDialog>
+<Grid @ref="_grid" TItem="PartnerRequirementsDto"
       Class="table table-hover table-bordered table-striped"
       DataProvider="PartnerRequirementsDataProvider"
       AllowPaging="true"
@@ -58,6 +57,7 @@
         <ChildContent>
             <div class="d-flex gap-1">
                 <a href="/tables/partner-requirements/@context.Id/update" class="btn btn-success">Оновити</a>
+                <button class="btn btn-danger" @onclick="() => DeletePartnerRequirements(context.Id)">Видалити</button>
             </div>
         </ChildContent>
     </GridColumn>

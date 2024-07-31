@@ -37,7 +37,7 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
             cmd.AddParameter("maxHeight", request.MaxHeight);
             cmd.AddParameter("minWeight", request.MinWeight);
             cmd.AddParameter("maxWeight", request.MaxWeight);
-            cmd.AddParameter("zodiacSign", request.ZodiacSign is null ? null : request.ZodiacSign.ToString());
+            cmd.AddParameter("zodiacSign", request.ZodiacSign is null ? null : ZodiacSignHelper.GetUkrainianTranslation(request.ZodiacSign.Value));
             cmd.AddParameter("location", request.City);
             cmd.AddParameter("clientId", request.ClientId);
 
@@ -191,6 +191,35 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
 
             await transaction.CommitAsync();
             return ServiceResult<bool>.Ok(true);
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
+    public async Task<ServiceResult<bool>> DeletePartnerRequirements(int id, string requestedBy)
+    {
+        var connection = await GetConnection(requestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "DELETE FROM partnerrequirements WHERE requirement_id = @id";
+            cmd.AddParameter("id", id);
+
+            var rowsAffected = await cmd.ExecuteNonQueryAsync();
+            if (rowsAffected == 0)
+            {
+                await cmd.DisposeAsync();
+                await transaction.CommitAsync();
+                return ServiceResult<bool>.NotFound("Вимоги до партнера", id);
+            }
+
+            await cmd.DisposeAsync();
+            await transaction.CommitAsync();
+            return ServiceResult<bool>.NoContent();
         }
         catch (Exception e)
         {

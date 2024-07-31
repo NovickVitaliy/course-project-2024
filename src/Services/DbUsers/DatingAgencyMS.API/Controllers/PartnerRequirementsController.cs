@@ -68,4 +68,17 @@ public class PartnerRequirementsController : BaseApiController
 
         return NoContent();
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeletePartnerRequirements(int id)
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var result = await _partnerRequirementsService.DeletePartnerRequirements(id, requestedBy);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return NoContent();
+    }
 }

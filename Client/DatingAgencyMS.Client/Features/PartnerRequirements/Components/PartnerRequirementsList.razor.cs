@@ -16,11 +16,11 @@ namespace DatingAgencyMS.Client.Features.PartnerRequirements.Components;
 public partial class PartnerRequirementsList : ComponentBase
 {
     [Inject] private IState<UserState> UserState { get; init; }
-
     [Inject] private IPartnerRequirementsService PartnerRequirementsService { get; init; }
-
     [Inject] private ToastService ToastService { get; init; }
-
+    private ConfirmDialog _confirmDialog = default!;
+    private Grid<PartnerRequirementsDto> _grid = default!;
+    
     private async Task<GridDataProviderResult<PartnerRequirementsDto>> PartnerRequirementsDataProvider(
         GridDataProviderRequest<PartnerRequirementsDto> request)
     {
@@ -64,5 +64,33 @@ public partial class PartnerRequirementsList : ComponentBase
             minHeightFilter,
             maxHeightFilter, minWeightFilter, maxWeightFilter, zodiacSignFilter, locationFilter,  clientIdFilter, sortingInfo,
             paginationInfo, UserState.Value.User.Login);
+    }
+
+    private async Task DeletePartnerRequirements(int id)
+    {
+        var confirmation = await _confirmDialog.ShowAsync(
+            title:$"Ви сравді хочете видалити об'єкт вимог до партнера з Id - {id}?",
+            message1:"Це видалить запис з БД. Ця дія незворотня.",
+            confirmDialogOptions: new ConfirmDialogOptions()
+            {
+                YesButtonText = "Видалити",
+                YesButtonColor = ButtonColor.Danger,
+                NoButtonText = "Назад",
+                NoButtonColor = ButtonColor.Secondary
+            });
+
+        if (confirmation)
+        {
+            try
+            {
+                await PartnerRequirementsService.DeletePartnerRequirements(id, UserState.Value.User.Token);
+                await _grid.RefreshDataAsync();
+            }
+            catch (ApiException e)
+            {
+                var apiError = e.ToApiError();
+                ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
+            }
+        }
     }
 }

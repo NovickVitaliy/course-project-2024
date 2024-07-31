@@ -19,4 +19,7 @@ public interface IPartnerRequirementsService
 
     [Put("/partner-requirements/{id}")]
     Task UpdatePartnerRequirements(int id, UpdatePartnerRequirementRequest request, [Authorize] string token);
+
+    [Delete("/partner-requirements/{id}")]
+    Task DeletePartnerRequirements(int id, [Authorize] string token);
 }
