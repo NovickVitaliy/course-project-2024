@@ -12,6 +12,7 @@
                 <label for="gender" class="form-label">Гендер</label>
                 <InputSelect id="gender" @bind-Value="_request.Gender" class="form-control">
                     <option selected disabled>Виберіть гендер</option>
+                    <option value="">Не важливо</option>
                     @foreach (var gender in ClientsConstants.Genders)
                     {
                     <option value="@gender">@gender</option>
@@ -21,6 +22,8 @@
             <div class="mb-3">
                 <label for="sex" class="form-label">Стать</label>
                 <InputSelect id="sex" @bind-Value="_request.Sex" class="form-control">
+                    <option disabled selected>Виберіть стать</option>
+                    <option value="">Не важливо</option>
                     @foreach (var sex in ClientsConstants.Sexes)
                     {
                         <option value="@sex">@sex</option>
@@ -55,6 +58,7 @@
                 <label for="zodiacSign" class="form-label">Знак Зодіаку</label>
                 <InputSelect id="zodiacSign" @bind-Value="_request.ZodiacSign" class="form-control">
                     <option selected disabled>Виберіть знак зодіаку</option>
+                    <option value="">Не важливо</option>
                     @foreach (ZodiacSign sign in Enum.GetValues(typeof(ZodiacSign)))
                     {
                         <option value="@sign">@ZodiacSignHelper.GetUkrainianTranslation(sign)</option>
