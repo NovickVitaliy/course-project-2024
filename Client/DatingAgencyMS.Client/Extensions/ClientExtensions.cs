@@ -18,6 +18,7 @@ public static class ClientExtensions
             Weight = clientDto.Weight,
             RegistrationNumber = clientDto.RegistrationNumber,
             SexualOrientation = clientDto.SexualOrientation,
-            Sex = clientDto.Sex
+            Sex = clientDto.Sex,
+            Location = clientDto.Location
         };
 }
