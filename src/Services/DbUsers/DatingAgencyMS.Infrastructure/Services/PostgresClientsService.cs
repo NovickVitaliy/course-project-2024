@@ -5,6 +5,7 @@ using DatingAgencyMS.Application.DTOs.Clients;
 using DatingAgencyMS.Application.DTOs.Clients.Requests;
 using DatingAgencyMS.Application.DTOs.Clients.Responses;
 using DatingAgencyMS.Application.Shared;
+using DatingAgencyMS.Client.Constants;
 using DatingAgencyMS.Domain.Models.Business;
 using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Helpers;
@@ -375,6 +376,75 @@ public class PostgresClientsService : IClientsService
         finally
         {
             _semaphoreSlim.Release();
+        }
+    }
+
+    public async Task<ServiceResult<GetClientsResponse>> GetRegisteredClientsByPeriod(GetClientsByTimePeriodRequest request)
+    {
+        List<ClientDto> clientDtos = [];
+        var connection = await GetConnection(request.RequestedBy);
+        await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            var sql = BuildSqlForRegisteredClientsByPeriod(request);
+
+            cmd.CommandText = sql.FullSql;
+            var reader = await cmd.ExecuteReaderAsync();
+            
+            while (await reader.ReadAsync())
+            {
+                var clientId = reader.GetInt32("id");
+                var firstName = reader.GetString("first_name");
+                var lastName = reader.GetString("last_name");
+                var gender = reader.GetString("gender");
+                var sex = reader.GetString("sex");
+                var sexualOrientation = reader.GetString("sexual_orientation");
+                var location = reader.GetString("location");
+                var registrationNumber = reader.GetString("registration_number");
+                var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
+                var age = reader.GetInt32("age");
+                var height = reader.GetInt32("height");
+                var weight = reader.GetInt32("weight");
+                var zodiacSign = ZodiacSignHelper.FromUkrainianToZodiacSign(reader.GetString("zodiac_sign"));
+                var description = reader.GetString("description");
+                var hasDeclinedService = reader.GetBoolean("has_declined_service");
+
+                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation, location,
+                    registrationNumber, registeredOn, age, height, weight, zodiacSign, description,
+                    hasDeclinedService));
+            }
+            
+            await reader.CloseAsync();
+
+            cmd.CommandText = $"SELECT COUNT(*) FROM clients {sql.ConditionSql}";
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            
+            await transaction.CommitAsync();
+            
+            return ServiceResult<GetClientsResponse>.Ok(new GetClientsResponse(clientDtos, count.Value));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<GetClientsResponse>.BadRequest(e.Message);
+        }
+    }
+
+    private static (string FullSql, string ConditionSql) BuildSqlForRegisteredClientsByPeriod(GetClientsByTimePeriodRequest request)
+    {
+        var sql = "SELECT * FROM clients WHERE registered_on >= NOW() - INTERVAL '{0}' " +
+                  "ORDER BY registered_on OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY";
+        var skip = (request.PageNumber - 1) * request.PageSize;
+        var take = request.PageSize;
+        switch (request.Period)
+        {
+            case RegisteredByPeriod.LastMonth:
+                return (string.Format(sql, "1 month", skip, take), "WHERE registered_on >= NOW() - INTERVAL '1 month'");
+            case RegisteredByPeriod.LastSemiAnnum:
+                return (string.Format(sql, "6 months", skip, take), "WHERE registered_on >= NOW() - INTERVAL '6 months'");
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 

@@ -372,6 +372,7 @@
       },
       "DatingAgencyMS.Application/1.0.0": {
         "dependencies": {
+          "Common.Business": "1.0.0",
           "Common.Filtering": "1.0.0",
           "DatingAgencyMS.Domain": "1.0.0"
         },

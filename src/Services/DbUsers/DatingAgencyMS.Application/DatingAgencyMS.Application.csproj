@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\..\Common.Business\Common.Business.csproj" />
       <ProjectReference Include="..\..\..\..\Common.Filtering\Common.Filtering.csproj" />
       <ProjectReference Include="..\DatingAgencyMS.Domain\DatingAgencyMS.Domain.csproj" />
     </ItemGroup>

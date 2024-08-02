@@ -274,6 +274,9 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+              "C:\\Users\\User\\Desktop\\projects\\course-project-2024\\Common.Business\\Common.Business.csproj": {
+                "projectPath": "C:\\Users\\User\\Desktop\\projects\\course-project-2024\\Common.Business\\Common.Business.csproj"
+              },
               "C:\\Users\\User\\Desktop\\projects\\course-project-2024\\Common.Filtering\\Common.Filtering.csproj": {
                 "projectPath": "C:\\Users\\User\\Desktop\\projects\\course-project-2024\\Common.Filtering\\Common.Filtering.csproj"
               },

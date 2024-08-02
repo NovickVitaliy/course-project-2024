@@ -2,6 +2,7 @@
 @using DatingAgencyMS.Client.Features.Clients.Components
 @using DatingAgencyMS.Client.Helpers
 @using BlazorBootstrap
+@using DatingAgencyMS.Client.Constants
 @using Microsoft.AspNetCore.Components.Web
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @rendermode @(new InteractiveServerRenderMode(false))
@@ -22,6 +23,25 @@
     </FooterTemplate>
 </Modal>
 
+<Modal @ref="_registeredByPeriodModal" Title="Зареєстровані особи минулий місяць/півроку">
+    <BodyTemplate>
+        <p>Вкажіть період, за який ви хочете побачити зареєстрованих осіб</p>
+        <select @bind="_period" id="period" class="form-select">
+            <option value="">Виберіть період</option>
+            <option value="@nameof(Constants.RegisteredByPeriod.LastMonth)">Минулий місяць</option>
+            <option value="@nameof(Constants.RegisteredByPeriod.LastSemiAnnum)">Минулі 6 місяців</option>
+        </select>
+        @if (!string.IsNullOrEmpty(_periodErrorMessage))
+        {
+        <p class="validation-message">@_periodErrorMessage</p>
+        }
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="HideRegisteredByPeriodModal">Закрити</Button>
+        <Button Color="ButtonColor.Primary" @onclick="RedirectToClientsByPeriod">Показати</Button>
+    </FooterTemplate>
+</Modal>
+
 <h3>Керування клієнтами</h3>
 <div class="d-flex w-100 mb-3 gap-1">
     @if (UserState.Value.User!.IsAllowedToCreateEntities())
@@ -30,5 +50,6 @@
     }
     <button class="btn btn-secondary" @onclick="CalculateNumberWhoDeclinedService">К-сть клієнтів, що відмовились від послуг</button>
     <button class="btn btn-secondary" @onclick="OnShowModalClick">Клієнти за кварталами року</button>
+    <button class="btn btn-secondary" @onclick="ShowRegisteredByPeriodModal">Зареєстровані особи за минулий місяць/півроку</button>
 </div>
 <ClientsList></ClientsList>

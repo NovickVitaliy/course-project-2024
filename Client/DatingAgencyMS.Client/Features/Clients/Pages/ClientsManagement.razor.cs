@@ -1,4 +1,5 @@
 using BlazorBootstrap;
+using DatingAgencyMS.Client.Constants;
 using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Features.Clients.Services;
 using DatingAgencyMS.Client.Store.UserUseCase;
@@ -15,7 +16,10 @@ public partial class ClientsManagement : FluxorComponent
     private Modal _byYearQuartersModal = default!;
     private int? _yearForClientsByQuarters;
     private string _yearForClientByQuartersErrorMessage;
-    
+
+    private Modal _registeredByPeriodModal = default!;
+    private Constants.RegisteredByPeriod? _period;
+    private string _periodErrorMessage;
     [Inject] private NavigationManager NavigationManager { get; init; }
     
     [Inject] private IState<UserState> UserState { get; init; }
@@ -65,5 +69,28 @@ public partial class ClientsManagement : FluxorComponent
         {
             _yearForClientByQuartersErrorMessage = "Рік не може бути відсутнім";
         }
+    }
+
+    private void RedirectToClientsByPeriod()
+    {
+        if (_period.HasValue)
+        {
+            _periodErrorMessage = string.Empty;
+            NavigationManager.NavigateTo($"/tables/clients/registered/{_period.ToString()}");
+        }
+        else
+        {
+            _periodErrorMessage = "Період часу не може бути відсутнім";
+        }
+    }
+
+    private async Task ShowRegisteredByPeriodModal()
+    {
+        await _registeredByPeriodModal.ShowAsync();
+    }
+
+    private async Task HideRegisteredByPeriodModal()
+    {
+        await _registeredByPeriodModal.HideAsync();
     }
 }

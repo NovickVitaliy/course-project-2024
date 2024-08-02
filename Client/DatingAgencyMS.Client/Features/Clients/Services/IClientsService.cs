@@ -26,4 +26,7 @@ public interface IClientsService
 
     [Get("/clients/by-year-quarter")]
     Task<GetClientsResponse> GetClientsByYearQuarter(GetClientsByYearQuarterRequest clientsRequest, [Authorize] string token);
+    
+    [Get("/clients/registered")]
+    Task<GetClientsResponse> GetRegisteredClientsByPeriod(GetRegisterdClientsByPeriodRequest request, [Authorize] string token);
 }

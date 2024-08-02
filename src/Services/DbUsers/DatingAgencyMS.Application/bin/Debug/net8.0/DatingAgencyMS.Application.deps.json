@@ -8,11 +8,17 @@
     ".NETCoreApp,Version=v8.0": {
       "DatingAgencyMS.Application/1.0.0": {
         "dependencies": {
+          "Common.Business": "1.0.0",
           "Common.Filtering": "1.0.0",
           "DatingAgencyMS.Domain": "1.0.0"
         },
         "runtime": {
           "DatingAgencyMS.Application.dll": {}
+        }
+      },
+      "Common.Business/1.0.0": {
+        "runtime": {
+          "Common.Business.dll": {}
         }
       },
       "Common.Filtering/1.0.0": {
@@ -29,6 +35,11 @@
   },
   "libraries": {
     "DatingAgencyMS.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Common.Business/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DatingAgencyMS.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9e2a4ef854c1bf7fa236f6590e39717fffdb4b3c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8769b47d4f251125a1ab4b4432b57d2859862dc9")]
 [assembly: System.Reflection.AssemblyProductAttribute("DatingAgencyMS.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DatingAgencyMS.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

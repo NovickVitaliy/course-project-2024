@@ -2,6 +2,7 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Clients.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Client.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
@@ -109,4 +110,17 @@ public class ClientsController : BaseApiController
 
         return Ok(result.ResponseData);
     }
+
+    [HttpGet("registered")]
+    public async Task<IActionResult> GetRegisteredClientByPeriod([FromQuery] GetClientsByTimePeriodRequest request)
+    {
+        var result = await _clientsService.GetRegisteredClientsByPeriod(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
+    
 }
