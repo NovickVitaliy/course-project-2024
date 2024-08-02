@@ -81,4 +81,17 @@ public class PartnerRequirementsController : BaseApiController
 
         return NoContent();
     }
+
+    [HttpGet("{id:int}/matches/count")]
+    public async Task<IActionResult> GetMatchesCount(int id)
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var result = await _partnerRequirementsService.GetMatchesCount(id, requestedBy);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }

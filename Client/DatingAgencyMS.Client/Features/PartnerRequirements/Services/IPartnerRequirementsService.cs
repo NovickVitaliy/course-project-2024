@@ -22,4 +22,7 @@ public interface IPartnerRequirementsService
 
     [Delete("/partner-requirements/{id}")]
     Task DeletePartnerRequirements(int id, [Authorize] string token);
+
+    [Get("/partner-requirements/{id}/matches/count")]
+    Task<long> GetMatchesCount(int id, [Authorize] string token);
 }

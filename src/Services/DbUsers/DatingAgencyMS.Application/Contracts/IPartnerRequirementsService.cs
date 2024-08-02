@@ -11,4 +11,5 @@ public interface IPartnerRequirementsService
     Task<ServiceResult<GetPartnerRequirementResponse>> GetPartnerRequirementById(int id, string requestedBy);
     Task<ServiceResult<bool>> UpdatePartnerRequirement(int partnerRequirementId, UpdatePartnerRequirementRequest request);
     Task<ServiceResult<bool>> DeletePartnerRequirements(int id, string requestedBy);
+    Task<ServiceResult<long>> GetMatchesCount(int id, string requestedBy);
 }

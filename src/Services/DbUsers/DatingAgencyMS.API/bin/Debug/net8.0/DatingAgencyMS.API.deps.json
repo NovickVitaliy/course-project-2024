@@ -360,6 +360,11 @@
           "Common.Auth.dll": {}
         }
       },
+      "Common.Business/1.0.0": {
+        "runtime": {
+          "Common.Business.dll": {}
+        }
+      },
       "Common.Filtering/1.0.0": {
         "runtime": {
           "Common.Filtering.dll": {}
@@ -382,6 +387,7 @@
       "DatingAgencyMS.Infrastructure/1.0.0": {
         "dependencies": {
           "Common.Auth": "1.0.0",
+          "Common.Business": "1.0.0",
           "DatingAgencyMS.Application": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.6",
           "Microsoft.Extensions.Options": "8.0.2",
@@ -705,6 +711,11 @@
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
     "Common.Auth/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Common.Business/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -58,6 +58,7 @@
             <div class="d-flex gap-1">
                 <a href="/tables/partner-requirements/@context.Id/update" class="btn btn-success">Оновити</a>
                 <button class="btn btn-danger" @onclick="() => DeletePartnerRequirements(context.Id)">Видалити</button>
+                <button class="btn btn-danger" @onclick="() => GetMatchesCount(context)">Кількість партнерів, за вимогами</button>
             </div>
         </ChildContent>
     </GridColumn>

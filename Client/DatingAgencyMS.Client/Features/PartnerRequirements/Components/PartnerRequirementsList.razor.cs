@@ -93,4 +93,26 @@ public partial class PartnerRequirementsList : ComponentBase
             }
         }
     }
+
+    private async Task GetMatchesCount(PartnerRequirementsDto partnerRequirementsDto)
+    {
+        try
+        {
+            var count = await PartnerRequirementsService.GetMatchesCount(partnerRequirementsDto.Id, UserState.Value.User.Token);
+            await _confirmDialog.ShowAsync("Кількість партнерів за вимогами", $"Кількість партнерів що підходять за вимоги для " +
+                                                                       $"клієнта з Id {partnerRequirementsDto.ClientId} - {count} людей",
+                new ConfirmDialogOptions
+                {
+                    IsVerticallyCentered = true,
+                    YesButtonText = "OK",
+                    NoButtonColor = ButtonColor.None,
+                    NoButtonText = string.Empty
+                });
+        }
+        catch (ApiException e)
+        {
+            var apiError = e.ToApiError();
+            ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
+        }
+    }
 }
