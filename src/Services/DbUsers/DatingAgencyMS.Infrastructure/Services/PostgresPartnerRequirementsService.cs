@@ -284,7 +284,8 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
     private async Task BuildQueryForMatches(DbCommand cmd, PartnerRequirements partnerRequirements, string sexualOrientation)
     {
         var sb = new StringBuilder();
-        sb.Append("SELECT COUNT(*) FROM clients WHERE 1=1 ");
+        sb.Append("SELECT COUNT(*) FROM clients WHERE 1=1 AND id != @clientId ");
+        cmd.AddParameter("clientId", partnerRequirements.ClientId);
         if (partnerRequirements.Gender is not null && !string.IsNullOrEmpty(partnerRequirements.Gender))
         {
             sb.Append("AND gender = @gender ");
