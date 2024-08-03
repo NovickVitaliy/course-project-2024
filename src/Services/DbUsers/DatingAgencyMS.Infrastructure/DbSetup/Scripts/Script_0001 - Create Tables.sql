@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS PartnerRequirements
     location       VARCHAR(50),
     client_id      INTEGER,
     PRIMARY KEY (requirement_id),
-    FOREIGN KEY (client_id) REFERENCES clients (id),
+    FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE ON UPDATE CASCADE ,
     CONSTRAINT partnerRequirements_minAge_check CHECK (min_age < max_age),
     CONSTRAINT partnerRequirements_minHeight_check CHECK (min_height < max_height),
     CONSTRAINT partnerRequirements_minWeight_check CHECK (min_weight < max_weight)
