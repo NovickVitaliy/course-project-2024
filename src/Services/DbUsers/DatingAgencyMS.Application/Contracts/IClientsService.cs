@@ -15,4 +15,5 @@ public interface IClientsService
     Task<ServiceResult<long>> GetCountOfClientsWhoDeclinedService(string requestedBy);
     Task<ServiceResult<GetClientsResponse>> GetClientsByYearQuarter(GetClientsByYearQuarterRequest request);
     Task<ServiceResult<GetClientsResponse>> GetRegisteredClientsByPeriod(GetClientsByTimePeriodRequest request);
+    Task<ServiceResult<bool>> DeleteClientsWhoDeclinedService(string requestedBy);
 }

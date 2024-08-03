@@ -29,4 +29,7 @@ public interface IClientsService
     
     [Get("/clients/registered")]
     Task<GetClientsResponse> GetRegisteredClientsByPeriod(GetRegisterdClientsByPeriodRequest request, [Authorize] string token);
+    
+    [Delete("/clients/declined")]
+    Task DeleteClientsWhoDeclinedService([Authorize] string token);
 }

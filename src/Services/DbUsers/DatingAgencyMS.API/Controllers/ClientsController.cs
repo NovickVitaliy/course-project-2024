@@ -122,5 +122,17 @@ public class ClientsController : BaseApiController
 
         return Ok(result.ResponseData);
     }
-    
+
+    [HttpDelete("declined")]
+    public async Task<IActionResult> DeleteClientWhoDeclinedService()
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var result = await _clientsService.DeleteClientsWhoDeclinedService(requestedBy);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return NoContent();
+    }
 }

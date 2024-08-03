@@ -47,6 +47,7 @@
     @if (UserState.Value.User!.IsAllowedToCreateEntities())
     {
         <a class="btn btn-primary" href="/tables/clients/create">Створити клієнта</a>
+        <a class="btn btn-primary" @onclick="ShowConfirmDialogToDeleteClientsWhoDeclinedService">Видалити клієнтів, що відмовлись від послуг</a>
     }
     <button class="btn btn-secondary" @onclick="CalculateNumberWhoDeclinedService">К-сть клієнтів, що відмовились від послуг</button>
     <button class="btn btn-secondary" @onclick="OnShowModalClick">Клієнти за кварталами року</button>

@@ -15,7 +15,7 @@ namespace DatingAgencyMS.Infrastructure.Services;
 public class PostgresClientsService : IClientsService
 {
     private readonly IDbManager _dbManager;
-    static readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1,1);
+    private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1,1);
 
     public PostgresClientsService(IDbManager dbManager)
     {
@@ -305,7 +305,7 @@ public class PostgresClientsService : IClientsService
 
     public async Task<ServiceResult<GetClientsResponse>> GetClientsByYearQuarter(GetClientsByYearQuarterRequest request)
     {
-        await _semaphoreSlim.WaitAsync();
+        await SemaphoreSlim.WaitAsync();
         var connection = await GetConnection(request.RequestedBy);
         await using var transaction = await connection.BeginTransactionAsync();
         try
@@ -375,7 +375,7 @@ public class PostgresClientsService : IClientsService
         }
         finally
         {
-            _semaphoreSlim.Release();
+            SemaphoreSlim.Release();
         }
     }
 
@@ -428,6 +428,25 @@ public class PostgresClientsService : IClientsService
         {
             await transaction.RollbackAsync();
             return ServiceResult<GetClientsResponse>.BadRequest(e.Message);
+        }
+    }
+
+    public async Task<ServiceResult<bool>> DeleteClientsWhoDeclinedService(string requestedBy)
+    {
+        var connection = await GetConnection(requestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "DELETE FROM clients WHERE has_declined_service = TRUE";
+            await cmd.ExecuteNonQueryAsync();
+            await transaction.CommitAsync();
+            return ServiceResult<bool>.NoContent();
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
         }
     }
 

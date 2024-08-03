@@ -21,12 +21,10 @@ public partial class ClientsManagement : FluxorComponent
     private Constants.RegisteredByPeriod? _period;
     private string _periodErrorMessage;
     [Inject] private NavigationManager NavigationManager { get; init; }
-    
     [Inject] private IState<UserState> UserState { get; init; }
-
     [Inject] private IClientsService ClientsService { get; init; }
-    
-    
+    [Inject] private ToastService ToastService { get; init; }
+
     private async Task CalculateNumberWhoDeclinedService()
     {
         try
@@ -44,7 +42,7 @@ public partial class ClientsManagement : FluxorComponent
         catch (ApiException e)
         {
             var apiError = e.ToApiError();
-            
+            ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
         }
     }
 
@@ -92,5 +90,36 @@ public partial class ClientsManagement : FluxorComponent
     private async Task HideRegisteredByPeriodModal()
     {
         await _registeredByPeriodModal.HideAsync();
+    }
+
+    private async Task ShowConfirmDialogToDeleteClientsWhoDeclinedService()
+    {
+        try
+        {
+            var count = await ClientsService.CalculateNumberWhoDeclinedService(UserState.Value.User.Token);
+
+            var confirmation = await _dialog.ShowAsync(
+                $"Ви справді хочете видалити {count} клієнтів, що відмовились від послуг сервісу?",
+                "Ця дія є незворотньою", new ConfirmDialogOptions
+                {
+                    IsVerticallyCentered = true,
+                    YesButtonText = "Видалити",
+                    YesButtonColor = ButtonColor.Danger,
+                    NoButtonColor = ButtonColor.Secondary,
+                    NoButtonText = "Відмінити"
+                });
+
+            if (confirmation)
+            {
+                await ClientsService.DeleteClientsWhoDeclinedService(UserState.Value.User.Token);
+                ToastService.Notify(new ToastMessage(ToastType.Success,
+                    "Клієнти, що відмовились від послугу сервісу було успішно видалено"));
+            }
+        }
+        catch (ApiException e)
+        {
+            var apiError = e.ToApiError();
+            ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
+        }
     }
 }
