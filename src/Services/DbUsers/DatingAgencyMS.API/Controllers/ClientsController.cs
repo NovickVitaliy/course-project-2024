@@ -135,4 +135,19 @@ public class ClientsController : BaseApiController
 
         return NoContent();
     }
+
+    [HttpGet("{clientId:int}/requirements/{requirementId:int}/matches")]
+    public async Task<IActionResult> GetMatchingPartners(int clientId, int requirementId, 
+        [FromQuery] int pageNumber, [FromQuery] int pageSize)
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var request = new GetMatchingPartnersRequest(clientId, requirementId, requestedBy, pageNumber, pageSize);
+        var result = await _clientsService.GetMatchingPartners(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }

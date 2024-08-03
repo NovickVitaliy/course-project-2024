@@ -32,4 +32,8 @@ public interface IClientsService
     
     [Delete("/clients/declined")]
     Task DeleteClientsWhoDeclinedService([Authorize] string token);
+
+    [Get("/clients/{clientId}/requirements/{requirementId}/matches")]
+    Task<GetClientsResponse> GetMatchingClients(int clientId, int requirementId, [Query] int pageNumber, 
+        [Query] int pageSize, [Authorize] string userToken);
 }

@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.Common;
+using System.Text;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Clients;
 using DatingAgencyMS.Application.DTOs.Clients.Requests;
@@ -9,6 +10,7 @@ using DatingAgencyMS.Client.Constants;
 using DatingAgencyMS.Domain.Models.Business;
 using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Helpers;
+using Microsoft.Extensions.Primitives;
 
 namespace DatingAgencyMS.Infrastructure.Services;
 
@@ -450,6 +452,217 @@ public class PostgresClientsService : IClientsService
         }
     }
 
+    public async Task<ServiceResult<GetClientsResponse>> GetMatchingPartners(GetMatchingPartnersRequest request)
+    {
+        List<ClientDto> clientDtos = [];
+        var connection = await GetConnection(request.RequestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            
+            var partnerRequirements = await ReadRequirementFromDb(cmd, request.RequirementId);
+            if (partnerRequirements is null)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<GetClientsResponse>.NotFound("Вимоги до партнера", request.RequirementId);
+            }
+            
+            var sql = await BuildSqlQueryForMatchingPartners(cmd, request, partnerRequirements);
+            cmd.CommandText = sql.FullSql;
+            var reader = await cmd.ExecuteReaderAsync();
+            
+            while (await reader.ReadAsync())
+            {
+                var clientId = reader.GetInt32("id");
+                var firstName = reader.GetString("first_name");
+                var lastName = reader.GetString("last_name");
+                var gender = reader.GetString("gender");
+                var sex = reader.GetString("sex");
+                var sexualOrientation = reader.GetString("sexual_orientation");
+                var location = reader.GetString("location");
+                var registrationNumber = reader.GetString("registration_number");
+                var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
+                var age = reader.GetInt32("age");
+                var height = reader.GetInt32("height");
+                var weight = reader.GetInt32("weight");
+                var zodiacSign = ZodiacSignHelper.FromUkrainianToZodiacSign(reader.GetString("zodiac_sign"));
+                var description = reader.GetString("description");
+                var hasDeclinedService = reader.GetBoolean("has_declined_service");
+
+                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation, location,
+                    registrationNumber, registeredOn, age, height, weight, zodiacSign, description,
+                    hasDeclinedService));
+            }
+
+            await reader.CloseAsync();
+            
+            cmd.CommandText = $"SELECT COUNT(*) FROM clients {sql.ConditionSql}";
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            await transaction.CommitAsync();
+
+            return ServiceResult<GetClientsResponse>.Ok(new GetClientsResponse(clientDtos, count.Value));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<GetClientsResponse>.BadRequest(e.Message);
+        }
+    }
+
+    private async Task<string?> ReadClientSexualOrientation(DbCommand cmd, int clientId)
+    {
+        cmd.CommandText = "SELECT sexual_orientation FROM clients WHERE id = @id ";
+        cmd.AddParameter("id", clientId);
+
+        await using var reader = await cmd.ExecuteReaderAsync();
+        if (!await reader.ReadAsync())
+        {
+            cmd.Parameters.Clear();
+            return null;
+        }
+        
+        cmd.Parameters.Clear();
+        return reader.GetString("sexual_orientation");
+    }
+    
+    private async Task<PartnerRequirements?> ReadRequirementFromDb(DbCommand cmd, int id)
+    {
+        cmd.CommandText = "SELECT * FROM partnerrequirements WHERE requirement_id = @id";
+        cmd.AddParameter("id", id);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        if (!await reader.ReadAsync())
+        {
+            return null;
+        }
+        
+        var gender = await reader.IsDBNullAsync("gender") ? null : reader.GetString("gender");
+        var sex = await reader.IsDBNullAsync("sex") ? null : reader.GetString("sex");
+        int? minAge = await reader.IsDBNullAsync("min_age") ? null : reader.GetInt32("min_age");
+        int? maxAge = await reader.IsDBNullAsync("max_age") ? null : reader.GetInt32("max_age");
+        int? minHeight = await reader.IsDBNullAsync("min_height") ? null : reader.GetInt32("min_height");
+        int? maxHeight = await reader.IsDBNullAsync("max_height") ? null : reader.GetInt32("max_height");
+        int? minWeight = await reader.IsDBNullAsync("min_weight") ? null : reader.GetInt32("min_weight");
+        int? maxWeight = await reader.IsDBNullAsync("max_weight") ? null : reader.GetInt32("max_weight");
+        var ukrainianZodiac = await reader.IsDBNullAsync("zodiac_sign") ? null : reader.GetString("zodiac_sign");
+        ZodiacSign? zodiacSign = ukrainianZodiac is not null
+            ? ZodiacSignHelper.FromUkrainianToZodiacSign(ukrainianZodiac)
+            : null;
+        var location = await reader.IsDBNullAsync("location") ? null :reader.GetString("location");
+        var clientId = reader.GetInt32("client_id");
+
+        cmd.Parameters.Clear();
+        
+        return new PartnerRequirements
+        {
+            Gender = gender,
+            MaxAge = maxAge,
+            MinAge = minAge,
+            ZodiacSign = zodiacSign,
+            ClientId = clientId,
+            MaxHeight = maxHeight,
+            Sex = sex,
+            MaxWeight = maxWeight,
+            MinHeight = minHeight,
+            MinWeight = minWeight,
+            Location = location,
+            RequirementsId = id
+        };
+    }
+    
+    private async Task<(string FullSql, string ConditionSql)> BuildSqlQueryForMatchingPartners(DbCommand cmd, GetMatchingPartnersRequest request, PartnerRequirements partnerRequirements)
+    {
+        var sexualOrientation = await ReadClientSexualOrientation(cmd, partnerRequirements.ClientId);
+        
+        var sb = new StringBuilder();
+        const string select = "SELECT * FROM clients ";
+        sb.Append("WHERE 1=1 AND id != @clientId ");
+        cmd.AddParameter("clientId", request.ClientId);
+        if (partnerRequirements.Gender is not null && !string.IsNullOrEmpty(partnerRequirements.Gender))
+        {
+            sb.Append("AND gender = @gender ");
+            cmd.AddParameter("gender", partnerRequirements.Gender);
+        }
+
+        if (partnerRequirements.Sex is not null && !string.IsNullOrEmpty(partnerRequirements.Sex))
+        {
+            sb.Append("AND sex = @sex ");
+            cmd.AddParameter("sex", partnerRequirements.Sex);
+        }
+
+        if (partnerRequirements.MinAge is not null)
+        {
+            sb.Append("AND age >= @minAge ");
+            cmd.AddParameter("minAge", partnerRequirements.MinAge);
+        }
+
+        if (partnerRequirements.MaxAge is not null)
+        {
+            sb.Append("AND age <= @maxAge ");
+            cmd.AddParameter("maxAge", partnerRequirements.MaxAge);
+        }
+     
+        if (partnerRequirements.MinHeight is not null)
+        {
+            sb.Append("AND height >= @minHeight ");
+            cmd.AddParameter("minHeight", partnerRequirements.MinHeight);
+        }
+        
+        if (partnerRequirements.MaxHeight is not null)
+        {
+            sb.Append("AND height <= @maxHeight ");
+            cmd.AddParameter("maxHeight", partnerRequirements.MaxHeight);
+        }
+        
+        if (partnerRequirements.MinWeight is not null)
+        {
+            sb.Append("AND weight >= @minWeight ");
+            cmd.AddParameter("minWeight", partnerRequirements.MinWeight);
+        }
+        
+        if (partnerRequirements.MaxWeight is not null)
+        {
+            sb.Append("AND weight <= @maxWeight ");
+            cmd.AddParameter("maxWeight", partnerRequirements.MaxWeight);
+        }
+        
+        if (partnerRequirements.ZodiacSign is not null)
+        {
+            sb.Append("AND zodiac_sign = @zodiacSign ");
+            cmd.AddParameter("zodiacSign",
+                ZodiacSignHelper.GetUkrainianTranslation(partnerRequirements.ZodiacSign.Value));
+        }
+
+        if (partnerRequirements.Location is not null && !string.IsNullOrEmpty(partnerRequirements.Location))
+        {
+            sb.Append("AND location = @location ");
+            cmd.AddParameter("location", partnerRequirements.Location);
+        }
+
+        var compatibleOrientations = ClientsConstants.OrientationsCompatibilityDictionary[sexualOrientation];
+        var parameterNames = new List<string>();
+        for (int i = 0; i < compatibleOrientations.Length; i++)
+        {
+            var paramName = "@orientation" + i;
+            parameterNames.Add(paramName);
+        }
+        var inClause = string.Join(", ", parameterNames);
+        sb.Append($"AND sexual_orientation IN ({inClause}) ");
+        
+        for (var i = 0; i < compatibleOrientations.Length; i++)
+        {
+            cmd.AddParameter(parameterNames[i], compatibleOrientations[i]);
+        }
+        
+        var conditionSql = sb.ToString();
+        sb.Insert(0, select);
+        var skip = (request.PageNumber - 1) * request.PageSize;
+        var size = request.PageSize;
+        sb.Append($"OFFSET {skip} ROWS FETCH NEXT {size} ROWS ONLY");
+        var fullSql = sb.ToString();
+        return (fullSql, conditionSql);
+    }
+    
     private static (string FullSql, string ConditionSql) BuildSqlForRegisteredClientsByPeriod(GetClientsByTimePeriodRequest request)
     {
         var sql = "SELECT * FROM clients WHERE registered_on >= NOW() - INTERVAL '{0}' " +

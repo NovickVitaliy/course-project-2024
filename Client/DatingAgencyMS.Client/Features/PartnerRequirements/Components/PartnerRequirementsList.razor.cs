@@ -18,6 +18,7 @@ public partial class PartnerRequirementsList : ComponentBase
     [Inject] private IState<UserState> UserState { get; init; }
     [Inject] private IPartnerRequirementsService PartnerRequirementsService { get; init; }
     [Inject] private ToastService ToastService { get; init; }
+    [Inject] private NavigationManager NavigationManager { get; init; }
     private ConfirmDialog _confirmDialog = default!;
     private Grid<PartnerRequirementsDto> _grid = default!;
     
@@ -99,15 +100,21 @@ public partial class PartnerRequirementsList : ComponentBase
         try
         {
             var count = await PartnerRequirementsService.GetMatchesCount(partnerRequirementsDto.Id, UserState.Value.User.Token);
-            await _confirmDialog.ShowAsync("Кількість партнерів за вимогами", $"Кількість партнерів що підходять за вимоги для " +
+            var confirmation = await _confirmDialog.ShowAsync("Кількість партнерів за вимогами", $"Кількість партнерів що підходять за вимоги для " +
                                                                        $"клієнта з Id {partnerRequirementsDto.ClientId} - {count} людей",
+                "Показати список партнерів?",
                 new ConfirmDialogOptions
                 {
                     IsVerticallyCentered = true,
                     YesButtonText = "OK",
-                    NoButtonColor = ButtonColor.None,
-                    NoButtonText = string.Empty
+                    NoButtonColor = ButtonColor.Secondary,
+                    NoButtonText = "Скасувати"
                 });
+
+            if (confirmation)
+            {
+                NavigationManager.NavigateTo($"/tables/partner-requirements/{partnerRequirementsDto.Id}/matches?clientId={partnerRequirementsDto.ClientId}");
+            }
         }
         catch (ApiException e)
         {
