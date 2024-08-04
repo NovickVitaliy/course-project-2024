@@ -48,6 +48,40 @@ public class PostgresInvitationsService : IInvitationsService
         }
     }
 
+    public async Task<ServiceResult<int>> CreateInvitation(CreateInvitationRequest request)
+    {
+        var connection = await _dbManager.GetConnectionOrThrow(request.RequestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText =
+                "INSERT INTO invitations (inviter_id, invitee_id, location, date_of_meeting, created_on, active_to, is_accepted) " +
+                "VALUES (@inviterId, @inviteeId, @location, @dateOfMeeting, @createdOn, @activeTo, @isAccepted) RETURNING invitation_id";
+
+            var createdOn = DateOnly.FromDateTime(DateTime.Now);
+            var activeTo = createdOn.AddDays(7);
+
+            cmd.AddParameter("inviterId", request.InviterId)
+                .AddParameter("inviteeId", request.InviteeId)
+                .AddParameter("location", request.Location)
+                .AddParameter("dateOfMeeting", request.DateOfMeeting)
+                .AddParameter("createdOn", createdOn)
+                .AddParameter("activeTo", activeTo)
+                .AddParameter("isAccepted", false);
+
+            var id = await cmd.ExecuteNonQueryAsync();
+            await transaction.CommitAsync();
+            
+            return ServiceResult<int>.Ok(id);
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<int>.BadRequest(e.Message);
+        }
+    }
+
     private async Task ReadInvitations(DbDataReader reader, List<InvitationDto> invitations)
     {
         while (await reader.ReadAsync())

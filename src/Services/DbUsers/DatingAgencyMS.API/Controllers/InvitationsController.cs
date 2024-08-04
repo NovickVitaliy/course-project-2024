@@ -26,4 +26,16 @@ public class InvitationsController : BaseApiController
 
         return Ok(result.ResponseData);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateInvitation(CreateInvitationRequest request)
+    {
+        var result = await _invitationsService.CreateInvitation(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Created("/api/invitation/{id}", new {id = result.ResponseData});
+    }
 }

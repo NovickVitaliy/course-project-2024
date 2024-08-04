@@ -1,0 +1,53 @@
+@page "/tables/invitations/create"
+@using Microsoft.AspNetCore.Components.Forms
+<h3>Створення запрошення</h3>
+
+<div class="row">
+    <div class="col-lg-6 col-sm-12">
+        @if (_request is not null)
+        {
+            <EditForm FormName="createInvitation" Model="_request" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="mb-3">
+                    <label for="inviterId" class="form-label">Id того, хто запрошує</label>
+                    <InputNumber id="inviterId" @bind-Value="_request.InviterId" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.InviterId"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="inviteeId" class="form-label">Id того, кого запрошують</label>
+                    <InputNumber id="inviteeId" @bind-Value="_request.InviteeId" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.InviteeId"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="location" class="form-label">Місце зустрічі</label>
+                    <InputText id="location" @bind-Value="_request.Location" class="form-control">
+                    </InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Location"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Дата та час зустрічі</label>
+                    <InputDate Type="InputDateType.DateTimeLocal" id="gender" @bind-Value="_request.DateOfMeeting" class="form-control">
+                    </InputDate>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.DateOfMeeting"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-1">
+                    <a class="btn btn-secondary" href="/tables/invitations">Назад</a>
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </div>
+            </EditForm>
+        }
+
+    </div>
+</div>

@@ -7,4 +7,5 @@ namespace DatingAgencyMS.Application.Contracts;
 public interface IInvitationsService
 {
     Task<ServiceResult<GetInvitationsResponse>> GetInvitations(GetInvitationsRequest request);
+    Task<ServiceResult<int>> CreateInvitation(CreateInvitationRequest request);
 }
