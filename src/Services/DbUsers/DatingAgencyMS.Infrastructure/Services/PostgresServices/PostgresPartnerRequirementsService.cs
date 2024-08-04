@@ -10,9 +10,8 @@ using DatingAgencyMS.Client.Constants;
 using DatingAgencyMS.Domain.Models.Business;
 using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Helpers;
-using Microsoft.Extensions.Primitives;
 
-namespace DatingAgencyMS.Infrastructure.Services;
+namespace DatingAgencyMS.Infrastructure.Services.PostgresServices;
 
 public class PostgresPartnerRequirementsService : IPartnerRequirementsService
 {

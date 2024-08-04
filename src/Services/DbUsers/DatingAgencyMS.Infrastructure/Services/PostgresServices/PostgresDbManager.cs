@@ -1,13 +1,12 @@
 using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Common;
-using System.Net;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.Shared;
 using DatingAgencyMS.Infrastructure.Models;
 using Npgsql;
 
-namespace DatingAgencyMS.Infrastructure.Services;
+namespace DatingAgencyMS.Infrastructure.Services.PostgresServices;
 
 public class PostgresDbManager : IDbManager, IAsyncDisposable
 {
@@ -71,6 +70,13 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
         connection.CurrentlyInUse = true;
         connection.LastAccessed = DateTime.Now;
         return Task.FromResult(ServiceResult<DbConnection>.Ok(connection.Connection));
+    }
+
+    public async Task<DbConnection> GetConnectionOrThrow(string login)
+    {
+        var serviceResult = await GetConnection(login);
+        if (!serviceResult.Success) throw new InvalidOperationException("Невдалось отримати підключення до БД. Спробуйте перезайти в аккаунт");
+        return serviceResult.ResponseData!;
     }
 
     public async Task<ServiceResult<bool>> CloseConnection(string login)

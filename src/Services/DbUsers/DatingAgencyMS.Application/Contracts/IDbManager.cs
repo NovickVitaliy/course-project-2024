@@ -8,5 +8,6 @@ public interface IDbManager
     Task<DbConnection> GetRootConnection();
     Task<ServiceResult<bool>> TryAccessDb(string login, string password);
     Task<ServiceResult<DbConnection>> GetConnection(string login);
+    Task<DbConnection> GetConnectionOrThrow(string login);
     Task<ServiceResult<bool>> CloseConnection(string login);
 }

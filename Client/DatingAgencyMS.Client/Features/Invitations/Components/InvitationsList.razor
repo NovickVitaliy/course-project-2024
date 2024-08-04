@@ -1,0 +1,36 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.Invitations.Models.Dtos
+
+<Grid TItem="InvitationDto"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="InvitationDataProvider"
+      AllowPaging="true"
+      AllowSorting="true"
+      AllowFiltering="true"
+      PageSize="10"
+      Responsive="true">
+    <GridColumn TItem="InvitationDto" HeaderText="Id Запрошення" PropertyName="InvitationId" SortString="invitation_id" SortKeySelector="i => i.InvitationId" FilterTextboxWidth="80">
+        @context.InvitationId
+    </GridColumn>
+    <GridColumn TItem="InvitationDto" HeaderText="Id Запрошувача" PropertyName="InviterId" SortString="inviter_id" SortKeySelector="i => i.InviterId" FilterTextboxWidth="80">
+        @context.InviterId
+    </GridColumn>
+    <GridColumn TItem="InvitationDto" HeaderText="Id Запрошеного" PropertyName="InviteeId" SortString="invitee_id" SortKeySelector="i => i.InviteeId" FilterTextboxWidth="80">
+        @context.InviteeId
+    </GridColumn>
+    <GridColumn TItem="InvitationDto" HeaderText="Місце зустрічі" PropertyName="Location" SortString="location" SortKeySelector="i => i.Location" FilterTextboxWidth="80">
+        @context.Location
+    </GridColumn>
+    <GridColumn TItem="InvitationDto" HeaderText="Дата зустрічі" PropertyName="DateOfMeeting" SortString="date_of_meeting" SortKeySelector="i => i.DateOfMeeting" FilterTextboxWidth="150">
+        @context.DateOfMeeting
+    </GridColumn>
+    <GridColumn TItem="InvitationDto" HeaderText="Створено" PropertyName="CreatedOn" SortString="created_on" SortKeySelector="i => i.CreatedOn" FilterTextboxWidth="150">
+        @context.CreatedOn
+    </GridColumn>
+    <GridColumn TItem="InvitationDto" HeaderText="Дійсне до" PropertyName="ActiveTo" SortString="active_to" SortKeySelector="i => i.ActiveTo" FilterTextboxWidth="150">
+        @context.ActiveTo
+    </GridColumn>
+    <GridColumn TItem="InvitationDto" HeaderText="Запрошення прийнято" PropertyName="IsAccepted" SortString="is_accepted" SortKeySelector="i => i.IsAccepted" FilterTextboxWidth="80">
+        @context.IsAccepted
+    </GridColumn>
+</Grid>

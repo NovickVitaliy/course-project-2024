@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS PartnerRequirements
     location       VARCHAR(50),
     client_id      INTEGER,
     PRIMARY KEY (requirement_id),
-    FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT partnerRequirements_minAge_check CHECK (min_age < max_age),
     CONSTRAINT partnerRequirements_minHeight_check CHECK (min_height < max_height),
     CONSTRAINT partnerRequirements_minWeight_check CHECK (min_weight < max_weight)
@@ -125,11 +125,14 @@ CREATE TABLE IF NOT EXISTS ClientRatings
 
 CREATE TABLE IF NOT EXISTS Invitations
 (
-    invitation_id SERIAL,
-    created_on    TIMESTAMP   NOT NULL,
-    inviter_id    INTEGER,
-    invitee_id    INTEGER,
-    location      VARCHAR(50) NOT NULL,
+    invitation_id   SERIAL,
+    inviter_id      INTEGER,
+    invitee_id      INTEGER,
+    location        VARCHAR(50) NOT NULL,
+    date_of_meeting TIMESTAMP   NOT NULL,
+    created_on      DATE        NOT NULL,
+    active_to       DATE        NOT NULL,
+    is_accepted     BOOLEAN     NOT NULL,
     PRIMARY KEY (invitation_id),
     FOREIGN KEY (inviter_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (invitee_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE

@@ -1,5 +1,5 @@
-using System.Data.Common;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs;
@@ -7,14 +7,12 @@ using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Application.DTOs.UserManagement.Requests;
 using DatingAgencyMS.Application.DTOs.UserManagement.Responses;
 using DatingAgencyMS.Application.Shared;
-using DatingAgencyMS.Domain.Models;
 using DatingAgencyMS.Domain.Models.DbManagement;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Helpers;
-using Npgsql;
 
-namespace DatingAgencyMS.Infrastructure.Services;
+namespace DatingAgencyMS.Infrastructure.Services.PostgresServices;
 
 public class PostgresUserManager : IUserManager
 {

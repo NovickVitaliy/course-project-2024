@@ -1,0 +1,10 @@
+@page "/tables/invitations"
+@using DatingAgencyMS.Client.Features.Invitations.Components
+<h3>Керування запрошеннями</h3>
+@if (UserState.Value.User is not null)
+{
+    <div class="d-flex w-100 mb-3 gap-1">
+
+    </div>
+    <InvitationsList></InvitationsList>
+}

@@ -4,6 +4,7 @@ using DatingAgencyMS.Domain.Models;
 using DatingAgencyMS.Domain.Models.DbManagement;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Services;
+using DatingAgencyMS.Infrastructure.Services.PostgresServices;
 using DatingAgencyMS.Infrastructure.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +46,7 @@ public static class DependencyInjection
         services.AddScoped<IUserManager, PostgresUserManager>();
         services.AddScoped<IClientsService, PostgresClientsService>();
         services.AddScoped<IPartnerRequirementsService, PostgresPartnerRequirementsService>();
-
+        services.AddScoped<IInvitationsService, PostgresInvitationsService>();
         return services;
     }
 }
