@@ -2,6 +2,7 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.PartnerRequirements.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
@@ -20,6 +21,7 @@ public class PartnerRequirementsController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> CreatePartnerRequirements(CreatePartnerRequirementsRequest request)
     {
         var result = await _partnerRequirementsService.CreatePartnerRequirements(request);
@@ -57,6 +59,7 @@ public class PartnerRequirementsController : BaseApiController
     }
 
     [HttpPut("{partnerRequirementId:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> UpdatePartnerRequirement([FromRoute] int partnerRequirementId,
         [FromBody] UpdatePartnerRequirementRequest request)
     {
@@ -70,6 +73,7 @@ public class PartnerRequirementsController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> DeletePartnerRequirements(int id)
     {
         var requestedBy = User.GetDbUserLogin();

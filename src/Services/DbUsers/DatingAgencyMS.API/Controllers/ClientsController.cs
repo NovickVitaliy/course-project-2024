@@ -3,6 +3,7 @@ using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Clients.Requests;
 using DatingAgencyMS.Application.Extensions;
 using DatingAgencyMS.Client.Constants;
+using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
@@ -47,6 +48,7 @@ public class ClientsController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> CreateClient([FromBody] CreateClientRequest request)
     {
         var result = await _clientsService.CreateClient(request);
@@ -61,6 +63,7 @@ public class ClientsController : BaseApiController
     }
 
     [HttpDelete("{clientId:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> DeleteClient(int clientId)
     {
         var requestedBy = User.GetDbUserLogin();
@@ -75,6 +78,7 @@ public class ClientsController : BaseApiController
     }
 
     [HttpPut("{clientId:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> UpdateClient([FromRoute] int clientId, [FromBody] UpdateClientRequest request)
     {
         var result = await _clientsService.UpdateClient(clientId, request);
@@ -124,6 +128,7 @@ public class ClientsController : BaseApiController
     }
 
     [HttpDelete("declined")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> DeleteClientWhoDeclinedService()
     {
         var requestedBy = User.GetDbUserLogin();
