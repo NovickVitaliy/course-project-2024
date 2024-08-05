@@ -12,20 +12,28 @@ namespace DatingAgencyMS.Client.Features.Clients.Pages;
 public partial class ClientByYearQuarters : ComponentBase
 {
     [SupplyParameterFromQuery] private int Year { get; init; }
-
     [Inject] private IClientsService ClientsService { get; init; }
-
     [Inject] private IState<UserState> UserState { get; init; }
+    private LoggedInUser? _loggedInUser;
 
-    private object _lockObj = new();
+    protected override void OnInitialized()
+    {
+        _loggedInUser = UserState.Value.User;
+        UserState.StateChanged += (_, _) =>
+        {
+            _loggedInUser = UserState.Value.User;
+        };
+        base.OnInitialized();
+    }
 
     private async Task<GridDataProviderResult<ClientDto>> GetClientsByYearQuarter(
         GridDataProviderRequest<ClientDto> request, int quarter)
     {
+        if (_loggedInUser is null) return new();
         var paginationInfo = new PaginationInfo(request.PageNumber, request.PageSize);
         var clientsRequest =
-            new GetClientsByYearQuarterRequest(paginationInfo, Year, quarter, UserState.Value.User.Login);
-        var response = await ClientsService.GetClientsByYearQuarter(clientsRequest, UserState.Value.User.Token);
+            new GetClientsByYearQuarterRequest(paginationInfo, Year, quarter, _loggedInUser.Login);
+        var response = await ClientsService.GetClientsByYearQuarter(clientsRequest, _loggedInUser.Token);
 
         return new GridDataProviderResult<ClientDto>()
         {

@@ -2,6 +2,7 @@ using BlazorBootstrap;
 using DatingAgencyMS.Client.Constants;
 using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Features.Clients.Services;
+using DatingAgencyMS.Client.Models.Core;
 using DatingAgencyMS.Client.Store.UserUseCase;
 using Fluxor;
 using Fluxor.Blazor.Web.Components;
@@ -10,7 +11,7 @@ using Refit;
 
 namespace DatingAgencyMS.Client.Features.Clients.Pages;
 
-public partial class ClientsManagement : FluxorComponent
+public partial class ClientsManagement
 {
     private ConfirmDialog _dialog = default!;
     private Modal _byYearQuartersModal = default!;
@@ -22,14 +23,26 @@ public partial class ClientsManagement : FluxorComponent
     private string _periodErrorMessage;
     [Inject] private NavigationManager NavigationManager { get; init; }
     [Inject] private IState<UserState> UserState { get; init; }
+    private LoggedInUser? _loggedInUser;
     [Inject] private IClientsService ClientsService { get; init; }
     [Inject] private ToastService ToastService { get; init; }
 
+    protected override void OnInitialized()
+    {
+        _loggedInUser = UserState.Value.User;
+        UserState.StateChanged += (sender, args) =>
+        {
+          _loggedInUser = UserState.Value.User;  
+        };
+        base.OnInitialized();
+    }
+
     private async Task CalculateNumberWhoDeclinedService()
     {
+        if (_loggedInUser is null) return;
         try
         {
-            var count = await ClientsService.CalculateNumberWhoDeclinedService(UserState.Value.User.Token);
+            var count = await ClientsService.CalculateNumberWhoDeclinedService(_loggedInUser.Token);
             await _dialog.ShowAsync("Клієнти, що відмовились", $"Від послуг сервісу відмовилось {count} клієнтів",
                 new ConfirmDialogOptions
                 {
@@ -94,9 +107,10 @@ public partial class ClientsManagement : FluxorComponent
 
     private async Task ShowConfirmDialogToDeleteClientsWhoDeclinedService()
     {
+        if (_loggedInUser is null) return;
         try
         {
-            var count = await ClientsService.CalculateNumberWhoDeclinedService(UserState.Value.User.Token);
+            var count = await ClientsService.CalculateNumberWhoDeclinedService(_loggedInUser.Token);
 
             var confirmation = await _dialog.ShowAsync(
                 $"Ви справді хочете видалити {count} клієнтів, що відмовились від послуг сервісу?",
@@ -111,7 +125,7 @@ public partial class ClientsManagement : FluxorComponent
 
             if (confirmation)
             {
-                await ClientsService.DeleteClientsWhoDeclinedService(UserState.Value.User.Token);
+                await ClientsService.DeleteClientsWhoDeclinedService(_loggedInUser.Token);
                 ToastService.Notify(new ToastMessage(ToastType.Success,
                     "Клієнти, що відмовились від послугу сервісу було успішно видалено"));
             }

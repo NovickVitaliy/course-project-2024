@@ -4,82 +4,85 @@
 @using DatingAgencyMS.Client.Models.Core
 @using Microsoft.AspNetCore.Components.Forms
 <h3>Додати вимоги до партнера</h3>
-<div class="row">
-    <div class="col-lg-6 col-sm-12">
-        <EditForm Model="_request" FormName="createPartnerRequirements" OnValidSubmit="OnValidSubmit">
-            <DataAnnotationsValidator></DataAnnotationsValidator>
-            <div class="mb-3">
-                <label for="gender" class="form-label">Гендер</label>
-                <InputSelect id="gender" @bind-Value="_request.Gender" class="form-control">
-                    <option selected disabled>Виберіть гендер</option>
-                    <option value="">Не важливо</option>
-                    @foreach (var gender in ClientsConstants.Genders)
-                    {
-                    <option value="@gender">@gender</option>
-                    }
-                </InputSelect>
-            </div>
-            <div class="mb-3">
-                <label for="sex" class="form-label">Стать</label>
-                <InputSelect id="sex" @bind-Value="_request.Sex" class="form-control">
-                    <option disabled selected>Виберіть стать</option>
-                    <option value="">Не важливо</option>
-                    @foreach (var sex in ClientsConstants.Sexes)
-                    {
-                        <option value="@sex">@sex</option>
-                    }
-                </InputSelect>
-            </div>
-            <div class="mb-3">
-                <label for="minAge" class="form-label">Мінімальний вік</label>
-                <InputNumber id="minAge" @bind-Value="_request.MinAge" class="form-control"></InputNumber>
-            </div>
-            <div class="mb-3">
-                <label for="maxAge" class="form-label">Максимальний вік</label>
-                <InputNumber id="maxAge" @bind-Value="_request.MaxAge" class="form-control"></InputNumber>
-            </div>
-            <div class="mb-3">
-                <label for="minHeight" class="form-label">Мінімальний ріст</label>
-                <InputNumber id="minHeight" @bind-Value="_request.MinHeight" class="form-control"></InputNumber>
-            </div>
-            <div class="mb-3">
-                <label for="maxHeight" class="form-label">Максимальний Ріст</label>
-                <InputNumber id="maxHeight" @bind-Value="_request.MaxHeight" class="form-control"></InputNumber>
-            </div>
-            <div class="mb-3">
-                <label for="minWeight" class="form-label">Мінімальна вага</label>
-                <InputNumber id="minWeight" @bind-Value="_request.MinWeight" class="form-control"></InputNumber>
-            </div>
-            <div class="mb-3">
-                <label for="maxWeight" class="form-label">Максимальна вага</label>
-                <InputNumber id="maxWeight" @bind-Value="_request.MaxWeight" class="form-control"></InputNumber>
-            </div>
-            <div class="mb-3">
-                <label for="zodiacSign" class="form-label">Знак Зодіаку</label>
-                <InputSelect id="zodiacSign" @bind-Value="_request.ZodiacSign" class="form-control">
-                    <option selected disabled>Виберіть знак зодіаку</option>
-                    <option value="">Не важливо</option>
-                    @foreach (ZodiacSign sign in Enum.GetValues(typeof(ZodiacSign)))
-                    {
-                        <option value="@sign">@ZodiacSignHelper.GetUkrainianTranslation(sign)</option>
-                    }
-                </InputSelect>
-            </div>
-            <div class="mb-3">
-                <label for="city" class="form-label">Місто</label>
-                <InputText id="city" @bind-Value="_request.City" class="form-control"></InputText>
-            </div>
-            <div class="mb-3">
-                <label for="clientId" class="form-label">ID Клієнта</label>
-                <InputNumber id="clientId" @bind-Value="_request.ClientId" class="form-control"></InputNumber>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.ClientId"></ValidationMessage>
+@if (_loggedInUser is not null)
+{
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <EditForm Model="_request" FormName="createPartnerRequirements" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Гендер</label>
+                    <InputSelect id="gender" @bind-Value="_request.Gender" class="form-control">
+                        <option selected disabled>Виберіть гендер</option>
+                        <option value="">Не важливо</option>
+                        @foreach (var gender in ClientsConstants.Genders)
+                        {
+                            <option value="@gender">@gender</option>
+                        }
+                    </InputSelect>
                 </div>
-            </div>
-            <div class="d-flex justify-content-end gap-1">
-                <a class="btn btn-secondary" href="/tables/partner-requirements">Назад</a>
-                <button type="submit" class="btn btn-primary">Створити</button>
-            </div>
-        </EditForm>
+                <div class="mb-3">
+                    <label for="sex" class="form-label">Стать</label>
+                    <InputSelect id="sex" @bind-Value="_request.Sex" class="form-control">
+                        <option disabled selected>Виберіть стать</option>
+                        <option value="">Не важливо</option>
+                        @foreach (var sex in ClientsConstants.Sexes)
+                        {
+                            <option value="@sex">@sex</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3">
+                    <label for="minAge" class="form-label">Мінімальний вік</label>
+                    <InputNumber id="minAge" @bind-Value="_request.MinAge" class="form-control"></InputNumber>
+                </div>
+                <div class="mb-3">
+                    <label for="maxAge" class="form-label">Максимальний вік</label>
+                    <InputNumber id="maxAge" @bind-Value="_request.MaxAge" class="form-control"></InputNumber>
+                </div>
+                <div class="mb-3">
+                    <label for="minHeight" class="form-label">Мінімальний ріст</label>
+                    <InputNumber id="minHeight" @bind-Value="_request.MinHeight" class="form-control"></InputNumber>
+                </div>
+                <div class="mb-3">
+                    <label for="maxHeight" class="form-label">Максимальний Ріст</label>
+                    <InputNumber id="maxHeight" @bind-Value="_request.MaxHeight" class="form-control"></InputNumber>
+                </div>
+                <div class="mb-3">
+                    <label for="minWeight" class="form-label">Мінімальна вага</label>
+                    <InputNumber id="minWeight" @bind-Value="_request.MinWeight" class="form-control"></InputNumber>
+                </div>
+                <div class="mb-3">
+                    <label for="maxWeight" class="form-label">Максимальна вага</label>
+                    <InputNumber id="maxWeight" @bind-Value="_request.MaxWeight" class="form-control"></InputNumber>
+                </div>
+                <div class="mb-3">
+                    <label for="zodiacSign" class="form-label">Знак Зодіаку</label>
+                    <InputSelect id="zodiacSign" @bind-Value="_request.ZodiacSign" class="form-control">
+                        <option selected disabled>Виберіть знак зодіаку</option>
+                        <option value="">Не важливо</option>
+                        @foreach (ZodiacSign sign in Enum.GetValues(typeof(ZodiacSign)))
+                        {
+                            <option value="@sign">@ZodiacSignHelper.GetUkrainianTranslation(sign)</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">Місто</label>
+                    <InputText id="city" @bind-Value="_request.City" class="form-control"></InputText>
+                </div>
+                <div class="mb-3">
+                    <label for="clientId" class="form-label">ID Клієнта</label>
+                    <InputNumber id="clientId" @bind-Value="_request.ClientId" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.ClientId"></ValidationMessage>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end gap-1">
+                    <a class="btn btn-secondary" href="/tables/partner-requirements">Назад</a>
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </div>
+            </EditForm>
+        </div>
     </div>
-</div>
+}

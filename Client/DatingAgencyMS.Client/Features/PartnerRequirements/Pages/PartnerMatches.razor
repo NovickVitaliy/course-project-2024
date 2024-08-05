@@ -3,60 +3,62 @@
 @using DatingAgencyMS.Client.Helpers
 @using DatingAgencyMS.Client.Models.Core
 
-@if (_client is not null)
+@if (_client is not null && _loggedInUser is not null)
 {
-    <h3>Партнери що підходять за вимогами для клієнта: <b>@_client.FirstName @_client.LastName</b> </h3>
+    {
+        <h3>Партнери що підходять за вимогами для клієнта: <b>@_client.FirstName @_client.LastName</b> </h3>
 
-    <Grid TItem="ClientDto"
-          Class="table table-hover table-bordered table-striped"
-          DataProvider="ClientDataProvider"
-          AllowPaging="true"
-          PageSize="10"
-          Responsive="true">
-        <GridColumn TItem="ClientDto" HeaderText="Id Клієнта" PropertyName="ClientId" SortString="id" SortKeySelector="c => c.ClientId" FilterTextboxWidth="80">
-            @context.ClientId
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Ім'я" PropertyName="FirstName" SortString="first_name" SortKeySelector="c => c.FirstName" FilterTextboxWidth="80">
-            @context.FirstName
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Прізвище" PropertyName="LastName" SortString="last_name" SortKeySelector="c => c.LastName" FilterTextboxWidth="80">
-            @context.LastName
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Гендер" PropertyName="Gender" SortString="gender" SortKeySelector="c => c.Gender" FilterTextboxWidth="80">
-            @context.Gender
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Стать" PropertyName="Sex" SortString="sex" SortKeySelector="c => c.Sex" FilterTextboxWidth="80">
-            @context.Sex
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Сексуальна орієнтація" PropertyName="SexualOrientation" SortString="sexual_orientation" SortKeySelector="c => c.SexualOrientation" FilterTextboxWidth="80">
-            @context.SexualOrientation
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Місцезнаходження" PropertyName="Location" SortString="location" SortKeySelector="c => c.Location" FilterTextboxWidth="80">
-            @context.Location
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Реєстраційний номер" PropertyName="RegistrationNumber" SortString="registration_number" SortKeySelector="c => c.RegistrationNumber" FilterTextboxWidth="80">
-            @context.RegistrationNumber
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Зареєстрований" PropertyName="RegisteredOn" SortString="registered_on" SortKeySelector="c => c.RegisteredOn">
-            @context.RegisteredOn
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Вік" PropertyName="Age" SortString="age" SortKeySelector="c => c.Age" FilterTextboxWidth="80">
-            @context.Age
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Ріст" PropertyName="Height" SortString="height" SortKeySelector="c => c.Height" FilterTextboxWidth="80">
-            @context.Height
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Вага" PropertyName="Weight" SortString="weight" SortKeySelector="c => c.Weight" FilterTextboxWidth="80">
-            @context.Weight
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Знак Зодіаку" PropertyName="ZodiacSign" SortString="zodiac_sign" Filterable="false" SortKeySelector="c => c.ZodiacSign" FilterTextboxWidth="80">
-            @ZodiacSignHelper.GetUkrainianTranslation(context.ZodiacSign)
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Опис" PropertyName="Description" SortString="description" SortKeySelector="c => c.Description" FilterTextboxWidth="80">
-            @context.Description
-        </GridColumn>
-        <GridColumn TItem="ClientDto" HeaderText="Відмова від сервісу" PropertyName="HasDeclinedService" SortString="has_declined_service" SortKeySelector="c => c.HasDeclinedService" FilterTextboxWidth="40">
-            @context.HasDeclinedService
-        </GridColumn>
-    </Grid>
+        <Grid TItem="ClientDto"
+              Class="table table-hover table-bordered table-striped"
+              DataProvider="ClientDataProvider"
+              AllowPaging="true"
+              PageSize="10"
+              Responsive="true">
+            <GridColumn TItem="ClientDto" HeaderText="Id Клієнта" PropertyName="ClientId" SortString="id" SortKeySelector="c => c.ClientId" FilterTextboxWidth="80">
+                @context.ClientId
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Ім'я" PropertyName="FirstName" SortString="first_name" SortKeySelector="c => c.FirstName" FilterTextboxWidth="80">
+                @context.FirstName
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Прізвище" PropertyName="LastName" SortString="last_name" SortKeySelector="c => c.LastName" FilterTextboxWidth="80">
+                @context.LastName
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Гендер" PropertyName="Gender" SortString="gender" SortKeySelector="c => c.Gender" FilterTextboxWidth="80">
+                @context.Gender
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Стать" PropertyName="Sex" SortString="sex" SortKeySelector="c => c.Sex" FilterTextboxWidth="80">
+                @context.Sex
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Сексуальна орієнтація" PropertyName="SexualOrientation" SortString="sexual_orientation" SortKeySelector="c => c.SexualOrientation" FilterTextboxWidth="80">
+                @context.SexualOrientation
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Місцезнаходження" PropertyName="Location" SortString="location" SortKeySelector="c => c.Location" FilterTextboxWidth="80">
+                @context.Location
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Реєстраційний номер" PropertyName="RegistrationNumber" SortString="registration_number" SortKeySelector="c => c.RegistrationNumber" FilterTextboxWidth="80">
+                @context.RegistrationNumber
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Зареєстрований" PropertyName="RegisteredOn" SortString="registered_on" SortKeySelector="c => c.RegisteredOn">
+                @context.RegisteredOn
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Вік" PropertyName="Age" SortString="age" SortKeySelector="c => c.Age" FilterTextboxWidth="80">
+                @context.Age
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Ріст" PropertyName="Height" SortString="height" SortKeySelector="c => c.Height" FilterTextboxWidth="80">
+                @context.Height
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Вага" PropertyName="Weight" SortString="weight" SortKeySelector="c => c.Weight" FilterTextboxWidth="80">
+                @context.Weight
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Знак Зодіаку" PropertyName="ZodiacSign" SortString="zodiac_sign" Filterable="false" SortKeySelector="c => c.ZodiacSign" FilterTextboxWidth="80">
+                @ZodiacSignHelper.GetUkrainianTranslation(context.ZodiacSign)
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Опис" PropertyName="Description" SortString="description" SortKeySelector="c => c.Description" FilterTextboxWidth="80">
+                @context.Description
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Відмова від сервісу" PropertyName="HasDeclinedService" SortString="has_declined_service" SortKeySelector="c => c.HasDeclinedService" FilterTextboxWidth="40">
+                @context.HasDeclinedService
+            </GridColumn>
+        </Grid>
+    }
 }

@@ -13,14 +13,21 @@ namespace DatingAgencyMS.Client.Features.Clients.Pages;
 
 public partial class RegisteredByPeriod : ComponentBase
 {
-    [Parameter]
-    public string Period { get; init; }
-
+    [Parameter] public string Period { get; init; }
     private Constants.RegisteredByPeriod? _periodAsEnum;
     [Inject] private NavigationManager NavigationManager { get; init; }
     [Inject] private ToastService ToastService { get; init; } 
     [Inject] private IClientsService ClientsService { get; init; }
     [Inject] private IState<UserState> UserState { get; init; }
+    private LoggedInUser? _loggedInUser;
+
+    protected override void OnInitialized()
+    {
+        _loggedInUser = UserState.Value.User;
+        UserState.StateChanged += (_, _) => _loggedInUser = UserState.Value.User; 
+        base.OnInitialized();
+    }
+
     protected override void OnParametersSet()
     {
         if (Enum.TryParse<Constants.RegisteredByPeriod>(Period, true, out var period))
@@ -35,11 +42,12 @@ public partial class RegisteredByPeriod : ComponentBase
 
     private async Task<GridDataProviderResult<ClientDto>> GetRegisteredClientsByPeriodDataProvider(GridDataProviderRequest<ClientDto> request)
     {
+        if (_loggedInUser is null) return new GridDataProviderResult<ClientDto>();
         try
         {
             var clientsRequest = new GetRegisterdClientsByPeriodRequest(_periodAsEnum.Value, request.PageNumber,
-                request.PageSize, UserState.Value.User.Login);
-            var result = await ClientsService.GetRegisteredClientsByPeriod(clientsRequest, UserState.Value.User.Token);
+                request.PageSize, _loggedInUser.Login);
+            var result = await ClientsService.GetRegisteredClientsByPeriod(clientsRequest, _loggedInUser.Token);
 
             return new GridDataProviderResult<ClientDto>()
             {

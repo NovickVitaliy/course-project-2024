@@ -15,20 +15,33 @@ public partial class PartnerMatches : ComponentBase
     [SupplyParameterFromQuery] private int ClientId { get; init; }
     [Inject] private IClientsService ClientsService { get; init; }
     [Inject] private IState<UserState> UserState { get; init; }
+    private LoggedInUser? _loggedInUser;
     [Inject] private ToastService ToastService { get; init; }
     private ClientDto? _client;
+
+    protected override void OnInitialized()
+    {
+        _loggedInUser = UserState.Value.User;
+        UserState.StateChanged += (_, _) => _loggedInUser = UserState.Value.User; 
+        base.OnInitialized();
+    }
+
     protected override async Task OnParametersSetAsync()
     {
-        _client = (await ClientsService.GetClientById(ClientId, UserState.Value.User.Token)).Client;
+        if (_loggedInUser is not null)
+        {
+            _client = (await ClientsService.GetClientById(ClientId, _loggedInUser.Token)).Client;
+        }
         await base.OnParametersSetAsync();
     }
 
     private async Task<GridDataProviderResult<ClientDto>> ClientDataProvider(GridDataProviderRequest<ClientDto> request)
     {
+        if (_loggedInUser is null) return new();
         try
         {
             var result = await ClientsService.GetMatchingClients(ClientId, RequirementId,
-                request.PageNumber, request.PageSize, UserState.Value.User.Token);
+                request.PageNumber, request.PageSize, _loggedInUser.Token);
             
             return new GridDataProviderResult<ClientDto>
             {

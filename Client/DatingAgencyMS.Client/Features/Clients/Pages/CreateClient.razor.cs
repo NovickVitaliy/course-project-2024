@@ -15,27 +15,39 @@ namespace DatingAgencyMS.Client.Features.Clients.Pages;
 public partial class CreateClient : ComponentBase
 {
     [Inject] public IState<UserState> UserState { get; init; }
-
+    private LoggedInUser? _loggedInUser;
     [Inject] private IClientsService ClientsService { get; init; }
-
     [Inject] private ToastService ToastService { get; init; }
     private CreateClientRequest _request;
     private const int MaximumDescriptionLength = 255;
 
+    protected override void OnInitialized()
+    {
+        _loggedInUser = UserState.Value.User;
+        UserState.StateChanged += (_,_) =>
+        {
+            _loggedInUser = UserState.Value.User;
+        };
+        base.OnInitialized();
+    }
+
     protected override void OnParametersSet()
     {
-        _request = new CreateClientRequest
+        if (_loggedInUser is not null)
         {
-            RequestedBy = UserState.Value.User!.Login
-        };
+            _request = new CreateClientRequest
+            {
+                RequestedBy = _loggedInUser.Login
+            };   
+        }
     }
 
     private async Task OnValidSubmit()
     {
+        if (_loggedInUser is null) return;
         try
         {
-            
-            var result = await ClientsService.CreateClient(_request, UserState.Value.User!.Token);
+            var result = await ClientsService.CreateClient(_request, _loggedInUser.Token);
             if (result.Success)
             {
                 ToastService.Notify(new ToastMessage(ToastType.Success, "Клієнт був вдало створений"));

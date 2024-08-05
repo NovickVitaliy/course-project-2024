@@ -4,160 +4,163 @@
 @using DatingAgencyMS.Client.Models.Core
 @using Microsoft.AspNetCore.Components.Forms
 <h3>Оновити дані клієнта</h3>
-<div class="row">
-    <div class="col-lg-6 col-sm-12">
-        <EditForm FormName="createClient" Model="_request" OnValidSubmit="OnValidSubmit">
-            <DataAnnotationsValidator></DataAnnotationsValidator>
-            <div class="mb-3">
-                <label for="firstName" class="form-label">Ім'я</label>
-                <InputText id="firstName" @bind-Value="_request.FirstName" class="form-control"></InputText>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.FirstName"></ValidationMessage>
+@if (_loggedInUser is not null)
+{
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <EditForm FormName="createClient" Model="_request" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">Ім'я</label>
+                    <InputText id="firstName" @bind-Value="_request.FirstName" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.FirstName"></ValidationMessage>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <label for="lastName" class="form-label">Прівзище</label>
-                <InputText id="lastName" @bind-Value="_request.LastName" class="form-control"></InputText>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.LastName"></ValidationMessage>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Прівзище</label>
+                    <InputText id="lastName" @bind-Value="_request.LastName" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.LastName"></ValidationMessage>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <label for="gender" class="form-label">Гендер</label>
-                <InputSelect id="gender" @bind-Value="_request.Gender" class="form-control">
-                    @foreach (var gender in ClientsConstants.Genders)
-                    {
-                        @if (gender == _request.Gender)
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Гендер</label>
+                    <InputSelect id="gender" @bind-Value="_request.Gender" class="form-control">
+                        @foreach (var gender in ClientsConstants.Genders)
                         {
-                            <option value="@gender" selected>@gender</option>
+                            @if (gender == _request.Gender)
+                            {
+                                <option value="@gender" selected>@gender</option>
+                            }
+                            else
+                            {
+                                <option value="@gender">@gender</option>
+                            }
                         }
-                        else
+                    </InputSelect>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Gender"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="sex" class="form-label">Стать</label>
+                    <InputSelect id="sex" @bind-Value="_request.Sex" class="form-control">
+                        @foreach (var sex in ClientsConstants.Sexes)
                         {
-                            <option value="@gender">@gender</option>   
+                            @if (sex == _request.Sex)
+                            {
+                                <option selected value="@sex">@sex</option>
+                            }
+                            else
+                            {
+                                <option value="@sex">@sex</option>
+                            }
                         }
-                    }
-                </InputSelect>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.Gender"></ValidationMessage>
+                    </InputSelect>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Gender"></ValidationMessage>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <label for="sex" class="form-label">Стать</label>
-                <InputSelect id="sex" @bind-Value="_request.Sex" class="form-control">
-                    @foreach (var sex in ClientsConstants.Sexes)
-                    {
-                        @if (sex == _request.Sex)
+                <div class="mb-3">
+                    <label for="sexualOrientation" class="form-label">Сексуальна орієнтація</label>
+                    <InputSelect id="sexualOrientation" @bind-Value="_request.SexualOrientation" class="form-control">
+                        @foreach (var orientation in ClientsConstants.Orientations)
                         {
-                            <option selected value="@sex">@sex</option>
+                            @if (orientation == _request.SexualOrientation)
+                            {
+                                <option value="@orientation" selected>@orientation</option>
+                            }
+                            else
+                            {
+                                <option value="@orientation">@orientation</option>
+                            }
                         }
-                        else
+                    </InputSelect>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.SexualOrientation"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="location" class="form-label">Місцезнаходження</label>
+                    <InputText id="location" @bind-Value="_request.Location" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Location"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="registrationNumber" class="form-label">Реєстраційний номер</label>
+                    <InputText id="registrationNumber" @bind-Value="_request.RegistrationNumber" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.RegistrationNumber"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="age" class="form-label">Вік</label>
+                    <InputNumber id="age" @bind-Value="_request.Age" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Age"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="height" class="form-label">Ріст</label>
+                    <InputNumber id="height" @bind-Value="_request.Height" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Height"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="weight" class="form-label">Вага</label>
+                    <InputNumber id="weight" @bind-Value="_request.Weight" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Weight"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="zodiacSign" class="form-label">Знак Зодіаку</label>
+                    <InputSelect id="zodiacSign" @bind-Value="_request.ZodiacSign" class="form-control">
+                        <option selected disabled>Виберіть знак зодіаку</option>
+                        @foreach (ZodiacSign sign in Enum.GetValues(typeof(ZodiacSign)))
                         {
-                            <option value="@sex">@sex</option>
+                            <option value="@sign">@ZodiacSignHelper.GetUkrainianTranslation(sign)</option>
                         }
-                    }
-                </InputSelect>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.Gender"></ValidationMessage>
+                    </InputSelect>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.ZodiacSign"></ValidationMessage>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="mb-3">
-                <label for="sexualOrientation" class="form-label">Сексуальна орієнтація</label>
-                <InputSelect id="sexualOrientation" @bind-Value="_request.SexualOrientation" class="form-control">
-                    @foreach (var orientation in ClientsConstants.Orientations)
-                    {
-                        @if (orientation == _request.SexualOrientation)
-                        {
-                            <option value="@orientation" selected>@orientation</option>
-                        }
-                        else
-                        {
-                            <option value="@orientation">@orientation</option>
-                        }
-                    }
-                </InputSelect>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.SexualOrientation"></ValidationMessage>
-                </div>
-            </div>
 
-            <div class="mb-3">
-                <label for="location" class="form-label">Місцезнаходження</label>
-                <InputText id="location" @bind-Value="_request.Location" class="form-control"></InputText>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.Location"></ValidationMessage>
+                <div class="mb-3">
+                    <div class="d-flex w-100 justify-content-between">
+                        <label for="description" class="form-label">Опис</label>
+                        <span>Символів залишилось: @(MaximumDescriptionLength - _request.Description.Length)</span>
+                    </div>
+                    <InputTextArea id="description" class="form-control" @bind-Value="_request.Description"></InputTextArea>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Description"></ValidationMessage>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="mb-3">
-                <label for="registrationNumber" class="form-label">Реєстраційний номер</label>
-                <InputText id="registrationNumber" @bind-Value="_request.RegistrationNumber" class="form-control"></InputText>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.RegistrationNumber"></ValidationMessage>
-                </div>
-            </div>
 
-            <div class="mb-3">
-                <label for="age" class="form-label">Вік</label>
-                <InputNumber id="age" @bind-Value="_request.Age" class="form-control"></InputNumber>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.Age"></ValidationMessage>
+                <div class="mb-3">
+                    <label for="hasDeclinedService" class="form-label">Відмова від сервісу</label>
+                    <InputCheckbox id="hasDeclinedService" @bind-Value="_request.HasDeclinedService" class="form-check-input"></InputCheckbox>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <label for="height" class="form-label">Ріст</label>
-                <InputNumber id="height" @bind-Value="_request.Height" class="form-control"></InputNumber>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.Height"></ValidationMessage>
+                <div class="d-flex justify-content-end gap-1">
+                    <a class="btn btn-secondary" href="/tables/clients">Назад</a>
+                    <button type="submit" class="btn btn-primary">Оновити</button>
                 </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="weight" class="form-label">Вага</label>
-                <InputNumber id="weight" @bind-Value="_request.Weight" class="form-control"></InputNumber>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.Weight"></ValidationMessage>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="zodiacSign" class="form-label">Знак Зодіаку</label>
-                <InputSelect id="zodiacSign" @bind-Value="_request.ZodiacSign" class="form-control">
-                    <option selected disabled>Виберіть знак зодіаку</option>
-                    @foreach (ZodiacSign sign in Enum.GetValues(typeof(ZodiacSign)))
-                    {
-                        <option value="@sign">@ZodiacSignHelper.GetUkrainianTranslation(sign)</option>
-                    }
-                </InputSelect>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.ZodiacSign"></ValidationMessage>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <div class="d-flex w-100 justify-content-between">
-                    <label for="description" class="form-label">Опис</label>
-                    <span>Символів залишилось: @(MaximumDescriptionLength - _request.Description.Length)</span>                    
-                </div>
-                <InputTextArea  id="description" class="form-control" @bind-Value="_request.Description"></InputTextArea>
-                <div class="validation-message">
-                    <ValidationMessage For="() => _request.Description"></ValidationMessage>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="hasDeclinedService" class="form-label">Відмова від сервісу</label>
-                <InputCheckbox id="hasDeclinedService" @bind-Value="_request.HasDeclinedService" class="form-check-input"></InputCheckbox>
-            </div>
-
-            <div class="d-flex justify-content-end gap-1">
-                <a class="btn btn-secondary" href="/tables/clients">Назад</a>
-                <button type="submit" class="btn btn-primary">Оновити</button>
-            </div>
-        </EditForm>
+            </EditForm>
+        </div>
     </div>
-</div>
+}

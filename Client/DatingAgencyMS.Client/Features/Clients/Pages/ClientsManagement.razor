@@ -2,7 +2,6 @@
 @using DatingAgencyMS.Client.Features.Clients.Components
 @using DatingAgencyMS.Client.Helpers
 @using BlazorBootstrap
-@using DatingAgencyMS.Client.Constants
 @using Microsoft.AspNetCore.Components.Web
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @rendermode @(new InteractiveServerRenderMode(false))
@@ -43,14 +42,17 @@
 </Modal>
 
 <h3>Керування клієнтами</h3>
-<div class="d-flex w-100 mb-3 gap-1">
-    @if (UserState.Value.User!.IsAllowedToCreateEntities())
-    {
-        <a class="btn btn-primary" href="/tables/clients/create">Створити клієнта</a>
-        <a class="btn btn-primary" @onclick="ShowConfirmDialogToDeleteClientsWhoDeclinedService">Видалити клієнтів, що відмовлись від послуг</a>
-    }
-    <button class="btn btn-secondary" @onclick="CalculateNumberWhoDeclinedService">К-сть клієнтів, що відмовились від послуг</button>
-    <button class="btn btn-secondary" @onclick="OnShowModalClick">Клієнти за кварталами року</button>
-    <button class="btn btn-secondary" @onclick="ShowRegisteredByPeriodModal">Зареєстровані особи за минулий місяць/півроку</button>
-</div>
-<ClientsList></ClientsList>
+@if (_loggedInUser is not null)
+{
+    <div class="d-flex w-100 mb-3 gap-1">
+        @if (UserState.Value.User!.IsAllowedToCreateEntities())
+        {
+            <a class="btn btn-primary" href="/tables/clients/create">Створити клієнта</a>
+            <a class="btn btn-primary" @onclick="ShowConfirmDialogToDeleteClientsWhoDeclinedService">Видалити клієнтів, що відмовлись від послуг</a>
+        }
+        <button class="btn btn-secondary" @onclick="CalculateNumberWhoDeclinedService">К-сть клієнтів, що відмовились від послуг</button>
+        <button class="btn btn-secondary" @onclick="OnShowModalClick">Клієнти за кварталами року</button>
+        <button class="btn btn-secondary" @onclick="ShowRegisteredByPeriodModal">Зареєстровані особи за минулий місяць/півроку</button>
+    </div>
+    <ClientsList></ClientsList>
+}

@@ -13,6 +13,7 @@ public partial class InvitationsManagement
 
     protected override void OnInitialized()
     {
+        _loggedInUser = UserState.Value.User;
         UserState.StateChanged += (sender, args) =>
         {
             _loggedInUser = UserState.Value.User;
