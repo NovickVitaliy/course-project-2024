@@ -6,19 +6,40 @@ using DatingAgencyMS.Client.Features.Invitations.Models.Dtos;
 using DatingAgencyMS.Client.Features.Invitations.Models.Dtos.Requests;
 using DatingAgencyMS.Client.Features.Invitations.Services;
 using DatingAgencyMS.Client.Helpers;
+using DatingAgencyMS.Client.Models.Core;
 using DatingAgencyMS.Client.Store.UserUseCase;
 using Fluxor;
+using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
 namespace DatingAgencyMS.Client.Features.Invitations.Components;
 
-public partial class InvitationsList : ComponentBase
+public partial class InvitationsList : FluxorComponent
 {
     [Inject] private IInvitationsService InvitationsService { get; init; }
     [Inject] private IState<UserState> UserState { get; init; }
+    private LoggedInUser? _loggedInUser = null;
     [Inject] private ToastService ToastService { get; init; }
-    
+    private Grid<InvitationDto>? _grid;
+    private ConfirmDialog? _confirmDialog;
+    private ConfirmDialogOptions _confirmDialogOptions = new()
+    {
+        YesButtonText = "Видалити",
+        YesButtonColor = ButtonColor.Danger,
+        NoButtonText = "Назад",
+        NoButtonColor = ButtonColor.Secondary
+    };
+
+    protected override void OnParametersSet()
+    {
+        UserState.StateChanged += (sender, args) =>
+        {
+            _loggedInUser = UserState.Value.User;
+        };
+        base.OnParametersSet();
+    }
+
     private async Task<GridDataProviderResult<InvitationDto>> InvitationDataProvider(
         GridDataProviderRequest<InvitationDto> request)
     {
@@ -66,5 +87,29 @@ public partial class InvitationsList : ComponentBase
         return new GetInvitationsRequest(invitationIdFilter, inviterIdFilter, inviteeIdFilter,
             locationFilter, dateOfMeetingFilter, createdOnFilter, activeToFilter, isAcceptedFilter, sortingInfo, paginationInfo,
             UserState.Value.User.Login);
+    }
+
+    private async Task DeleteInvitation(int invitationId)
+    {
+        if (_confirmDialog is null) return;
+
+        var confirmation = await _confirmDialog.ShowAsync(
+            "Підтвердження видалення", 
+            $"Ви справді хочете видалити запрошення з Id = {invitationId}",
+            _confirmDialogOptions);
+
+        if (!confirmation) return;
+
+        try
+        {
+            await InvitationsService.DeleteInvitation(invitationId, UserState.Value.User.Token);
+            ToastService.Notify(new ToastMessage(ToastType.Success, $"Запрошення з Id - {invitationId} було успішно видалено"));
+            _grid?.RefreshDataAsync();
+        }
+        catch (ApiException e)
+        {
+            var apiError = e.ToApiError();
+            ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
+        }
     }
 }

@@ -8,4 +8,5 @@ public interface IInvitationsService
 {
     Task<ServiceResult<GetInvitationsResponse>> GetInvitations(GetInvitationsRequest request);
     Task<ServiceResult<int>> CreateInvitation(CreateInvitationRequest request);
+    Task<ServiceResult<bool>> DeleteInvitation(int invitationId, string requestedBy);
 }

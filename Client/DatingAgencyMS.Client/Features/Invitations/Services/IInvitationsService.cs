@@ -11,4 +11,7 @@ public interface IInvitationsService
 
     [Post("/invitations")]
     Task CreateInvitation(CreateInvitationRequest request, [Authorize] string token);
+
+    [Delete("/invitations/{id}")]
+    Task DeleteInvitation(int id, [Authorize] string token);
 }

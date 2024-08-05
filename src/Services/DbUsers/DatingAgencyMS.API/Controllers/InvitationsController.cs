@@ -2,6 +2,7 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Invitations.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Extensions;
 
 namespace DatingAgencyMS.API.Controllers; 
 
@@ -37,5 +38,18 @@ public class InvitationsController : BaseApiController
         }
 
         return Created("/api/invitation/{id}", new {id = result.ResponseData});
+    }
+
+    [HttpDelete("{invitationId:int}")]
+    public async Task<IActionResult> DeleteInvitation(int invitationId)
+    {
+        var requestedBy = User.GetDbUserLogin();
+        var result = await _invitationsService.DeleteInvitation(invitationId, requestedBy);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return NoContent();
     }
 }

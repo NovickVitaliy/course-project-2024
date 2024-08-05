@@ -1,7 +1,11 @@
 @using BlazorBootstrap
 @using DatingAgencyMS.Client.Features.Invitations.Models.Dtos
-
-<Grid TItem="InvitationDto"
+@using DatingAgencyMS.Client.Helpers
+@using Microsoft.AspNetCore.Components.Web
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@rendermode @(new InteractiveServerRenderMode(false))
+<ConfirmDialog @ref="_confirmDialog"></ConfirmDialog>
+<Grid @ref="_grid" TItem="InvitationDto"
       Class="table table-hover table-bordered table-striped"
       DataProvider="InvitationDataProvider"
       AllowPaging="true"
@@ -33,4 +37,17 @@
     <GridColumn TItem="InvitationDto" HeaderText="Запрошення прийнято" PropertyName="IsAccepted" SortString="is_accepted" SortKeySelector="i => i.IsAccepted" FilterTextboxWidth="80">
         @context.IsAccepted
     </GridColumn>
+    @if (UserState.Value.User.IsAllowedToUpdateAndDeleteEntities())
+    {
+    <GridColumn TItem="InvitationDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+        <HeaderContent>
+            Options
+        </HeaderContent>
+        <ChildContent>
+            <div class="d-flex gap-1">
+                <button @onclick="() => DeleteInvitation(context.InvitationId)" class="btn btn-danger">Видалити</button>
+            </div>
+        </ChildContent>
+    </GridColumn>
+    }
 </Grid>

@@ -82,6 +82,33 @@ public class PostgresInvitationsService : IInvitationsService
         }
     }
 
+    public async Task<ServiceResult<bool>> DeleteInvitation(int invitationId, string requestedBy)
+    {
+        var connection = await _dbManager.GetConnectionOrThrow(requestedBy);
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "DELETE FROM invitations WHERE invitation_id = @invitationId";
+            cmd.AddParameter("invitationId", invitationId);
+            
+            var rowsAffected = await cmd.ExecuteNonQueryAsync();
+            if (rowsAffected == 0)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Запрошення", invitationId);
+            }
+            
+            await transaction.CommitAsync();
+            return ServiceResult<bool>.NoContent();
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
     private async Task ReadInvitations(DbDataReader reader, List<InvitationDto> invitations)
     {
         while (await reader.ReadAsync())
