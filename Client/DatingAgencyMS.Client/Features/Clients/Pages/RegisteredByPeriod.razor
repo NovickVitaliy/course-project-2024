@@ -3,7 +3,7 @@
 @using BlazorBootstrap
 @using DatingAgencyMS.Client.Helpers
 @using DatingAgencyMS.Client.Models.Core
-
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @if (_loggedInUser is not null)
 {
     @if (_periodAsEnum is not null)

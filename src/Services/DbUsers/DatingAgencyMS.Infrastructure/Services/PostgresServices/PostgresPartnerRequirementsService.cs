@@ -24,7 +24,7 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
 
     public async Task<ServiceResult<bool>> CreatePartnerRequirements(CreatePartnerRequirementsRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -62,7 +62,7 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
 
     public async Task<ServiceResult<GetPartnersRequirementResponse>> GetPartnersRequirement(GetPartnersRequirementRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -108,7 +108,7 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
 
     public async Task<ServiceResult<GetPartnerRequirementResponse>> GetPartnerRequirementById(int id, string requestedBy)
     {
-        var connection = await GetConnection(requestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -156,7 +156,7 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
 
     public async Task<ServiceResult<bool>> UpdatePartnerRequirement(int partnerRequirementId, UpdatePartnerRequirementRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -203,7 +203,7 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
 
     public async Task<ServiceResult<bool>> DeletePartnerRequirements(int id, string requestedBy)
     {
-        var connection = await GetConnection(requestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -232,7 +232,7 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
 
     public async Task<ServiceResult<long>> GetMatchesCount(int id, string requestedBy)
     {
-        var connection = await GetConnection(requestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
         try
         {
@@ -434,17 +434,5 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
                 string.Concat(selectFrom, conditionOnlySqlQuery, sortingClause, pagination),
                 conditionOnlySqlQuery
             );
-    }
-
-    private async Task<DbConnection> GetConnection(string requestedBy)
-    {
-        var serviceResult = await _dbManager.GetConnection(requestedBy);
-        if (!serviceResult.Success || serviceResult.ResponseData is null)
-        {
-            throw new InvalidOperationException(
-                "Не вдалося отримати підключення до БД для даного користувача. Спробуйте увійти в аккаунт знову");
-        }
-
-        return serviceResult.ResponseData;
     }
 }

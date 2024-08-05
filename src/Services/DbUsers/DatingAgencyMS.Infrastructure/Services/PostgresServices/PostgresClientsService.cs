@@ -25,7 +25,7 @@ public class PostgresClientsService : IClientsService
 
     public async Task<ServiceResult<GetClientsResponse>> GetClients(GetClientsRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -114,7 +114,7 @@ public class PostgresClientsService : IClientsService
 
     public async Task<ServiceResult<CreateClientResponse>> CreateClient(CreateClientRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -155,7 +155,7 @@ public class PostgresClientsService : IClientsService
 
     public async Task<ServiceResult<bool>> DeleteClient(int clientId, string requestedBy)
     {
-        var connection = await GetConnection(requestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -182,7 +182,7 @@ public class PostgresClientsService : IClientsService
 
     public async Task<ServiceResult<bool>> UpdateClient(int clientId, UpdateClientRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -236,7 +236,7 @@ public class PostgresClientsService : IClientsService
 
     public async Task<ServiceResult<GetClientResponse>> GetClientById(GetClientRequest getClientRequest)
     {
-        var connection = await GetConnection(getClientRequest.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -282,7 +282,7 @@ public class PostgresClientsService : IClientsService
 
     public async Task<ServiceResult<long>> GetCountOfClientsWhoDeclinedService(string requestedBy)
     {
-        var connection = await GetConnection(requestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -307,7 +307,7 @@ public class PostgresClientsService : IClientsService
     public async Task<ServiceResult<GetClientsResponse>> GetClientsByYearQuarter(GetClientsByYearQuarterRequest request)
     {
         await SemaphoreSlim.WaitAsync();
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -383,7 +383,7 @@ public class PostgresClientsService : IClientsService
     public async Task<ServiceResult<GetClientsResponse>> GetRegisteredClientsByPeriod(GetClientsByTimePeriodRequest request)
     {
         List<ClientDto> clientDtos = [];
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
         try
         {
@@ -434,7 +434,7 @@ public class PostgresClientsService : IClientsService
 
     public async Task<ServiceResult<bool>> DeleteClientsWhoDeclinedService(string requestedBy)
     {
-        var connection = await GetConnection(requestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -454,7 +454,7 @@ public class PostgresClientsService : IClientsService
     public async Task<ServiceResult<GetClientsResponse>> GetMatchingPartners(GetMatchingPartnersRequest request)
     {
         List<ClientDto> clientDtos = [];
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -677,18 +677,5 @@ public class PostgresClientsService : IClientsService
             default:
                 throw new ArgumentOutOfRangeException();
         }
-    }
-
-
-    private async Task<DbConnection> GetConnection(string requestedBy)
-    {
-        var serviceResult = await _dbManager.GetConnection(requestedBy);
-        if (!serviceResult.Success || serviceResult.ResponseData is null)
-        {
-            throw new InvalidOperationException(
-                "Не вдалося отримати підключення до БД для даного користувача. Спробуйте увійти в аккаунт знову");
-        }
-
-        return serviceResult.ResponseData;
     }
 }

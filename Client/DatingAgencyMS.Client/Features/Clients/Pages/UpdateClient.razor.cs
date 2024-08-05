@@ -10,7 +10,7 @@ using Refit;
 
 namespace DatingAgencyMS.Client.Features.Clients.Pages;
 
-public partial class UpdateClient : ComponentBase
+public partial class UpdateClient
 {
     [Parameter] public int clientid { get;init; }
     [Inject] private IState<UserState> UserState { get; init; }
@@ -24,7 +24,10 @@ public partial class UpdateClient : ComponentBase
     protected override void OnInitialized()
     {
         _loggedInUser = UserState.Value.User;
-        UserState.StateChanged += (_, _) => _loggedInUser = UserState.Value.User;
+        UserState.StateChanged += (_, _) =>
+        {
+            _loggedInUser = UserState.Value.User;
+        };
         base.OnInitialized();
     }
 

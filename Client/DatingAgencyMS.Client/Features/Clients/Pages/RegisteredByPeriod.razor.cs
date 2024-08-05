@@ -11,7 +11,7 @@ using Refit;
 
 namespace DatingAgencyMS.Client.Features.Clients.Pages;
 
-public partial class RegisteredByPeriod : ComponentBase
+public partial class RegisteredByPeriod
 {
     [Parameter] public string Period { get; init; }
     private Constants.RegisteredByPeriod? _periodAsEnum;

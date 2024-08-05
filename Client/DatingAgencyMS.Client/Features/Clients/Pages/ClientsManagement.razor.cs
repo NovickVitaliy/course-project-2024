@@ -127,7 +127,8 @@ public partial class ClientsManagement
             {
                 await ClientsService.DeleteClientsWhoDeclinedService(_loggedInUser.Token);
                 ToastService.Notify(new ToastMessage(ToastType.Success,
-                    "Клієнти, що відмовились від послугу сервісу було успішно видалено"));
+                    "Клієнти, що відмовились від послуг сервісу було успішно видалено"));
+                NavigationManager.Refresh(true);
             }
         }
         catch (ApiException e)

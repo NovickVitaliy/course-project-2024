@@ -12,13 +12,16 @@ using Refit;
 
 namespace DatingAgencyMS.Client.Features.Clients.Pages;
 
-public partial class CreateClient : ComponentBase
+public partial class CreateClient
 {
     [Inject] public IState<UserState> UserState { get; init; }
     private LoggedInUser? _loggedInUser;
     [Inject] private IClientsService ClientsService { get; init; }
     [Inject] private ToastService ToastService { get; init; }
-    private CreateClientRequest _request;
+    private CreateClientRequest _request = new()
+    {
+        RequestedBy = string.Empty
+    };
     private const int MaximumDescriptionLength = 255;
 
     protected override void OnInitialized()
@@ -27,6 +30,10 @@ public partial class CreateClient : ComponentBase
         UserState.StateChanged += (_,_) =>
         {
             _loggedInUser = UserState.Value.User;
+            _request = new CreateClientRequest
+            {
+                RequestedBy = _loggedInUser!.Login
+            };
         };
         base.OnInitialized();
     }

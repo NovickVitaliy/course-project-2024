@@ -23,7 +23,7 @@ public class PostgresInvitationsService : IInvitationsService
     public async Task<ServiceResult<GetInvitationsResponse>> GetInvitations(GetInvitationsRequest request)
     {
         List<InvitationDto> invitations = [];
-        var connection = await _dbManager.GetConnectionOrThrow(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
         try
         {
@@ -50,7 +50,7 @@ public class PostgresInvitationsService : IInvitationsService
 
     public async Task<ServiceResult<int>> CreateInvitation(CreateInvitationRequest request)
     {
-        var connection = await _dbManager.GetConnectionOrThrow(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -84,7 +84,7 @@ public class PostgresInvitationsService : IInvitationsService
 
     public async Task<ServiceResult<bool>> DeleteInvitation(int invitationId, string requestedBy)
     {
-        var connection = await _dbManager.GetConnectionOrThrow(requestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {

@@ -11,14 +11,14 @@ using Refit;
 
 namespace DatingAgencyMS.Client.Features.Invitations.Pages;
 
-public partial class CreateInvitation : ComponentBase
+public partial class CreateInvitation
 {
     [Inject] private IState<UserState> UserState { get; init; }
     private LoggedInUser? _loggedInUser;
     [Inject] private IInvitationsService InvitationsService { get; init; }
     [Inject] private ToastService ToastService { get; init; }
     [Inject] private NavigationManager NavigationManager { get; init; }
-    private CreateInvitationRequest? _request;
+    private CreateInvitationRequest? _request = new();
 
     protected override void OnInitialized()
     {

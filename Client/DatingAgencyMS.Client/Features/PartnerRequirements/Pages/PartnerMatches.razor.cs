@@ -9,7 +9,7 @@ using Refit;
 
 namespace DatingAgencyMS.Client.Features.PartnerRequirements.Pages;
 
-public partial class PartnerMatches : ComponentBase
+public partial class PartnerMatches
 {
     [Parameter] public int RequirementId { get; init; }
     [SupplyParameterFromQuery] private int ClientId { get; init; }

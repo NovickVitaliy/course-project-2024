@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace DatingAgencyMS.Client.Features.Clients.Pages;
 
-public partial class ClientByYearQuarters : ComponentBase
+public partial class ClientByYearQuarters
 {
     [SupplyParameterFromQuery] private int Year { get; init; }
     [Inject] private IClientsService ClientsService { get; init; }

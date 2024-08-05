@@ -13,7 +13,7 @@ using Refit;
 
 namespace DatingAgencyMS.Client.Features.PartnerRequirements.Pages;
 
-public partial class UpdatePartnerRequirement : ComponentBase
+public partial class UpdatePartnerRequirement
 {
     [Parameter] public int Id { get; init; }
     [Inject] private IPartnerRequirementsService PartnerRequirementsService { get; init; }
@@ -21,9 +21,7 @@ public partial class UpdatePartnerRequirement : ComponentBase
     private LoggedInUser? _loggedInUser;
     [Inject] private ToastService ToastService { get; init; }
     [Inject] private NavigationManager NavigationManager { get; init; }
-    private UpdatePartnerRequirementRequest? _request;
-
-    
+    private UpdatePartnerRequirementRequest? _request = new();
     
     protected override async Task OnInitializedAsync()
     {

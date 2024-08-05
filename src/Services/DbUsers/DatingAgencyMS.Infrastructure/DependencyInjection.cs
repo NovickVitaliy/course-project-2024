@@ -6,6 +6,7 @@ using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Services;
 using DatingAgencyMS.Infrastructure.Services.PostgresServices;
 using DatingAgencyMS.Infrastructure.Settings;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,11 +38,18 @@ public static class DependencyInjection
 
         services.AddScoped<ITokenService, DefaultTokenService>();
 
-        services.AddSingleton<IDbManager, PostgresDbManager>(_ => new PostgresDbManager(
-            pgConnTemplate: configuration.GetConnectionString("pg_conn_template") ??
-                            throw new ArgumentException("pg_conn_template"),
-            pgRootConn: configuration.GetConnectionString("ConnectionStringForRoot") ??
-                        throw new ArgumentException("ConnectionStringForRoot")));
+        services.AddHttpContextAccessor();
+        
+        services.AddSingleton<IDbManager, PostgresDbManager>(sp =>
+        {
+            var pgConnTemplate = configuration.GetConnectionString("pg_conn_template") ??
+                                 throw new ArgumentException("pg_conn_template");
+            var pgRootConn = configuration.GetConnectionString("ConnectionStringForRoot") ??
+                             throw new ArgumentException("ConnectionStringForRoot");
+            var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+            
+            return new PostgresDbManager(pgConnTemplate, pgRootConn, httpContextAccessor);
+        });
 
         services.AddScoped<IUserManager, PostgresUserManager>();
         services.AddScoped<IClientsService, PostgresClientsService>();

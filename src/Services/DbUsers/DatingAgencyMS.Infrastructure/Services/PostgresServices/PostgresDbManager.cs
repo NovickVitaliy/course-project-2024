@@ -3,7 +3,9 @@ using System.Data;
 using System.Data.Common;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.Shared;
+using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Models;
+using Microsoft.AspNetCore.Http;
 using Npgsql;
 
 namespace DatingAgencyMS.Infrastructure.Services.PostgresServices;
@@ -14,10 +16,11 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
     private readonly string _pgConnTemplate;
     private readonly ConcurrentDictionary<string, DbConnectionInfo> _connections;
     private readonly DbConnection _rootConnection;
-
-    public PostgresDbManager(string pgConnTemplate, string pgRootConn)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public PostgresDbManager(string pgConnTemplate, string pgRootConn, IHttpContextAccessor httpContextAccessor)
     {
         _pgConnTemplate = pgConnTemplate;
+        _httpContextAccessor = httpContextAccessor;
         _connections = new ConcurrentDictionary<string, DbConnectionInfo>();
         _rootConnection = new NpgsqlConnection(pgRootConn);
     }
@@ -72,8 +75,9 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
         return Task.FromResult(ServiceResult<DbConnection>.Ok(connection.Connection));
     }
 
-    public async Task<DbConnection> GetConnectionOrThrow(string login)
+    public async Task<DbConnection> GetConnectionOrThrow()
     {
+        var login = _httpContextAccessor.HttpContext!.User.GetDbUserLogin();
         var serviceResult = await GetConnection(login);
         if (!serviceResult.Success) throw new InvalidOperationException("Невдалось отримати підключення до БД. Спробуйте перезайти в аккаунт");
         return serviceResult.ResponseData!;

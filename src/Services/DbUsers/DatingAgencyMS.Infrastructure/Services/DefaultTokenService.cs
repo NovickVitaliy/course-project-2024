@@ -14,10 +14,9 @@ namespace DatingAgencyMS.Infrastructure.Services;
 public class DefaultTokenService : ITokenService
 {
     private readonly JwtSettings _jwtSettings;
-    private readonly IUserManager _userManager;
+
     public DefaultTokenService(IOptions<JwtSettings> options, IUserManager userManager)
     {
-        _userManager = userManager;
         _jwtSettings = options.Value;
     }
 

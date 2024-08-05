@@ -11,14 +11,14 @@ using Refit;
 
 namespace DatingAgencyMS.Client.Features.PartnerRequirements.Pages;
 
-public partial class CreatePartnerRequirements : ComponentBase
+public partial class CreatePartnerRequirements
 {
     [Inject] private IState<UserState> UserState { get; init; }
     private LoggedInUser? _loggedInUser;
     [Inject] private IPartnerRequirementsService PartnerRequirementsService { get; init; }
     [Inject] private ToastService ToastService { get; init; }
     [Inject] private NavigationManager NavigationManager { get; init; }
-    private CreatePartnerRequirementsRequest _request;
+    private CreatePartnerRequirementsRequest _request = new();
 
     protected override void OnInitialized()
     {

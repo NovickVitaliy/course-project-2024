@@ -65,7 +65,7 @@ public class PostgresUserManager : IUserManager
 
     public async Task<ServiceResult<GetUsersResponse>> GetUsers(GetUsersRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         List<DbUserDto> users = [];
         long? totalCount = null;
@@ -102,7 +102,7 @@ public class PostgresUserManager : IUserManager
 
     public async Task<ServiceResult<GetUserResponse>> GetUser(GetUserRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -165,7 +165,7 @@ public class PostgresUserManager : IUserManager
 
     public async Task<ServiceResult<long>> CreateUser(CreateUserRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
         long? id = null;
         try
@@ -232,7 +232,7 @@ public class PostgresUserManager : IUserManager
 
     public async Task<ServiceResult<bool>> DeleteUser(DeleteUserRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         var success = false;
         await using var transaction = await connection.BeginTransactionAsync();
         try
@@ -312,7 +312,7 @@ public class PostgresUserManager : IUserManager
 
     public async Task<ServiceResult<bool>> AssignNewRole(AssignNewRoleRequest request)
     {
-        var connection = await GetConnection(request.RequestedBy);
+        var connection = await _dbManager.GetConnectionOrThrow();
         var success = false;
         await using var transaction = await connection.BeginTransactionAsync();
         try
@@ -351,7 +351,7 @@ public class PostgresUserManager : IUserManager
 
     public async Task<ServiceResult<DbRoles>> GetUserRole(string login)
     {
-        var connection = await GetConnection(login);
+        var connection = (await _dbManager.GetConnection(login)).ResponseData;
         await using var cmd = connection.CreateCommand();
         cmd.CommandText = "SELECT role FROM keys WHERE login=@login";
         cmd.AddParameter("login", login);
@@ -363,17 +363,5 @@ public class PostgresUserManager : IUserManager
         }
 
         throw new ArgumentException("Користувач з таким логіном не був знайдений", login);
-    }
-
-    private async Task<DbConnection> GetConnection(string requestedBy)
-    {
-        var serviceResult = await _dbManager.GetConnection(requestedBy);
-        if (!serviceResult.Success || serviceResult.ResponseData is null)
-        {
-            throw new InvalidOperationException(
-                "Не вдалося отримати підключення до БД для даного користувача. Спробуйте увійти в аккаунт знову");
-        }
-
-        return serviceResult.ResponseData;
     }
 }
