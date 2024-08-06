@@ -52,33 +52,41 @@ CREATE TABLE IF NOT EXISTS PartnerRequirements
     CONSTRAINT partnerRequirements_minWeight_check CHECK (min_weight < max_weight)
 );
 
-CREATE TABLE IF NOT EXISTS PlannedMeetings
+
+CREATE TABLE IF NOT EXISTS Meetings
 (
-    meeting_id       SERIAL,
-    first_client_id  INTEGER,
-    second_client_id INTEGER,
-    date             TIMESTAMP   NOT NULL,
-    location         VARCHAR(50) NOT NULL,
+    meeting_id SERIAL,
+    date       TIMESTAMP   NOT NULL,
+    inviter_id INTEGER,
+    invitee_id INTEGER,
+    location   VARCHAR(50) NOT NULL,
+    result     VARCHAR(50) NOT NULL,
     PRIMARY KEY (meeting_id),
-    FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (inviter_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (invitee_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS FinishedMeetings
+CREATE TABLE IF NOT EXISTS MeetingVisit
 (
-    meeting_id           SERIAL,
-    date                 TIMESTAMP   NOT NULL,
-    first_client_id      INTEGER,
-    second_client_id     INTEGER,
-    location             VARCHAR(50) NOT NULL,
-    first_client_score   SMALLINT    NOT NULL,
-    first_client_review  VARCHAR(50) NOT NULL,
-    second_client_score  SMALLINT    NOT NULL,
-    second_client_review VARCHAR(50) NOT NULL,
-    result               VARCHAR(50) NOT NULL,
-    PRIMARY KEY (meeting_id),
-    FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
+    id         SERIAL,
+    client_id  INTEGER,
+    meeting_id INTEGER,
+    visited    BOOLEAN,
+    PRIMARY KEY (id),
+    FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (meeting_id) REFERENCES Meetings (meeting_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS MeetingReview
+(
+    id             SERIAL,
+    inviter_score  SMALLINT    NOT NULL,
+    inviter_review VARCHAR(50) NOT NULL,
+    invitee_score  SMALLINT    NOT NULL,
+    invitee_review VARCHAR(50) NOT NULL,
+    meeting_id     INTEGER,
+    PRIMARY KEY (id),
+    FOREIGN KEY (meeting_id) REFERENCES Meetings (meeting_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS CoupleArchive
@@ -94,23 +102,6 @@ CREATE TABLE IF NOT EXISTS CoupleArchive
     FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS MeetingArchive
-(
-    id                   SERIAL,
-    date                 TIMESTAMP   NOT NULL,
-    first_client_id      INTEGER,
-    second_client_id     INTEGER,
-    location             VARCHAR(50) NOT NULL,
-    first_client_score   SMALLINT    NOT NULL,
-    first_client_review  VARCHAR(50) NOT NULL,
-    second_client_score  SMALLINT    NOT NULL,
-    second_client_review VARCHAR(50) NOT NULL,
-    result               VARCHAR(50) NOT NULL,
-    archived_on          TIMESTAMP   NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 CREATE TABLE IF NOT EXISTS ClientRatings
 (
@@ -170,15 +161,4 @@ CREATE TABLE IF NOT EXISTS PhoneNumbers
     additional_contacts_id INTEGER,
     PRIMARY KEY (id),
     FOREIGN KEY (additional_contacts_id) REFERENCES AdditionalContacts (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Friendship
-(
-    first_client_id  INTEGER,
-    second_client_id INTEGER,
-    established_on   TIMESTAMP NOT NULL,
-    PRIMARY KEY (first_client_id, second_client_id),
-    FOREIGN KEY (first_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (second_client_id) REFERENCES Clients (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE (first_client_id, second_client_id)
 );

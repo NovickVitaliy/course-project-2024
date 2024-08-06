@@ -2,7 +2,8 @@ namespace DatingAgencyMS.Domain.Models.Business;
 
 public enum MeetingResult
 {
-    IssuesResolved,
+    Pending,
+    Match,
     NoMatch,
     Cancelled
 }
