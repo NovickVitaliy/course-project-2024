@@ -10,3 +10,4 @@ C:\Users\User\Desktop\projects\course-project-2024\src\Common\Common.Auth\obj\De
 C:\Users\User\Desktop\projects\course-project-2024\src\Common\Common.Auth\obj\Debug\net8.0\refint\Common.Auth.dll
 C:\Users\User\Desktop\projects\course-project-2024\src\Common\Common.Auth\obj\Debug\net8.0\Common.Auth.pdb
 C:\Users\User\Desktop\projects\course-project-2024\src\Common\Common.Auth\obj\Debug\net8.0\ref\Common.Auth.dll
+C:\Users\User\Desktop\projects\course-project-2024\src\Common\Common.Auth\obj\Debug\net8.0\Common.Auth.sourcelink.json

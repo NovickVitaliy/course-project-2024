@@ -14,4 +14,7 @@ public interface IInvitationsService
 
     [Delete("/invitations/{id}")]
     Task DeleteInvitation(int id, [Authorize] string token);
+
+    [Put("/invitations/{invitationId}/accept")]
+    Task MarkAsAccepted(int invitationId, [Authorize] string token);
 }

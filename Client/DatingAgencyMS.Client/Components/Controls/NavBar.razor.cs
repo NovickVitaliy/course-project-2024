@@ -31,13 +31,16 @@ public partial class NavBar
         try
         {
             await DbAccessService.Logout(User!.Login, User.Token);
-            Dispatcher.Dispatch(new SetUserAction(null));
-            await LocalStorageService.RemoveItemAsync(UserConstants.UserLocalStorageKey);
-            NavigationManager.NavigateTo("/");
         }
         catch (Exception e)
         {
             //TODO: make some user notification blah blah blah
+        }
+        finally
+        {
+            Dispatcher.Dispatch(new SetUserAction(null));
+            await LocalStorageService.RemoveItemAsync(UserConstants.UserLocalStorageKey);
+            NavigationManager.NavigateTo("/");
         }
     }
 }

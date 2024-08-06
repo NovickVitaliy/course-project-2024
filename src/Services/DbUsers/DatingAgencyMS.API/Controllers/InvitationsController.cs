@@ -52,4 +52,16 @@ public class InvitationsController : BaseApiController
 
         return NoContent();
     }
+
+    [HttpPut("{invitationId:int}/accept")]
+    public async Task<IActionResult> MarkAssAccepted(int invitationId)
+    {
+        var result = await _invitationsService.MarkAsAccepted(invitationId);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok();
+    }
 }

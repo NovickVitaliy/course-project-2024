@@ -46,6 +46,7 @@
         <ChildContent>
             <div class="d-flex gap-1">
                 <button @onclick="() => DeleteInvitation(context.InvitationId)" class="btn btn-danger">Видалити</button>
+                <button @onclick="() => MarkAsAccepted(context.InvitationId)" class="btn btn-success">Позначити як прийняте</button>
             </div>
         </ChildContent>
     </GridColumn>

@@ -109,6 +109,33 @@ public class PostgresInvitationsService : IInvitationsService
         }
     }
 
+    public async Task<ServiceResult<bool>> MarkAsAccepted(int invitationId)
+    {
+        var connection = await _dbManager.GetConnectionOrThrow();
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "UPDATE invitations SET is_accepted = TRUE WHERE invitation_id = @invitationId";
+            cmd.AddParameter("invitationId", invitationId);
+            var rowsAffected = await cmd.ExecuteNonQueryAsync();
+            if (rowsAffected == 0)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.BadRequest("Запрошення вже прийнято або його не було знайдено");
+            }
+            
+            //TODO: create planned meeting
+            await transaction.CommitAsync();
+            return ServiceResult<bool>.Ok(true);
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
     private async Task ReadInvitations(DbDataReader reader, List<InvitationDto> invitations)
     {
         while (await reader.ReadAsync())

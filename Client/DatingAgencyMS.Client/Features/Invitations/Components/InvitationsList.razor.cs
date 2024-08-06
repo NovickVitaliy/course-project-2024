@@ -31,13 +31,14 @@ public partial class InvitationsList : FluxorComponent
         NoButtonColor = ButtonColor.Secondary
     };
 
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
+        _loggedInUser = UserState.Value.User;
         UserState.StateChanged += (sender, args) =>
         {
             _loggedInUser = UserState.Value.User;
         };
-        base.OnParametersSet();
+        base.OnInitialized();
     }
 
     private async Task<GridDataProviderResult<InvitationDto>> InvitationDataProvider(
@@ -110,6 +111,37 @@ public partial class InvitationsList : FluxorComponent
         {
             var apiError = e.ToApiError();
             ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
+        }
+    }
+
+    private async Task MarkAsAccepted(int invitationId)
+    {
+        if (_confirmDialog is null || _loggedInUser is null) return;
+
+        var confirmation = await _confirmDialog.ShowAsync("Підтвердження прийнятта запрошення",
+            "Після того як запрошення буде позначено як прийнято, створиться об'єкт зустрічі в таблиці зустрічей. " +
+            "Продовжити?", new ConfirmDialogOptions
+            {
+                YesButtonText = "ОК",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Відмінити",
+                NoButtonColor = ButtonColor.Secondary
+            });
+
+        if (confirmation)
+        {
+            try
+            {
+                await InvitationsService.MarkAsAccepted(invitationId, _loggedInUser.Token);
+                await _grid?.RefreshDataAsync();
+                ToastService.Notify(new ToastMessage(ToastType.Success, 
+                    "Запрошення було успішно прийняте. Зустріч була запланована, щоб переглянути детальнішу інформацію перейдіть до таблиці зустрічей"));
+            }
+            catch (ApiException e)
+            {
+                var apiError = e.ToApiError();
+                ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
+            }
         }
     }
 }
