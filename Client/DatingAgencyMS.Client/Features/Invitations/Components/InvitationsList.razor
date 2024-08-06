@@ -2,7 +2,6 @@
 @using DatingAgencyMS.Client.Features.Invitations.Models.Dtos
 @using DatingAgencyMS.Client.Helpers
 @using Microsoft.AspNetCore.Components.Web
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @rendermode @(new InteractiveServerRenderMode(false))
 <ConfirmDialog @ref="_confirmDialog"></ConfirmDialog>
 <Grid @ref="_grid" TItem="InvitationDto"
@@ -46,7 +45,10 @@
         <ChildContent>
             <div class="d-flex gap-1">
                 <button @onclick="() => DeleteInvitation(context.InvitationId)" class="btn btn-danger">Видалити</button>
-                <button @onclick="() => MarkAsAccepted(context.InvitationId)" class="btn btn-success">Позначити як прийняте</button>
+                @if (!context.IsAccepted)
+                {
+                    <button @onclick="() => MarkAsAccepted(context.InvitationId)" class="btn btn-success">Позначити як прийняте</button>
+                }
             </div>
         </ChildContent>
     </GridColumn>

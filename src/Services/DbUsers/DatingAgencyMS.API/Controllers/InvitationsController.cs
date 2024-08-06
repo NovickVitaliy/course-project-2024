@@ -1,6 +1,8 @@
+using System.Transactions;
 using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Invitations.Requests;
+using DatingAgencyMS.Application.DTOs.Meetings.Requests;
 using DatingAgencyMS.Application.Extensions;
 using DatingAgencyMS.Infrastructure.Extensions;
 
@@ -10,10 +12,11 @@ namespace DatingAgencyMS.API.Controllers;
 public class InvitationsController : BaseApiController
 {
     private readonly IInvitationsService _invitationsService;
-
-    public InvitationsController(IInvitationsService invitationsService)
+    private readonly IMeetingsService _meetingsService;
+    public InvitationsController(IInvitationsService invitationsService, IMeetingsService meetingsService)
     {
         _invitationsService = invitationsService;
+        _meetingsService = meetingsService;
     }
 
     [HttpGet]
@@ -54,12 +57,30 @@ public class InvitationsController : BaseApiController
     }
 
     [HttpPut("{invitationId:int}/accept")]
-    public async Task<IActionResult> MarkAssAccepted(int invitationId)
+    public async Task<IActionResult> MarkAsAccepted(int invitationId)
     {
-        var result = await _invitationsService.MarkAsAccepted(invitationId);
-        if (!result.Success)
+        try
         {
-            return StatusCode(result.Code, result.ToHttpErrorResponse());
+            using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            var invitationResult = await _invitationsService.MarkAsAccepted(invitationId);
+            if (!invitationResult.Success)
+            {
+                return StatusCode(invitationResult.Code, invitationResult.ToHttpErrorResponse());
+            }
+
+            var invitationDto = invitationResult.ResponseData;
+            var createMeetingRequest = new CreateMeetingRequest(invitationDto.InviterId, invitationDto.InviteeId,
+                invitationDto.Location, invitationDto.DateOfMeeting);
+            var meetingResult = await _meetingsService.CreateMeeting(createMeetingRequest);
+            if (!meetingResult.Success)
+            {
+                return StatusCode(meetingResult.Code, meetingResult.ToHttpErrorResponse());
+            }
+            transactionScope.Complete();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
 
         return Ok();

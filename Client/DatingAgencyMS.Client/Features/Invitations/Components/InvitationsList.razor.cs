@@ -9,17 +9,15 @@ using DatingAgencyMS.Client.Helpers;
 using DatingAgencyMS.Client.Models.Core;
 using DatingAgencyMS.Client.Store.UserUseCase;
 using Fluxor;
-using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
 namespace DatingAgencyMS.Client.Features.Invitations.Components;
 
-public partial class InvitationsList : FluxorComponent
+public partial class InvitationsList : ComponentBase
 {
     [Inject] private IInvitationsService InvitationsService { get; init; }
     [Inject] private IState<UserState> UserState { get; init; }
-    private LoggedInUser? _loggedInUser = null;
     [Inject] private ToastService ToastService { get; init; }
     private Grid<InvitationDto>? _grid;
     private ConfirmDialog? _confirmDialog;
@@ -30,16 +28,6 @@ public partial class InvitationsList : FluxorComponent
         NoButtonText = "Назад",
         NoButtonColor = ButtonColor.Secondary
     };
-
-    protected override void OnInitialized()
-    {
-        _loggedInUser = UserState.Value.User;
-        UserState.StateChanged += (sender, args) =>
-        {
-            _loggedInUser = UserState.Value.User;
-        };
-        base.OnInitialized();
-    }
 
     private async Task<GridDataProviderResult<InvitationDto>> InvitationDataProvider(
         GridDataProviderRequest<InvitationDto> request)
@@ -116,7 +104,7 @@ public partial class InvitationsList : FluxorComponent
 
     private async Task MarkAsAccepted(int invitationId)
     {
-        if (_confirmDialog is null || _loggedInUser is null) return;
+        if (_confirmDialog is null) return;
 
         var confirmation = await _confirmDialog.ShowAsync("Підтвердження прийнятта запрошення",
             "Після того як запрошення буде позначено як прийнято, створиться об'єкт зустрічі в таблиці зустрічей. " +
@@ -132,7 +120,7 @@ public partial class InvitationsList : FluxorComponent
         {
             try
             {
-                await InvitationsService.MarkAsAccepted(invitationId, _loggedInUser.Token);
+                await InvitationsService.MarkAsAccepted(invitationId, UserState.Value.User.Token);
                 await _grid?.RefreshDataAsync();
                 ToastService.Notify(new ToastMessage(ToastType.Success, 
                     "Запрошення було успішно прийняте. Зустріч була запланована, щоб переглянути детальнішу інформацію перейдіть до таблиці зустрічей"));

@@ -109,7 +109,7 @@ public class PostgresInvitationsService : IInvitationsService
         }
     }
 
-    public async Task<ServiceResult<bool>> MarkAsAccepted(int invitationId)
+    public async Task<ServiceResult<InvitationDto>> MarkAsAccepted(int invitationId)
     {
         var connection = await _dbManager.GetConnectionOrThrow();
         await using var transaction = await connection.BeginTransactionAsync();
@@ -122,36 +122,47 @@ public class PostgresInvitationsService : IInvitationsService
             if (rowsAffected == 0)
             {
                 await transaction.RollbackAsync();
-                return ServiceResult<bool>.BadRequest("Запрошення вже прийнято або його не було знайдено");
+                return ServiceResult<InvitationDto>.BadRequest("Запрошення вже прийнято або його не було знайдено");
             }
-            
-            //TODO: create planned meeting
+
+            cmd.CommandText = "SELECT * FROM invitations WHERE invitation_id = @invitationId";
+            cmd.AddParameter("invitationId", invitationId);
+            var reader = await cmd.ExecuteReaderAsync();
+            await reader.ReadAsync();
+            var invitation = ReadSingleInvitation(reader);
+            await reader.CloseAsync();
             await transaction.CommitAsync();
-            return ServiceResult<bool>.Ok(true);
+            return ServiceResult<InvitationDto>.Ok(invitation);
         }
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-            return ServiceResult<bool>.BadRequest(e.Message);
+            return ServiceResult<InvitationDto>.BadRequest(e.Message);
         }
     }
 
-    private async Task ReadInvitations(DbDataReader reader, List<InvitationDto> invitations)
+    private static async Task ReadInvitations(DbDataReader reader, List<InvitationDto> invitations)
     {
         while (await reader.ReadAsync())
         {
-            var invitationId = reader.GetInt32("invitation_id");
-            var inviterId = reader.GetInt32("inviter_id");
-            var inviteeId = reader.GetInt32("invitee_id");
-            var location = reader.GetString("location");
-            var dateOfMeeting = reader.GetDateTime("date_of_meeting");
-            var createdOn = DateOnly.FromDateTime(reader.GetDateTime("created_on"));
-            var activeTo = DateOnly.FromDateTime(reader.GetDateTime("active_to"));
-            var isAccepted = reader.GetBoolean("is_accepted");
-            
-            invitations.Add(new InvitationDto(invitationId, inviterId, inviteeId, 
-                location, dateOfMeeting, createdOn, activeTo, isAccepted));
+            var invitation = ReadSingleInvitation(reader);
+            invitations.Add(invitation);
         }
+    }
+
+    private static InvitationDto ReadSingleInvitation(DbDataReader reader)
+    {
+        var invitationId = reader.GetInt32("invitation_id");
+        var inviterId = reader.GetInt32("inviter_id");
+        var inviteeId = reader.GetInt32("invitee_id");
+        var location = reader.GetString("location");
+        var dateOfMeeting = reader.GetDateTime("date_of_meeting");
+        var createdOn = DateOnly.FromDateTime(reader.GetDateTime("created_on"));
+        var activeTo = DateOnly.FromDateTime(reader.GetDateTime("active_to"));
+        var isAccepted = reader.GetBoolean("is_accepted");
+
+        return new InvitationDto(invitationId, inviterId, inviteeId,
+            location, dateOfMeeting, createdOn, activeTo, isAccepted);
     }
 
     private static (string FullSql, string ConditionSql) BuildSqlForGetInvitations(GetInvitationsRequest request)
