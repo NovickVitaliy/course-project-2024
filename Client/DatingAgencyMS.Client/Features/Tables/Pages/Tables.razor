@@ -1,30 +1,11 @@
 @page "/tables"
 @using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.Tables.Components
 <h3>Таблиці</h3>
 <div class="w-100 border border-dark border-1 mb-3"></div>
 <div class="d-flex gap-2">
-    <Card>
-        <CardBody>
-            <CardTitle>Клієнти</CardTitle>
-            <Button Color="ButtonColor.Primary" Type="ButtonType.Link" To="/tables/clients">Перейти до таблиці</Button>
-        </CardBody>
-    </Card>
-    <Card>
-        <CardBody>
-            <CardTitle>Вимоги до партнерів</CardTitle>
-            <Button Color="ButtonColor.Primary" Type="ButtonType.Link" To="/tables/partner-requirements">Перейти до таблиці</Button>
-        </CardBody>
-    </Card>
-    <Card>
-        <CardBody>
-            <CardTitle>Запрошення</CardTitle>
-            <Button Color="ButtonColor.Primary" Type="ButtonType.Link" To="/tables/invitations">Перейти до таблиці</Button>
-        </CardBody>
-    </Card>
-    <Card>
-        <CardBody>
-            <CardTitle>Зустрічі</CardTitle>
-            <Button Color="ButtonColor.Primary" Type="ButtonType.Link" To="/tables/meetings">Перейти до таблиці</Button>
-        </CardBody>
-    </Card>
+    <TableCard TableName="Клієнти" TableLink="/tables/clients"></TableCard>
+    <TableCard TableName="Вимоги до партнерів" TableLink="/tables/partner-requirements"></TableCard>
+    <TableCard TableName="Запрошення" TableLink="/tables/invitations"></TableCard>
+    <TableCard TableName="Зустрічі" TableLink="/tables/meetings"></TableCard>
 </div>

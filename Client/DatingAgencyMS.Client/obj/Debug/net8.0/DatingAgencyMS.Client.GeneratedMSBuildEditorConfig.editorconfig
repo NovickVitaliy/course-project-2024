@@ -131,6 +131,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcUGFydG5lclJlcXVpcmVtZW50c1xQYWdlc1xVcGRhdGVQYXJ0bmVyUmVxdWlyZW1lbnQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Tables/Components/TableCard.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcVGFibGVzXENvbXBvbmVudHNcVGFibGVDYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Tables/Pages/Tables.razor]
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcVGFibGVzXFBhZ2VzXFRhYmxlcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
