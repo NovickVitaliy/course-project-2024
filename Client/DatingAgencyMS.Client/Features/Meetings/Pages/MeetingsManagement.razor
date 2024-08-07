@@ -1,11 +1,50 @@
 @page "/tables/meetings"
 @using DatingAgencyMS.Client.Features.Meetings.Components
+@using Microsoft.AspNetCore.Components.Web
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.Meetings.Models.Enum
+@rendermode @(new InteractiveServerRenderMode(false))
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<Modal @ref="_plannedMeetingsByPeriodPromptModal" Title="Заплановані зустрічі за періодом часу">
+    <BodyTemplate>
+        <p>Вкажіть період, за який ви бажаєте побачити заплановані зустрічі</p>
+        <select @bind="_periodOption" id="period" class="form-select">
+            <option value="" selected disabled>Виберіть період</option>
+            <option value="@nameof(PlannedMeetingByPeriodOption.CurrentMonth)">Поточний місяць</option>
+            <option value="@nameof(PlannedMeetingByPeriodOption.NextMonths)">Наступні місяці</option>
+        </select>
+        @if (!string.IsNullOrEmpty(_periodError))
+        {
+            <div class="validation-message">@_periodError</div>
+        }
+        @if (_periodOption == PlannedMeetingByPeriodOption.NextMonths)
+        {
+            <div>
+                <label>Рік</label>
+                <input @bind-value="_periodYear" class="form-control" type="number" min="@DateTime.Now.Year"/>
+            </div>
+            <div>
+                <label>Місяць</label>
+                <select @bind="_periodMonth" class="form-select">
+                    @foreach (var month in GetLeftMonths())
+                    {
+                        <option value="@month.MonthIndex">@month.Month</option>
+                    }
+                </select>
+            </div>
+        }
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHidePlannedMeetingPromptModalClick">Закрити</Button>
+        <Button Color="ButtonColor.Primary" @onclick="OnPlannedMeetingPromptModalSuccessClick">Показати</Button>
+    </FooterTemplate>
+</Modal>
+
 <h3>Керування зустрічами</h3>
 @if (_loggedInUser is not null)
 {
     <div class="d-flex w-100 mb-3 gap-1">
-
+        <button class="btn btn-primary" @onclick="PromptForPeriodOfTime">Заплановані зустрічі за періодом часу</button>
     </div>
     <MeetingsList></MeetingsList>
 }

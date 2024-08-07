@@ -31,7 +31,7 @@ public class PostgresMeetingsService : IMeetingsService
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
             cmd.CommandText = "INSERT INTO meetings (date, inviter_id, invitee_id, location, result) " +
                               "VALUES (@date, @inviterId, @inviteeId, @location, @result) RETURNING meeting_id";
-            cmd.AddParameter("date", DateTime.Now)
+            cmd.AddParameter("date", request.Date)
                 .AddParameter("inviterId", request.InviterId)
                 .AddParameter("inviteeId", request.InviteeId)
                 .AddParameter("location", request.Location)
@@ -59,7 +59,7 @@ public class PostgresMeetingsService : IMeetingsService
 
             cmd.CommandText = sql.FullSql;
             var reader = await cmd.ExecuteReaderAsync();
-            var meetings = await ReadMeeting(reader);
+            var meetings = await ReadMeetings(reader);
             await reader.CloseAsync();
 
             cmd.CommandText = $"SELECT COUNT(*) FROM meetings {sql.ConditionSql}";
@@ -75,7 +75,45 @@ public class PostgresMeetingsService : IMeetingsService
         }
     }
 
-    private async Task<IReadOnlyList<MeetingDto>> ReadMeeting(DbDataReader reader)
+    public async Task<ServiceResult<GetMeetingsResponse>> GetPlannedMeetingsByPeriod(GetPlannedMeetingsForPeriodRequest request)
+    {
+        var connection = await _dbManager.GetConnectionOrThrow();
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT * FROM meetings WHERE result = 'Очікується' " +
+                              "AND EXTRACT(YEAR FROM date) = @year " +
+                              "AND EXTRACT(MONTH FROM date) = @month " +
+                              "ORDER BY date " +
+                              "OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY ";
+            cmd.AddParameter("year", request.Year)
+                .AddParameter("month", request.Month)
+                .AddParameter("skip", (request.PageNumber - 1) * request.PageSize)
+                .AddParameter("take", request.PageSize);
+
+            var reader = await cmd.ExecuteReaderAsync();
+            var meetings = await ReadMeetings(reader);
+            await reader.CloseAsync();
+            
+            cmd.Parameters.Clear();
+            cmd.CommandText = "SELECT COUNT(*) FROM meetings WHERE result = 'Очікується' " +
+                              "AND EXTRACT(YEAR FROM date) = @year " +
+                              "AND EXTRACT(MONTH FROM date) = @month ";
+            cmd.AddParameter("year", request.Year)
+                .AddParameter("month", request.Month);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            
+            return ServiceResult<GetMeetingsResponse>.Ok(new GetMeetingsResponse(meetings, count.Value));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<GetMeetingsResponse>.BadRequest(e.Message);
+        }
+    }
+
+    private async Task<IReadOnlyList<MeetingDto>> ReadMeetings(DbDataReader reader)
     {
         List<MeetingDto> meetings = [];
         while (await reader.ReadAsync())

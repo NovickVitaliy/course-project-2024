@@ -111,6 +111,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWVldGluZ3NcUGFnZXNcTWVldGluZ3NNYW5hZ2VtZW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Meetings/Pages/MeetingsPlannedByPeriod.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWVldGluZ3NcUGFnZXNcTWVldGluZ3NQbGFubmVkQnlQZXJpb2QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/PartnerRequirements/Components/PartnerRequirementsList.razor]
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcUGFydG5lclJlcXVpcmVtZW50c1xDb21wb25lbnRzXFBhcnRuZXJSZXF1aXJlbWVudHNMaXN0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

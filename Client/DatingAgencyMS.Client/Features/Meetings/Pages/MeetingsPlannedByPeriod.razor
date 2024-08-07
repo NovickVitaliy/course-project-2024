@@ -1,0 +1,34 @@
+@page "/tables/meetings/planned"
+@using DatingAgencyMS.Client.Helpers
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.Meetings.Models
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<h3>Зустрічі заплановані на період: @MonthHelper.GetUkrainianMonthName(Month), @Year рік, </h3>
+@if (_loggedInUser is not null)
+{
+    <Grid TItem="MeetingDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="PlannedMeetingsDataProvider"
+          AllowPaging="true"
+          PageSize="10"
+          Responsive="true">
+        <GridColumn TItem="MeetingDto" HeaderText="Id Зустрічі" PropertyName="MeetingId" SortString="meeting_id" SortKeySelector="x => x.MeetingId" FilterTextboxWidth="80">
+            @context.MeetingId
+        </GridColumn>
+        <GridColumn TItem="MeetingDto" HeaderText="Дата Зустрічі" PropertyName="Date" SortString="date" SortKeySelector="x => x.Date" FilterTextboxWidth="80">
+            @context.Date
+        </GridColumn>
+        <GridColumn TItem="MeetingDto" HeaderText="Id Запрошувача" PropertyName="InviterId" SortString="inviter_id" SortKeySelector="x => x.InviterId" FilterTextboxWidth="80">
+            @context.InviterId
+        </GridColumn>
+        <GridColumn TItem="MeetingDto" HeaderText="Id Запрошуваного" PropertyName="InviteeId" SortString="invitee_id" SortKeySelector="x => x.InviteeId" FilterTextboxWidth="80">
+            @context.InviteeId
+        </GridColumn>
+        <GridColumn TItem="MeetingDto" HeaderText="Місце Зустрічі" PropertyName="Location" SortString="location" SortKeySelector="x => x.Location" FilterTextboxWidth="80">
+            @context.Location
+        </GridColumn>
+        <GridColumn TItem="MeetingDto" HeaderText="Результат зустрічі" PropertyName="Result" SortString="result" SortKeySelector="x => x.Result" FilterTextboxWidth="80">
+            @context.Result
+        </GridColumn>
+    </Grid>
+}

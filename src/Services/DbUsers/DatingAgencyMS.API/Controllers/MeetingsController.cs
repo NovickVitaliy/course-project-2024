@@ -26,4 +26,16 @@ public class MeetingsController : BaseApiController
 
         return Ok(result.ResponseData);
     }
+
+    [HttpGet("planned")]
+    public async Task<IActionResult> GetPlannedMeetingsByPeriod([FromQuery] GetPlannedMeetingsForPeriodRequest request)
+    {
+        var result = await _meetingsService.GetPlannedMeetingsByPeriod(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }
