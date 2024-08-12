@@ -147,6 +147,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcVGFibGVzXFBhZ2VzXFRhYmxlcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Visits/Components/VisitsList.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcVmlzaXRzXENvbXBvbmVudHNcVmlzaXRzTGlzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Visits/Pages/VisitsManagement.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcVmlzaXRzXFBhZ2VzXFZpc2l0c01hbmFnZW1lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Components/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-vy5203p7ya

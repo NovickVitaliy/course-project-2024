@@ -5,6 +5,7 @@ using DatingAgencyMS.Client.Features.Clients.Services;
 using DatingAgencyMS.Client.Features.Invitations.Services;
 using DatingAgencyMS.Client.Features.Meetings.Services;
 using DatingAgencyMS.Client.Features.PartnerRequirements.Services;
+using DatingAgencyMS.Client.Features.Visits.Services;
 using DatingAgencyMS.Client.Services;
 using Fluxor;
 
@@ -20,7 +21,8 @@ builder.Services
     .AddRefitServiceWithBaseApiUrl<IClientsService>(cfg)
     .AddRefitServiceWithBaseApiUrl<IPartnerRequirementsService>(cfg)
     .AddRefitServiceWithBaseApiUrl<IInvitationsService>(cfg)
-    .AddRefitServiceWithBaseApiUrl<IMeetingsService>(cfg);
+    .AddRefitServiceWithBaseApiUrl<IMeetingsService>(cfg)
+    .AddRefitServiceWithBaseApiUrl<IVisitsService>(cfg);
 
 builder.Services.AddFluxor(options =>
 {

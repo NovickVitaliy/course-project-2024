@@ -1,0 +1,29 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.Meetings.Models
+@using DatingAgencyMS.Client.Features.Meetings.Models.Enum
+@using DatingAgencyMS.Client.Features.Visits.Models.Dtos
+@using DatingAgencyMS.Client.Models.Core
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+
+<Grid TItem="VisitDto"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="VisitsDataProvider"
+      AllowPaging="true"
+      AllowSorting="true"
+      AllowFiltering="true"
+      PageSize="10"
+      Responsive="true">
+    <GridColumn TItem="VisitDto" HeaderText="Id Відвідування" PropertyName="Id" SortString="id" SortKeySelector="x => x.Id" FilterTextboxWidth="80">
+        @context.Id
+    </GridColumn>
+    <GridColumn TItem="VisitDto" HeaderText="Id Клієнта" PropertyName="ClientId" SortString="client_id" SortKeySelector="x => x.ClientId" FilterTextboxWidth="80">
+        @context.ClientId
+    </GridColumn>
+    <GridColumn TItem="VisitDto" HeaderText="Id Зустрічі" PropertyName="MeetingId" SortString="meeting_id" SortKeySelector="x => x.MeetingId" FilterTextboxWidth="80">
+        @context.MeetingId
+    </GridColumn>
+    <GridColumn TItem="VisitDto" HeaderText="Відвідано?" PropertyName="Visited" SortString="visited" SortKeySelector="x => x.Visited" FilterTextboxWidth="80">
+        @(context.Visited ? "Відвідано" : "Не відвідано")
+    </GridColumn>
+</Grid>

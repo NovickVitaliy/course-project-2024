@@ -1,0 +1,10 @@
+@page "/tables/visits"
+@using DatingAgencyMS.Client.Features.Visits.Components
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<h3>Керування відвідуваннями зустріч</h3>
+@if (_loggedInUser is not null)
+{
+    <div class="d-flex w-100 mb-3 gap-1">
+    </div>
+    <VisitsList></VisitsList>
+}
