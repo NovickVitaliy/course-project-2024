@@ -4,6 +4,7 @@ using Common.Filtering.Sorting;
 using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Features.Meetings.Models;
 using DatingAgencyMS.Client.Features.Meetings.Models.Dtos.Requests;
+using DatingAgencyMS.Client.Features.Meetings.Models.Enum;
 using DatingAgencyMS.Client.Features.Meetings.Services;
 using DatingAgencyMS.Client.Helpers;
 using DatingAgencyMS.Client.Store.UserUseCase;

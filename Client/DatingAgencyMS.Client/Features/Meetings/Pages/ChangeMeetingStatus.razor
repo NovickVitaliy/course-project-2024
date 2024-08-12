@@ -1,0 +1,53 @@
+@page "/tables/meetings/{meetingId:int}/change-status"
+@using DatingAgencyMS.Client.Features.Meetings.Models.Enum
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@code {
+    private void Callback(ChangeEventArgs obj)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+<h3>Змінити статус зустрічі</h3>
+
+<div class="row">
+    <div class="col-lg-6 col-sm-12">
+        <EditForm FormName="changeMeetingStatusForm" Model="_request" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <div class="mb-3">
+                <label for="status">Статус зустрічі</label>
+                <InputSelect id="status" @bind-Value="_request.MeetingStatus" class="form-select">
+                    <option value="@MeetingStatus.Match">Пари підійшли одне одному</option>
+                    <option value="@MeetingStatus.NoMatch">Пари не підійшли одне одному</option>
+                    <option value="@MeetingStatus.Canceled">Зустріч була скасована</option>
+                </InputSelect>
+                <div class="validation-message">
+                    <ValidationMessage For="() => _request.MeetingStatus"></ValidationMessage>
+                </div>
+            </div>
+            @if (_request.MeetingStatus is MeetingStatus.NoMatch or MeetingStatus.Canceled)
+            {
+                <div class="mb-3">
+                    <p>Вкажіть чи відвідали зустріч запрошувач та той кого запрошують</p>
+                    <div class="form-check">
+                        <label for="inviter-visited" class="form-check-label">Той, хто запрошує</label>
+                        <input id="inviter-visited" class="form-check-input" type="checkbox" @bind="InviterVisited"/>
+                    </div>
+                    <div class="form-check">
+                        <label for="invitee-visited" class="form-check-label">Той, кого запрошують</label>
+                        <input id="invitee-visited" class="form-check-input" type="checkbox" @bind="InviteeVisited"/>
+                    </div>
+                </div>
+            }
+            <p class="fst-italic">NOTE: @GetDetailsAboutStatus()</p>
+            <div class="d-flex gap-1 justify-content-end">
+                <a class="btn btn-secondary" href="/tables/meetings">Скасувати</a>
+                <button type="submit" class="btn btn-primary">Змінити</button>
+            </div>
+        </EditForm>
+    </div>
+</div>

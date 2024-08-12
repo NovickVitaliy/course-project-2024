@@ -107,6 +107,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWVldGluZ3NcQ29tcG9uZW50c1xNZWV0aW5nc0xpc3QucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Meetings/Pages/ChangeMeetingStatus.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWVldGluZ3NcUGFnZXNcQ2hhbmdlTWVldGluZ1N0YXR1cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Meetings/Pages/MeetingsManagement.razor]
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWVldGluZ3NcUGFnZXNcTWVldGluZ3NNYW5hZ2VtZW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

@@ -1,5 +1,11 @@
 @using BlazorBootstrap
 @using DatingAgencyMS.Client.Features.Meetings.Models
+@using DatingAgencyMS.Client.Features.Meetings.Models.Enum
+@using DatingAgencyMS.Client.Helpers
+@using DatingAgencyMS.Client.Models.Core
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+
 <Grid TItem="MeetingDto"
       Class="table table-hover table-bordered table-striped"
       DataProvider="MeetingDataProvider"
@@ -24,6 +30,22 @@
         @context.Location
     </GridColumn>
     <GridColumn TItem="MeetingDto" HeaderText="Результат зустрічі" PropertyName="Result" SortString="result" SortKeySelector="x => x.Result" FilterTextboxWidth="80">
-        @context.Result
+        @MeetingStatusHelper.ToUkrainianTranslationFromOldEnum(context.Result)
     </GridColumn>
+    @if (UserState.Value.User.IsAllowedToUpdateAndDeleteEntities())
+    {
+    <GridColumn TItem="MeetingDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+        <HeaderContent>
+            Опції
+        </HeaderContent>
+        <ChildContent>
+            <div class="d-flex gap-1">
+                @if (@context.Result is MeetingResult.Pending)
+                {
+                    <a class="btn btn-primary" href="/tables/meetings/@context.MeetingId/change-status">Змінити статус зустрічі</a>
+                }
+            </div>
+        </ChildContent>
+    </GridColumn>
+    }
 </Grid>

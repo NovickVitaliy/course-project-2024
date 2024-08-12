@@ -13,10 +13,6 @@
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\User\\Desktop\\projects\\course-project-2024\\Common.Business\\obj\\",
         "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
         "originalTargetFrameworks": [
           "net8.0"
         ],

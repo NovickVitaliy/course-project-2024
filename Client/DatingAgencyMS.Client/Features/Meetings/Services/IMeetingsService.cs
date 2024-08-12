@@ -12,4 +12,7 @@ public interface IMeetingsService
 
     [Get("/meetings/planned")]
     Task<GetMeetingsResponse> GetPlannedMeetingsForPeriod([FromQuery] GetPlannedMeetingsForPeriodRequest request, [Authorize] string token);
+    
+    [Put("/meetings/{meetingId}/change-status")]
+    Task ChangeMeetingStatus(int meetingId, ChangeMeetingStatusRequest request, [Authorize] string token);
 }

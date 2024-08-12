@@ -38,4 +38,19 @@ public class MeetingsController : BaseApiController
 
         return Ok(result.ResponseData);
     }
+
+    [HttpPut("{meetingId:int}/change-status")]
+    public async Task<IActionResult> ChangeMeetingStatus([FromBody] ChangeMeetingStatusRequest request,
+        [FromRoute] int meetingId)
+    { 
+        request = request with { MeetingId = meetingId };
+
+        var result = await _meetingsService.ChangeMeetingStatus(request);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok();
+    }
 }

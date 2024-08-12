@@ -9,6 +9,7 @@ using DatingAgencyMS.Domain.Models.Business;
 using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Helpers;
 using System.Data;
+using DatingAgencyMS.Application.DTOs.Clients;
 
 
 namespace DatingAgencyMS.Infrastructure.Services.PostgresServices;
@@ -111,6 +112,67 @@ public class PostgresMeetingsService : IMeetingsService
             await transaction.RollbackAsync();
             return ServiceResult<GetMeetingsResponse>.BadRequest(e.Message);
         }
+    }
+
+    public async Task<ServiceResult<bool>> ChangeMeetingStatus(ChangeMeetingStatusRequest request)
+    {
+        var connection = await _dbManager.GetConnectionOrThrow();
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+
+            await UpdateMeetingRecord(cmd, request);
+            var partnersIds = await ReadPartnersIds(cmd, request);
+            await CreateVisitRecord(cmd, partnersIds.InviterId, request.MeetingId, request.InviterVisited);
+            await CreateVisitRecord(cmd, partnersIds.InviteeId, request.MeetingId, request.InviteeVisited);
+            
+            //TODO: move couple to archive
+            
+            await transaction.CommitAsync();
+            
+            return ServiceResult<bool>.Ok(true);
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
+    private async Task CreateVisitRecord(DbCommand cmd, int clientId, int meetingId, bool visited)
+    {
+        cmd.CommandText = "INSERT INTO meetingvisit (client_id, meeting_id, visited)" +
+                          "VALUES (@clientId, @meetingId, @visited)";
+        cmd.AddParameter("clientId", clientId)
+            .AddParameter("meetingId", meetingId)
+            .AddParameter("visited", visited);
+
+        await cmd.ExecuteNonQueryAsync();
+        cmd.Parameters.Clear();
+    }
+
+    private async Task<(int InviterId, int InviteeId)> ReadPartnersIds(DbCommand cmd, ChangeMeetingStatusRequest request)
+    {
+        cmd.CommandText = "SELECT inviter_id, invitee_id FROM meetings WHERE meeting_id = @meetingId";
+        cmd.AddParameter("@meetingId", request.MeetingId);
+        var reader = await cmd.ExecuteReaderAsync();
+        await reader.ReadAsync();
+        var inviterId = reader.GetInt32("inviter_id");
+        var inviteeId = reader.GetInt32("invitee_id");
+        await reader.CloseAsync();
+        cmd.Parameters.Clear();
+        return (inviterId, inviteeId);
+    }
+
+
+    private async Task UpdateMeetingRecord(DbCommand cmd, ChangeMeetingStatusRequest request)
+    {
+        cmd.CommandText = "UPDATE meetings SET result = @result WHERE meeting_id = @meetingId";
+        cmd.AddParameter("result", MeetingResultHelper.ToUkrainian(request.MeetingStatus))
+            .AddParameter("meetingId", request.MeetingId);
+        await cmd.ExecuteNonQueryAsync();
+        cmd.Parameters.Clear();
     }
 
     private async Task<IReadOnlyList<MeetingDto>> ReadMeetings(DbDataReader reader)
