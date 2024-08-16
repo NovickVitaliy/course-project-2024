@@ -31,8 +31,17 @@ public partial class MeetingsManagement
         await _plannedMeetingsByPeriodPromptModal?.ShowAsync();
     }
 
-    private IEnumerable<(string Month, int MonthIndex)> GetLeftMonths()
+    private IEnumerable<(string Month, int MonthIndex)> GetLeftMonthsForYear()
     {
+        if (_periodYear != DateTime.Now.Year)
+        {
+            for (int i = 1; i <= 12; i++)
+            {
+                yield return (MonthHelper.GetUkrainianMonthName(i), i);
+            }
+
+            yield break;
+        }
         const int amountOfMonths = 12;
         var currentMonthNumber = DateTime.Now.Month;
 

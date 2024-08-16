@@ -26,7 +26,7 @@
             <div>
                 <label>Місяць</label>
                 <select @bind="_periodMonth" class="form-select">
-                    @foreach (var month in GetLeftMonths())
+                    @foreach (var month in GetLeftMonthsForYear())
                     {
                         <option value="@month.MonthIndex">@month.Month</option>
                     }
