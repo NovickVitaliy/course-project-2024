@@ -1,3 +1,4 @@
+using System.Transactions;
 using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Meetings.Requests;
@@ -9,10 +10,12 @@ namespace DatingAgencyMS.API.Controllers;
 public class MeetingsController : BaseApiController
 {
     private readonly IMeetingsService _meetingsService;
-
-    public MeetingsController(IMeetingsService meetingsService)
+    private readonly ICoupleArchiveService _coupleArchiveService;
+        
+    public MeetingsController(IMeetingsService meetingsService, ICoupleArchiveService coupleArchiveService)
     {
         _meetingsService = meetingsService;
+        _coupleArchiveService = coupleArchiveService;
     }
 
     [HttpGet]
@@ -43,14 +46,31 @@ public class MeetingsController : BaseApiController
     public async Task<IActionResult> ChangeMeetingStatus([FromBody] ChangeMeetingStatusRequest request,
         [FromRoute] int meetingId)
     { 
-        request = request with { MeetingId = meetingId };
-
-        var result = await _meetingsService.ChangeMeetingStatus(request);
-        if (!result.Success)
+        try
         {
-            return StatusCode(result.Code, result.ToHttpErrorResponse());
-        }
+            request = request with { MeetingId = meetingId };
+            //TODO: transaction
+            using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            
+            var result = await _meetingsService.ChangeMeetingStatus(request);
+            if (!result.Success)
+            {
+                return StatusCode(result.Code, result.ToHttpErrorResponse());
+            }
 
-        return Ok();
+            result = await _coupleArchiveService.MoveCoupleToArchive(request.MeetingId);
+            if (!result.Success)
+            {
+                return StatusCode(result.Code, result.ToHttpErrorResponse());
+            }
+            
+            transactionScope.Complete();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

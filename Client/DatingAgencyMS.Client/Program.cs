@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using DatingAgencyMS.Client.Components;
 using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Features.Clients.Services;
+using DatingAgencyMS.Client.Features.CoupleArchive.Services;
 using DatingAgencyMS.Client.Features.Invitations.Services;
 using DatingAgencyMS.Client.Features.Meetings.Services;
 using DatingAgencyMS.Client.Features.PartnerRequirements.Services;
@@ -22,7 +23,8 @@ builder.Services
     .AddRefitServiceWithBaseApiUrl<IPartnerRequirementsService>(cfg)
     .AddRefitServiceWithBaseApiUrl<IInvitationsService>(cfg)
     .AddRefitServiceWithBaseApiUrl<IMeetingsService>(cfg)
-    .AddRefitServiceWithBaseApiUrl<IVisitsService>(cfg);
+    .AddRefitServiceWithBaseApiUrl<IVisitsService>(cfg)
+    .AddRefitServiceWithBaseApiUrl<ICoupleArchiveService>(cfg);
 
 builder.Services.AddFluxor(options =>
 {

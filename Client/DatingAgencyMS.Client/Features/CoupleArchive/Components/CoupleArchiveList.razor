@@ -1,0 +1,30 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.CoupleArchive.Models.DTOs
+
+<Grid TItem="ArchivedCoupleDto"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="ArchivedCoupleDataProvider"
+      AllowPaging="true"
+      AllowSorting="true"
+      AllowFiltering="true"
+      PageSize="10"
+      Responsive="true">
+    <GridColumn TItem="ArchivedCoupleDto" HeaderText="Id Запису" PropertyName="CoupleArchiveId" SortString="couple_archive_id" SortKeySelector="c => c.CoupleArchiveId" FilterTextboxWidth="80">
+        @context.CoupleArchiveId
+    </GridColumn>
+    <GridColumn TItem="ArchivedCoupleDto" HeaderText="Id 1-го Клієнту" PropertyName="FirstClientId" SortString="first_client_id" SortKeySelector="c => c.FirstClientId" FilterTextboxWidth="80">
+        @context.FirstClientId
+    </GridColumn>
+    <GridColumn TItem="ArchivedCoupleDto" HeaderText="Id 2-го Клієнту" PropertyName="SecondClientId" SortString="second_client_id" SortKeySelector="c => c.SecondClientId" FilterTextboxWidth="80">
+        @context.SecondClientId
+    </GridColumn>
+    <GridColumn TItem="ArchivedCoupleDto" HeaderText="Дата створення пари" PropertyName="CoupleCreatedOn" SortString="couple_created_on" SortKeySelector="c => c.CoupleCreatedOn" FilterTextboxWidth="80">
+        @context.CoupleCreatedOn
+    </GridColumn>
+    <GridColumn TItem="ArchivedCoupleDto" HeaderText="Додаткова інформація" PropertyName="AdditionalInfo" SortString="additional_info" SortKeySelector="c => c.AdditionalInfo" FilterTextboxWidth="80">
+        @context.AdditionalInfo
+    </GridColumn>
+    <GridColumn TItem="ArchivedCoupleDto" HeaderText="Дата архівування" PropertyName="ArchivedOn" SortString="archived_on" SortKeySelector="c => c.ArchivedOn" FilterTextboxWidth="80">
+        @context.ArchivedOn
+    </GridColumn>
+</Grid>

@@ -1,0 +1,8 @@
+@using DatingAgencyMS.Client.Features.CoupleArchive.Components
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@page "/tables/couple-archive"
+<h3>Архів пар, що вирішили сімейні проблеми</h3>
+@if (_loggedInUser is not null)
+{
+    <CoupleArchiveList></CoupleArchiveList>
+}

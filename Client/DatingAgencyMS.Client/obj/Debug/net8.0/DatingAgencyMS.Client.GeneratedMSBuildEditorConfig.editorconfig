@@ -95,6 +95,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcQ2xpZW50c1xQYWdlc1xVcGRhdGVDbGllbnQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/CoupleArchive/Components/CoupleArchiveList.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcQ291cGxlQXJjaGl2ZVxDb21wb25lbnRzXENvdXBsZUFyY2hpdmVMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/CoupleArchive/Pages/CoupleArchiveManagement.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcQ291cGxlQXJjaGl2ZVxQYWdlc1xDb3VwbGVBcmNoaXZlTWFuYWdlbWVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Invitations/Components/InvitationsList.razor]
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSW52aXRhdGlvbnNcQ29tcG9uZW50c1xJbnZpdGF0aW9uc0xpc3QucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
