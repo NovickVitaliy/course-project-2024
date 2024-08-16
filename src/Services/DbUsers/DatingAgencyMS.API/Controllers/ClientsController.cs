@@ -155,4 +155,17 @@ public class ClientsController : BaseApiController
 
         return Ok(result.ResponseData);
     }
+
+    [HttpGet("not-skipped")]
+    public async Task<IActionResult> GetClientWhoDidNotSkipAnyMeeting([FromQuery] int pageNumber,
+        [FromQuery] int pageSize)
+    {
+        var result = await _clientsService.GetClientsWhoDidNotSkipAnyMeeting(pageNumber, pageSize);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }

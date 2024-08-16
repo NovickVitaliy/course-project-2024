@@ -137,4 +137,9 @@ public partial class ClientsManagement
             ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
         }
     }
+
+    private void ShowClientsWhoDidNotSkipAnyMeeting()
+    {
+        NavigationManager.NavigateTo("/tables/clients/not-skipped");
+    }
 }

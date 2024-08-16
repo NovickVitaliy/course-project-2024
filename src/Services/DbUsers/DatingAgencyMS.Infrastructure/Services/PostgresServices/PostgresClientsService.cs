@@ -16,7 +16,7 @@ namespace DatingAgencyMS.Infrastructure.Services.PostgresServices;
 public class PostgresClientsService : IClientsService
 {
     private readonly IDbManager _dbManager;
-    private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1,1);
+    private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
     public PostgresClientsService(IDbManager dbManager)
     {
@@ -100,14 +100,16 @@ public class PostgresClientsService : IClientsService
         var pagination = $"OFFSET {skipItems} ROWS FETCH NEXT {request.PaginationInfo.PageSize} ROWS ONLY";
 
         return (string.Concat(selectFrom, initialCondition, idCondition, firstNameCondition, lastNameCondition,
-                genderCondition, sexCondition, sexualOrientationCondition, locationCondition, registrationNumberCondition,
+                genderCondition, sexCondition, sexualOrientationCondition, locationCondition,
+                registrationNumberCondition,
                 registeredOnCondition,
                 ageCondition, heightCondition,
                 weightCondition, zodiacSignCondition, descriptionFilter, hasDeclinedServiceFilter, sortingString,
                 pagination),
             string.Concat(initialCondition, idCondition, firstNameCondition, lastNameCondition, genderCondition,
                 sexCondition,
-                sexualOrientationCondition, locationCondition, registrationNumberCondition, registeredOnCondition, ageCondition,
+                sexualOrientationCondition, locationCondition, registrationNumberCondition, registeredOnCondition,
+                ageCondition,
                 heightCondition,
                 weightCondition, zodiacSignCondition, descriptionFilter, hasDeclinedServiceFilter));
     }
@@ -380,7 +382,8 @@ public class PostgresClientsService : IClientsService
         }
     }
 
-    public async Task<ServiceResult<GetClientsResponse>> GetRegisteredClientsByPeriod(GetClientsByTimePeriodRequest request)
+    public async Task<ServiceResult<GetClientsResponse>> GetRegisteredClientsByPeriod(
+        GetClientsByTimePeriodRequest request)
     {
         List<ClientDto> clientDtos = [];
         var connection = await _dbManager.GetConnectionOrThrow();
@@ -392,7 +395,7 @@ public class PostgresClientsService : IClientsService
 
             cmd.CommandText = sql.FullSql;
             var reader = await cmd.ExecuteReaderAsync();
-            
+
             while (await reader.ReadAsync())
             {
                 var clientId = reader.GetInt32("id");
@@ -415,14 +418,14 @@ public class PostgresClientsService : IClientsService
                     registrationNumber, registeredOn, age, height, weight, zodiacSign, description,
                     hasDeclinedService));
             }
-            
+
             await reader.CloseAsync();
 
             cmd.CommandText = $"SELECT COUNT(*) FROM clients {sql.ConditionSql}";
             var count = (long?)await cmd.ExecuteScalarAsync();
-            
+
             await transaction.CommitAsync();
-            
+
             return ServiceResult<GetClientsResponse>.Ok(new GetClientsResponse(clientDtos, count.Value));
         }
         catch (Exception e)
@@ -459,18 +462,18 @@ public class PostgresClientsService : IClientsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
-            
+
             var partnerRequirements = await ReadRequirementFromDb(cmd, request.RequirementId);
             if (partnerRequirements is null)
             {
                 await transaction.RollbackAsync();
                 return ServiceResult<GetClientsResponse>.NotFound("Вимоги до партнера", request.RequirementId);
             }
-            
+
             var sql = await BuildSqlQueryForMatchingPartners(cmd, request, partnerRequirements);
             cmd.CommandText = sql.FullSql;
             var reader = await cmd.ExecuteReaderAsync();
-            
+
             while (await reader.ReadAsync())
             {
                 var clientId = reader.GetInt32("id");
@@ -495,9 +498,69 @@ public class PostgresClientsService : IClientsService
             }
 
             await reader.CloseAsync();
-            
+
             cmd.CommandText = $"SELECT COUNT(*) FROM clients {sql.ConditionSql}";
             var count = (long?)await cmd.ExecuteScalarAsync();
+            await transaction.CommitAsync();
+
+            return ServiceResult<GetClientsResponse>.Ok(new GetClientsResponse(clientDtos, count.Value));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<GetClientsResponse>.BadRequest(e.Message);
+        }
+    }
+
+    public async Task<ServiceResult<GetClientsResponse>> GetClientsWhoDidNotSkipAnyMeeting(int pageNumber, int pageSize)
+    {
+        List<ClientDto> clientDtos = [];
+        var connection = await _dbManager.GetConnectionOrThrow();
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT * FROM clients c WHERE c.id IN " +
+                              "(SELECT mv.client_id FROM meetingvisit mv " +
+                              "GROUP BY mv.client_id " +
+                              "HAVING COUNT(visited) = (SELECT COUNT(*) FROM meetingvisit WHERE client_id = mv.client_id AND visited = TRUE)) " +
+                              "OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY";
+            cmd.AddParameter("skip", (pageNumber - 1) * pageSize)
+                .AddParameter("take", pageSize);
+
+            var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var clientId = reader.GetInt32("id");
+                var firstName = reader.GetString("first_name");
+                var lastName = reader.GetString("last_name");
+                var gender = reader.GetString("gender");
+                var sex = reader.GetString("sex");
+                var sexualOrientation = reader.GetString("sexual_orientation");
+                var location = reader.GetString("location");
+                var registrationNumber = reader.GetString("registration_number");
+                var registeredOn = DateOnly.FromDateTime(reader.GetDateTime("registered_on"));
+                var age = reader.GetInt32("age");
+                var height = reader.GetInt32("height");
+                var weight = reader.GetInt32("weight");
+                var zodiacSign = ZodiacSignHelper.FromUkrainianToZodiacSign(reader.GetString("zodiac_sign"));
+                var description = reader.GetString("description");
+                var hasDeclinedService = reader.GetBoolean("has_declined_service");
+
+                clientDtos.Add(new ClientDto(clientId, firstName, lastName, gender, sex, sexualOrientation, location,
+                    registrationNumber, registeredOn, age, height, weight, zodiacSign, description,
+                    hasDeclinedService));
+            }
+
+            await reader.CloseAsync();
+
+            cmd.Parameters.Clear();
+            cmd.CommandText = "SELECT COUNT(*) FROM clients c WHERE c.id IN " +
+                              "(SELECT mv.client_id FROM meetingvisit mv " +
+                              "GROUP BY mv.client_id " +
+                              "HAVING COUNT(visited) = (SELECT COUNT(*) FROM meetingvisit WHERE client_id = mv.client_id AND visited = TRUE)) ";
+            var count = (long?)await cmd.ExecuteScalarAsync();
+
             await transaction.CommitAsync();
 
             return ServiceResult<GetClientsResponse>.Ok(new GetClientsResponse(clientDtos, count.Value));
@@ -520,11 +583,11 @@ public class PostgresClientsService : IClientsService
             cmd.Parameters.Clear();
             return null;
         }
-        
+
         cmd.Parameters.Clear();
         return reader.GetString("sexual_orientation");
     }
-    
+
     private async Task<PartnerRequirements?> ReadRequirementFromDb(DbCommand cmd, int id)
     {
         cmd.CommandText = "SELECT * FROM partnerrequirements WHERE requirement_id = @id";
@@ -534,7 +597,7 @@ public class PostgresClientsService : IClientsService
         {
             return null;
         }
-        
+
         var gender = await reader.IsDBNullAsync("gender") ? null : reader.GetString("gender");
         var sex = await reader.IsDBNullAsync("sex") ? null : reader.GetString("sex");
         int? minAge = await reader.IsDBNullAsync("min_age") ? null : reader.GetInt32("min_age");
@@ -547,11 +610,11 @@ public class PostgresClientsService : IClientsService
         ZodiacSign? zodiacSign = ukrainianZodiac is not null
             ? ZodiacSignHelper.FromUkrainianToZodiacSign(ukrainianZodiac)
             : null;
-        var location = await reader.IsDBNullAsync("location") ? null :reader.GetString("location");
+        var location = await reader.IsDBNullAsync("location") ? null : reader.GetString("location");
         var clientId = reader.GetInt32("client_id");
 
         cmd.Parameters.Clear();
-        
+
         return new PartnerRequirements
         {
             Gender = gender,
@@ -568,11 +631,12 @@ public class PostgresClientsService : IClientsService
             RequirementsId = id
         };
     }
-    
-    private async Task<(string FullSql, string ConditionSql)> BuildSqlQueryForMatchingPartners(DbCommand cmd, GetMatchingPartnersRequest request, PartnerRequirements partnerRequirements)
+
+    private async Task<(string FullSql, string ConditionSql)> BuildSqlQueryForMatchingPartners(DbCommand cmd,
+        GetMatchingPartnersRequest request, PartnerRequirements partnerRequirements)
     {
         var sexualOrientation = await ReadClientSexualOrientation(cmd, partnerRequirements.ClientId);
-        
+
         var sb = new StringBuilder();
         const string select = "SELECT * FROM clients ";
         sb.Append("WHERE 1=1 AND id != @clientId ");
@@ -600,31 +664,31 @@ public class PostgresClientsService : IClientsService
             sb.Append("AND age <= @maxAge ");
             cmd.AddParameter("maxAge", partnerRequirements.MaxAge);
         }
-     
+
         if (partnerRequirements.MinHeight is not null)
         {
             sb.Append("AND height >= @minHeight ");
             cmd.AddParameter("minHeight", partnerRequirements.MinHeight);
         }
-        
+
         if (partnerRequirements.MaxHeight is not null)
         {
             sb.Append("AND height <= @maxHeight ");
             cmd.AddParameter("maxHeight", partnerRequirements.MaxHeight);
         }
-        
+
         if (partnerRequirements.MinWeight is not null)
         {
             sb.Append("AND weight >= @minWeight ");
             cmd.AddParameter("minWeight", partnerRequirements.MinWeight);
         }
-        
+
         if (partnerRequirements.MaxWeight is not null)
         {
             sb.Append("AND weight <= @maxWeight ");
             cmd.AddParameter("maxWeight", partnerRequirements.MaxWeight);
         }
-        
+
         if (partnerRequirements.ZodiacSign is not null)
         {
             sb.Append("AND zodiac_sign = @zodiacSign ");
@@ -645,14 +709,15 @@ public class PostgresClientsService : IClientsService
             var paramName = "@orientation" + i;
             parameterNames.Add(paramName);
         }
+
         var inClause = string.Join(", ", parameterNames);
         sb.Append($"AND sexual_orientation IN ({inClause}) ");
-        
+
         for (var i = 0; i < compatibleOrientations.Length; i++)
         {
             cmd.AddParameter(parameterNames[i], compatibleOrientations[i]);
         }
-        
+
         var conditionSql = sb.ToString();
         sb.Insert(0, select);
         var skip = (request.PageNumber - 1) * request.PageSize;
@@ -661,8 +726,9 @@ public class PostgresClientsService : IClientsService
         var fullSql = sb.ToString();
         return (fullSql, conditionSql);
     }
-    
-    private static (string FullSql, string ConditionSql) BuildSqlForRegisteredClientsByPeriod(GetClientsByTimePeriodRequest request)
+
+    private static (string FullSql, string ConditionSql) BuildSqlForRegisteredClientsByPeriod(
+        GetClientsByTimePeriodRequest request)
     {
         var sql = "SELECT * FROM clients WHERE registered_on >= NOW() - INTERVAL '{0}' " +
                   "ORDER BY registered_on OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY";
@@ -673,7 +739,8 @@ public class PostgresClientsService : IClientsService
             case RegisteredByPeriod.LastMonth:
                 return (string.Format(sql, "1 month", skip, take), "WHERE registered_on >= NOW() - INTERVAL '1 month'");
             case RegisteredByPeriod.LastSemiAnnum:
-                return (string.Format(sql, "6 months", skip, take), "WHERE registered_on >= NOW() - INTERVAL '6 months'");
+                return (string.Format(sql, "6 months", skip, take),
+                    "WHERE registered_on >= NOW() - INTERVAL '6 months'");
             default:
                 throw new ArgumentOutOfRangeException();
         }

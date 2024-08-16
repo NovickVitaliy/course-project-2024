@@ -36,4 +36,7 @@ public interface IClientsService
     [Get("/clients/{clientId}/requirements/{requirementId}/matches")]
     Task<GetClientsResponse> GetMatchingClients(int clientId, int requirementId, [Query] int pageNumber, 
         [Query] int pageSize, [Authorize] string userToken);
+    
+    [Get("/clients/not-skipped")]
+    Task<GetClientsResponse> GetClientsWhoDidNotSkipAnyMeeting([Query] int pageNumber, [Query] int pageSize, [Authorize] string userToken);
 }

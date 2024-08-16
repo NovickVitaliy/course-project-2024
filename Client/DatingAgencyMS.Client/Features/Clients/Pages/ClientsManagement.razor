@@ -32,7 +32,7 @@
         </select>
         @if (!string.IsNullOrEmpty(_periodErrorMessage))
         {
-        <p class="validation-message">@_periodErrorMessage</p>
+            <p class="validation-message">@_periodErrorMessage</p>
         }
     </BodyTemplate>
     <FooterTemplate>
@@ -53,6 +53,7 @@
         <button class="btn btn-secondary" @onclick="CalculateNumberWhoDeclinedService">К-сть клієнтів, що відмовились від послуг</button>
         <button class="btn btn-secondary" @onclick="OnShowModalClick">Клієнти за кварталами року</button>
         <button class="btn btn-secondary" @onclick="ShowRegisteredByPeriodModal">Зареєстровані особи за минулий місяць/півроку</button>
+        <button class="btn btn-secondary" @onclick="ShowClientsWhoDidNotSkipAnyMeeting">Клієнти, що не пропустили жодної зустрічі</button>
     </div>
     <ClientsList></ClientsList>
 }

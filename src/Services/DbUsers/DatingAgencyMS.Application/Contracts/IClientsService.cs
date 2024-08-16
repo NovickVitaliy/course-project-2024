@@ -17,4 +17,5 @@ public interface IClientsService
     Task<ServiceResult<GetClientsResponse>> GetRegisteredClientsByPeriod(GetClientsByTimePeriodRequest request);
     Task<ServiceResult<bool>> DeleteClientsWhoDeclinedService(string requestedBy);
     Task<ServiceResult<GetClientsResponse>> GetMatchingPartners(GetMatchingPartnersRequest request);
+    Task<ServiceResult<GetClientsResponse>> GetClientsWhoDidNotSkipAnyMeeting(int pageNumber, int pageSize);
 }
