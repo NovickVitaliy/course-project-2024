@@ -1,8 +1,12 @@
 @page "/tables/partner-requirements"
 @using DatingAgencyMS.Client.Helpers
 @using DatingAgencyMS.Client.Features.PartnerRequirements.Components
+@using BlazorBootstrap
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
-
+<a href="/tables">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    До списку таблиць
+</a>
 <h3>Керування вимогами до партнерів</h3>
 @if (_loggedInUser is not null)
 {

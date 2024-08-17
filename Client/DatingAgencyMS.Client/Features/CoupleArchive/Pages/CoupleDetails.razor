@@ -1,6 +1,11 @@
 @using DatingAgencyMS.Client.Helpers
+@using BlazorBootstrap
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @page "/tables/couple-archive/{coupleArchiveId:int}"
+<a href="/tables/couple-archive">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
 <h3>Деталі про пару</h3>
 
 @if (_loggedInUser is not null && _firstClient is not null && _secondClient is not null)

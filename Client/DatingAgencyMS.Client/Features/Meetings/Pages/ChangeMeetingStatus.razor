@@ -2,9 +2,13 @@
 @using DatingAgencyMS.Client.Features.Meetings.Models.Enum
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Web
+@using BlazorBootstrap
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
-
+<a href="/tables/meetings">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
 <h3>Змінити статус зустрічі</h3>
 
 <div class="row">

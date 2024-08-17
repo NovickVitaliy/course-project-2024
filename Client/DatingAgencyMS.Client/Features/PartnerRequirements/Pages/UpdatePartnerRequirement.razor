@@ -3,8 +3,12 @@
 @using DatingAgencyMS.Client.Helpers
 @using DatingAgencyMS.Client.Models.Core
 @using Microsoft.AspNetCore.Components.Forms
+@using BlazorBootstrap
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
-
+<a href="/tables/partner-requirements">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
 <h3>Оновити вимоги до партнера</h3>
 @if (_loggedInUser is not null)
 {

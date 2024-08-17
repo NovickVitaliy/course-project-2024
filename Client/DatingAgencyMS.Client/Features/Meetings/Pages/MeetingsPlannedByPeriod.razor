@@ -3,6 +3,10 @@
 @using BlazorBootstrap
 @using DatingAgencyMS.Client.Features.Meetings.Models
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<a href="/tables/meetings">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
 <h3>Зустрічі заплановані на період: @MonthHelper.GetUkrainianMonthName(Month), @Year рік, </h3>
 @if (_loggedInUser is not null)
 {

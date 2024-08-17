@@ -1,6 +1,11 @@
 @using DatingAgencyMS.Client.Features.CoupleArchive.Components
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using BlazorBootstrap
 @page "/tables/couple-archive"
+<a href="/tables">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    До списку таблиць
+</a>
 <h3>Архів пар, що вирішили сімейні проблеми</h3>
 @if (_loggedInUser is not null)
 {

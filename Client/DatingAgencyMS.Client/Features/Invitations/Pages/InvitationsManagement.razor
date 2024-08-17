@@ -1,6 +1,11 @@
 @page "/tables/invitations"
 @using DatingAgencyMS.Client.Features.Invitations.Components
+@using BlazorBootstrap
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<a href="/tables">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    До списку таблиць
+</a>
 <h3>Керування запрошеннями</h3>
 @if (_loggedInUser is not null)
 {

@@ -3,6 +3,10 @@
 @using DatingAgencyMS.Client.Helpers
 @using DatingAgencyMS.Client.Models.Core
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<a href="/tables/clients">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
 <h1>Клієнти за кварталами <b>@Year</b> року</h1>
 @if (_loggedInUser is not null)
 {
