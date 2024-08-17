@@ -103,6 +103,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcQ291cGxlQXJjaGl2ZVxQYWdlc1xDb3VwbGVBcmNoaXZlTWFuYWdlbWVudC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/CoupleArchive/Pages/CoupleDetails.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcQ291cGxlQXJjaGl2ZVxQYWdlc1xDb3VwbGVEZXRhaWxzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Desktop/projects/course-project-2024/Client/DatingAgencyMS.Client/Features/Invitations/Components/InvitationsList.razor]
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSW52aXRhdGlvbnNcQ29tcG9uZW50c1xJbnZpdGF0aW9uc0xpc3QucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 

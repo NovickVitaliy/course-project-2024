@@ -27,4 +27,8 @@
     <GridColumn TItem="ArchivedCoupleDto" HeaderText="Дата архівування" PropertyName="ArchivedOn" SortString="archived_on" SortKeySelector="c => c.ArchivedOn" FilterTextboxWidth="80">
         @context.ArchivedOn
     </GridColumn>
+    <GridColumn TItem="ArchivedCoupleDto" Filterable="false" Sortable="false">
+        <a href="/tables/couple-archive/@context.CoupleArchiveId?firstClientId=@context.FirstClientId&secondClientId=@context.SecondClientId" 
+           class="btn btn-primary">Деталі</a>
+    </GridColumn>
 </Grid>

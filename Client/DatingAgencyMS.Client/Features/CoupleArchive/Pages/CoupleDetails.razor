@@ -1,0 +1,46 @@
+@using DatingAgencyMS.Client.Helpers
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@page "/tables/couple-archive/{coupleArchiveId:int}"
+<h3>Деталі про пару</h3>
+
+@if (_loggedInUser is not null && _firstClient is not null && _secondClient is not null)
+{
+    <div class="d-flex w-100">
+        <div class="w-50 border border-1 border-end p-5">
+            <h2>@_firstClient.FirstName @_firstClient.LastName</h2>
+            <b>Id:</b> @_firstClient.ClientId <br>
+            <b>Ім'я:</b> @_firstClient.FirstName <br>
+            <b>Прізвище:</b> @_firstClient.LastName <br>
+            <b>Гендер:</b> @_firstClient.Gender <br>
+            <b>Стать:</b> @_firstClient.Sex <br>
+            <b>Сексуальна орієнтація:</b> @_firstClient.SexualOrientation <br>
+            <b>Місцезнаходження:</b> @_firstClient.Location <br>
+            <b>Реєстраційний номер:</b> @_firstClient.RegistrationNumber <br>
+            <b>Дата реєстрації:</b> @_firstClient.RegisteredOn <br>
+            <b>Вік:</b> @_firstClient.Age <br>
+            <b>Ріст:</b> @_firstClient.Height см. <br>
+            <b>Вага:</b> @_firstClient.Weight кг. <br>
+            <b>Знак Зодіаку:</b> @ZodiacSignHelper.GetUkrainianTranslation(_firstClient.ZodiacSign) <br>
+            <b>Опис:</b> @_firstClient.Description <br>
+            <b>Відмова від сервісу:</b> @_firstClient.HasDeclinedService <br>
+        </div>
+        <div class="w-50 border border-1 border-start p-5">
+            <h2>@_secondClient.FirstName @_secondClient.LastName</h2>
+            <b>Id:</b> @_secondClient.ClientId <br>
+            <b>Ім'я:</b> @_secondClient.FirstName <br>
+            <b>Прізвище:</b> @_secondClient.LastName <br>
+            <b>Гендер:</b> @_secondClient.Gender <br>
+            <b>Стать:</b> @_secondClient.Sex <br>
+            <b>Сексуальна орієнтація:</b> @_secondClient.SexualOrientation <br>
+            <b>Місцезнаходження:</b> @_secondClient.Location <br>
+            <b>Реєстраційний номер:</b> @_secondClient.RegistrationNumber <br>
+            <b>Дата реєстрації:</b> @_secondClient.RegisteredOn <br>
+            <b>Вік:</b> @_secondClient.Age <br>
+            <b>Ріст:</b> @_secondClient.Height см. <br>
+            <b>Вага:</b> @_secondClient.Weight кг. <br>
+            <b>Знак Зодіаку:</b> @ZodiacSignHelper.GetUkrainianTranslation(_secondClient.ZodiacSign) <br>
+            <b>Опис:</b> @_secondClient.Description <br>
+            <b>Відмова від сервісу:</b> @_secondClient.HasDeclinedService <br>
+        </div>
+    </div>   
+}
