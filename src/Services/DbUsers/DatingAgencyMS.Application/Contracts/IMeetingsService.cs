@@ -10,4 +10,5 @@ public interface IMeetingsService
     Task<ServiceResult<GetMeetingsResponse>> GetMeetings(GetMeetingsRequest request);
     Task<ServiceResult<GetMeetingsResponse>> GetPlannedMeetingsByPeriod(GetPlannedMeetingsForPeriodRequest request);
     Task<ServiceResult<bool>> ChangeMeetingStatus(ChangeMeetingStatusRequest request);
+    Task<ServiceResult<long>> GetCountOfConductedMeetingsBySex(string sex);
 }

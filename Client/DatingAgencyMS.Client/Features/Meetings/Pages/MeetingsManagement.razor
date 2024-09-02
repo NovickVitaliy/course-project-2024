@@ -2,9 +2,12 @@
 @using DatingAgencyMS.Client.Features.Meetings.Components
 @using Microsoft.AspNetCore.Components.Web
 @using BlazorBootstrap
+@using DatingAgencyMS.Client.Constants
 @using DatingAgencyMS.Client.Features.Meetings.Models.Enum
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<ConfirmDialog @ref="_dialog"></ConfirmDialog>
+
 <Modal @ref="_plannedMeetingsByPeriodPromptModal" Title="Заплановані зустрічі за періодом часу">
     <BodyTemplate>
         <p>Вкажіть період, за який ви бажаєте побачити заплановані зустрічі</p>
@@ -39,6 +42,31 @@
         <Button Color="ButtonColor.Primary" @onclick="OnPlannedMeetingPromptModalSuccessClick">Показати</Button>
     </FooterTemplate>
 </Modal>
+
+
+<Modal @ref="_countOfMeetingsBySex" Title="К-сть проведених зустрічей за статевою ознакою">
+    <BodyTemplate>
+        <p>Виберіть статеву ознаку, за якою бажаєте підрахувати к-сть проведених зустрічей</p>
+        <select class="form-select" @bind="_sexForCountOfMeeting">
+            <option selected disabled>Виберіть статеву ознаку</option>
+            @foreach (var sex in ClientsConstants.Sexes)
+            {
+                <option value="@sex">@sex</option>
+            }
+        </select>
+        @if (!string.IsNullOrEmpty(_sexForCountOfMeetingError))
+        {
+            <p class="validation-message">
+                @_sexForCountOfMeetingError
+            </p>   
+        }
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideCountOfMeetingModal">Закрити</Button>
+        <Button Color="ButtonColor.Primary" @onclick="OnCountOfMeetingModalSuccess">Показати</Button>
+    </FooterTemplate>
+</Modal>
+
 <a href="/tables">
     <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
     До списку таблиць
@@ -48,6 +76,7 @@
 {
     <div class="d-flex w-100 mb-3 gap-1">
         <button class="btn btn-primary" @onclick="PromptForPeriodOfTime">Заплановані зустрічі за періодом часу</button>
+        <button class="btn btn-primary" @onclick="PromptForSexForCount">К-сть проведених зустрічей за статевою ознакою</button>
     </div>
     <MeetingsList></MeetingsList>
 }

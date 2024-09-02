@@ -3,9 +3,11 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Meetings.Requests;
 using DatingAgencyMS.Application.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
 
+[Authorize]
 [Route("api/meetings")]
 public class MeetingsController : BaseApiController
 {
@@ -72,5 +74,17 @@ public class MeetingsController : BaseApiController
             Console.WriteLine(e);
             throw;
         }
+    }
+
+    [HttpGet("{sex}/count")]
+    public async Task<IActionResult> GetCountOfConductedMeetingsBySex(string sex)
+    {
+        var result = await _meetingsService.GetCountOfConductedMeetingsBySex(sex);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
     }
 }

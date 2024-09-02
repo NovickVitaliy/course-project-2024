@@ -140,6 +140,36 @@ public class PostgresMeetingsService : IMeetingsService
         }
     }
 
+    public async Task<ServiceResult<long>> GetCountOfConductedMeetingsBySex(string sex)
+    {
+        var connection = await _dbManager.GetConnectionOrThrow();
+        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM meetings m " +
+                              "INNER JOIN clients c1 ON m.invitee_id = c1.id " +
+                              "INNER JOIN clients c2 ON m.inviter_id = c2.id " +
+                              "WHERE result != 'Очікується' AND " +
+                              "(c1.sex = @sex OR c2.sex = @sex)";
+            cmd.AddParameter("sex", sex);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count is null)
+            {
+                await transaction.RollbackAsync();
+                throw new NullReferenceException(nameof(count));
+            }
+
+            await transaction.CommitAsync();
+            return ServiceResult<long>.Ok(count.Value);
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<long>.BadRequest(e.Message);
+        }
+    }
+
     private async Task CreateVisitRecord(DbCommand cmd, int clientId, int meetingId, bool visited)
     {
         cmd.CommandText = "INSERT INTO meetingvisit (client_id, meeting_id, visited)" +

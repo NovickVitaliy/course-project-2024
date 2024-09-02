@@ -15,4 +15,7 @@ public interface IMeetingsService
     
     [Put("/meetings/{meetingId}/change-status")]
     Task ChangeMeetingStatus(int meetingId, ChangeMeetingStatusRequest request, [Authorize] string token);
+
+    [Get("/meetings/{sex}/count")]
+    Task<long> GetCountOfConductedMeetingsBySex(string sex, [Authorize] string token);
 }
