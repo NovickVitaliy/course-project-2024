@@ -87,9 +87,11 @@ public class PostgresCoupleArchiveService : ICoupleArchiveService
             var count = (long?)await cmd.ExecuteScalarAsync();
             if (count is null)
             {
+                await transaction.RollbackAsync();
                 throw new NullReferenceException(nameof(count));
             }
-            
+
+            await transaction.CommitAsync();
             return ServiceResult<long>.Ok(count.Value);
         }
         catch (Exception e)
