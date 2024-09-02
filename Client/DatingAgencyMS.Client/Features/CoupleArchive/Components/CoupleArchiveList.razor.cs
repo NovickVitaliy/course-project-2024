@@ -18,6 +18,21 @@ public partial class CoupleArchiveList : ComponentBase
     [Inject] private ToastService ToastService { get; init; }
     [Inject] private ICoupleArchiveService CoupleArchiveService { get; init; }
     [Inject] private IState<UserState> UserState { get; init; }
+    private long? _countOfThoseWhoSolved = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _countOfThoseWhoSolved = await CoupleArchiveService.GetArchivedCoupleCount(UserState.Value.User.Token);
+        }
+        catch (ApiException e)
+        {
+            var apiError = e.ToApiError();
+            ToastService.Notify(new ToastMessage(ToastType.Danger, apiError.Description));
+        }
+    }
+
     private async Task<GridDataProviderResult<ArchivedCoupleDto>> ArchivedCoupleDataProvider(GridDataProviderRequest<ArchivedCoupleDto> request)
     {
         try

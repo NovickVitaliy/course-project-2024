@@ -8,4 +8,7 @@ public interface ICoupleArchiveService
 {
     [Get("/archived-couples")]
     Task<GetArchivedCouplesResponse> GetArchivedCouples([Query] GetArchivedCoupleRequest request, [Authorize] string token);
+
+    [Get("/archived-couples/count")]
+    Task<long> GetArchivedCoupleCount([Authorize] string token);
 }

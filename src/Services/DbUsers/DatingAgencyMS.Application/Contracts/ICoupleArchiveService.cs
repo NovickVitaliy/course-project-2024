@@ -8,4 +8,5 @@ public interface ICoupleArchiveService
 {
     Task<ServiceResult<bool>> MoveCoupleToArchive(int successfulMeetingId);
     Task<ServiceResult<GetArchivedCoupleResponse>> GetArchivedCouples(GetArchivedCoupleRequest request);
+    Task<ServiceResult<long>> GetArchivedCouplesCount();
 }

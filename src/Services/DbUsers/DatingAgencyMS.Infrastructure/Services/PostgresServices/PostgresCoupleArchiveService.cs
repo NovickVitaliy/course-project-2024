@@ -76,6 +76,29 @@ public class PostgresCoupleArchiveService : ICoupleArchiveService
         }
     }
 
+    public async Task<ServiceResult<long>> GetArchivedCouplesCount()
+    {
+        var connection = await _dbManager.GetConnectionOrThrow();
+        await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM couplearchive";
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count is null)
+            {
+                throw new NullReferenceException(nameof(count));
+            }
+            
+            return ServiceResult<long>.Ok(count.Value);
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<long>.BadRequest(e.Message);
+        }
+    }
+
     private ArchivedCoupleDto ReadArchivedCouple(DbDataReader reader)
     {
         var coupleArchiveId = reader.GetInt32("couple_archive_id");

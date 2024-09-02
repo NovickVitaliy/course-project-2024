@@ -1,6 +1,9 @@
 @using BlazorBootstrap
 @using DatingAgencyMS.Client.Features.CoupleArchive.Models.DTOs
-
+@if (_countOfThoseWhoSolved is not null)
+{
+    <p>Загальна кількість пар, що розв'язали сімейні проблеми: @_countOfThoseWhoSolved</p>
+}
 <Grid TItem="ArchivedCoupleDto"
       Class="table table-hover table-bordered table-striped"
       DataProvider="ArchivedCoupleDataProvider"

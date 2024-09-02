@@ -28,4 +28,16 @@ public class CoupleArchiveController : BaseApiController
 
         return Ok(result.ResponseData);
     }
+
+    [HttpGet("count")]
+    public async Task<IActionResult> GetArchivedCouplesCount()
+    {
+        var result = await _coupleArchiveService.GetArchivedCouplesCount();
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToString());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }
