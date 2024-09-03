@@ -17,4 +17,7 @@ public interface IUsersService
 
     [Get("/users/{login}")]
     Task<GetUserResponse> GetUser(string login, [Authorize] string token);
+
+    [Put("/users/{userId}")]
+    Task AssignNewRoleAsync(int userId, AssignNewRoleRequest request, [Authorize] string token);
 }

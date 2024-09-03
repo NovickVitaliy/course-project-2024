@@ -15,7 +15,4 @@ public class AssignNewRoleRequest
     [Required]
     [NotEquals(nameof(OldRole))]
     public DbRoles NewRole { get; set; }
-    
-    [Required]
-    public string RequestedBy { get; set; }
 }

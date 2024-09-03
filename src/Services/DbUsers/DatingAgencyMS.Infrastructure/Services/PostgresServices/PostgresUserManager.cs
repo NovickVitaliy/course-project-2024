@@ -314,7 +314,7 @@ public class PostgresUserManager : IUserManager
     {
         var connection = await _dbManager.GetConnectionOrThrow();
         var success = false;
-        await using var transaction = await connection.BeginTransactionAsync();
+        await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
@@ -339,14 +339,13 @@ public class PostgresUserManager : IUserManager
             await cmd.ExecuteNonQueryAsync();
             
             await transaction.CommitAsync();
+            return ServiceResult<bool>.Ok(success);
         }
         catch (DbException e)
         {
             await transaction.RollbackAsync();
             return ServiceResult<bool>.BadRequest(e.Message);
         }
-
-        return ServiceResult<bool>.Ok(success);
     }
 
     public async Task<ServiceResult<DbRoles>> GetUserRole(string login)

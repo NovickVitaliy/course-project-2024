@@ -42,7 +42,6 @@
                     <option selected disabled>Виберіть роль</option>
                     @if (UserState.Value.User is not null && IsOwner())
                     {
-                        <option value="@DbRoles.Owner">Власник</option>
                         <option value="@DbRoles.Admin">Адміністратор</option>
                     }
                     <option value="@DbRoles.Operator">Оператор</option>
