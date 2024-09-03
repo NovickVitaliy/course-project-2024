@@ -46,7 +46,7 @@ public class PostgresUserManager : IUserManager
             
             await reader.DisposeAsync();
             
-            var equals = PasswordHelper.VerifyPassword(loginDbRequest.Password, passwordHash, passwordSalt);
+            var equals = PasswordHelper.VerifyHashedPassword(loginDbRequest.Password, passwordHash, passwordSalt);
             if (equals)
             {
                 await transaction.CommitAsync();
