@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using DatingAgencyMS.Client.Models.Core;
 
-namespace DatingAgencyMS.Client.Attributes.ValidationAttributes;
+namespace DatingAgencyMS.Client.Attributes.Validation;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class RestrictedLoginAttribute : ValidationAttribute

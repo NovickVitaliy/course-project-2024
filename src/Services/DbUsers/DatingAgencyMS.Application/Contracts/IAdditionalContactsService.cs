@@ -7,4 +7,5 @@ namespace DatingAgencyMS.Application.Contracts;
 public interface IAdditionalContactsService
 {
     Task<ServiceResult<GetAdditionalContactsResponse>> GetAsync(GetAdditionalContactsRequest request);
+    Task<ServiceResult<bool>> CreateAsync(CreateAdditionalContactsRequest request);
 }

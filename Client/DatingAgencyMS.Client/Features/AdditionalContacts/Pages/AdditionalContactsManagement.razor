@@ -8,6 +8,7 @@
     <div class="d-flex w-100 mb-3 gap-1">
         @if (UserState.Value.User!.IsAllowedToCreateEntities())
         {
+            <a class="btn btn-primary" href="/tables/additional-contacts/create">Створити об'єкт додаткових контактів</a>
         }
     </div>
     <AdditionalContactsList></AdditionalContactsList>

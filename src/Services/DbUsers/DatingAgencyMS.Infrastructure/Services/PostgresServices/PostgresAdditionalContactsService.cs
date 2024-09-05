@@ -54,6 +54,48 @@ public class PostgresAdditionalContactsService : IAdditionalContactsService
         }
     }
 
+    public async Task<ServiceResult<bool>> CreateAsync(CreateAdditionalContactsRequest request)
+    {
+        var connection = await _dbManager.GetConnectionOrThrow();
+        await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM additionalcontacts WHERE client_id = @clientId";
+            cmd.AddParameter("clientId", request.ClientId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+
+            if (count == 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.BadRequest("Об'єкт додаткових записів для даного користувача вже існує.");
+            }
+            
+            cmd.Parameters.Clear();
+            
+            cmd.CommandText = "INSERT INTO additionalcontacts (client_id, telegram, facebook, instagram, tiktok) " +
+                              "VALUES (@clientId, @telegram, @facebook, @instagram, @tiktok)";
+            cmd.AddParameter("clientId", request.ClientId)
+                .AddParameter("telegram", request.Telegram)
+                .AddParameter("facebook", request.Facebook)
+                .AddParameter("instagram", request.Instagram)
+                .AddParameter("tiktok", request.TikTok);
+
+            var rowsAffected = await cmd.ExecuteNonQueryAsync();
+
+            await transaction.CommitAsync();
+
+            return rowsAffected == 1
+                ? ServiceResult<bool>.Created(true)
+                : ServiceResult<bool>.BadRequest("Помилка при створенні запису");
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
     private AdditionalContactDto ReadAdditionalContact(DbDataReader reader)
     {
         var id = reader.GetInt32("id");

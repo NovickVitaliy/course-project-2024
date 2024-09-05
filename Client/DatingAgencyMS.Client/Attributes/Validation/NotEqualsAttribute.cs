@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace DatingAgencyMS.Client.Attributes.ValidationAttributes;
+namespace DatingAgencyMS.Client.Attributes.Validation;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class NotEqualsAttribute : ValidationAttribute

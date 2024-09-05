@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using DatingAgencyMS.Client.Attributes.ValidationAttributes;
+using DatingAgencyMS.Client.Attributes.Validation;
 using DatingAgencyMS.Client.Models.Core;
 
 namespace DatingAgencyMS.Client.Models.DTOs.User.Requests;

@@ -25,7 +25,7 @@ public partial class AdditionalContactsList : ComponentBase
         var additionalContactsRequest = BuildRequst(request);
         try
         {
-            var response = await AdditionalContactsService.Get(additionalContactsRequest, UserState.Value.User.Token);
+            var response = await AdditionalContactsService.GetAsync(additionalContactsRequest, UserState.Value.User.Token);
             return new GridDataProviderResult<AdditionalContactDto>()
             {
                 Data = response.AdditionalContacts,
