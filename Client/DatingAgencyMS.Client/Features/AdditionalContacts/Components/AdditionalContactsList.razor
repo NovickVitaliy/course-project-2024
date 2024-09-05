@@ -1,0 +1,30 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.AdditionalContacts.Models
+
+<Grid TItem="AdditionalContactDto"
+    Class="table table-hover table-bordered table-striped"
+    DataProvider="AdditionalContactsDataProvider"
+    AllowPaging="true"
+    AllowSorting="true"
+    AllowFiltering="true"
+    PageSize="10"
+    Responsive="true">
+    <GridColumn TItem="AdditionalContactDto" HeaderText="Id" PropertyName="Id" SortString="id" SortKeySelector="c => c.Id" FilterTextboxWidth="80">
+        @context.Id
+    </GridColumn>
+    <GridColumn TItem="AdditionalContactDto" HeaderText="Id Клієнта" PropertyName="ClientId" SortString="client_id" SortKeySelector="c => c.ClientId" FilterTextboxWidth="80">
+        @context.ClientId
+    </GridColumn>
+    <GridColumn TItem="AdditionalContactDto" HeaderText="Telegram" PropertyName="Telegram" SortString="telegram" SortKeySelector="c => c.Telegram" FilterTextboxWidth="80">
+        @context.Telegram
+    </GridColumn>
+    <GridColumn TItem="AdditionalContactDto" HeaderText="Facebook" PropertyName="Facebook" SortString="facebook" SortKeySelector="c => c.Facebook" FilterTextboxWidth="80">
+        @context.Facebook
+    </GridColumn>
+    <GridColumn TItem="AdditionalContactDto" HeaderText="Instagram" PropertyName="Instagram" SortString="instagram" SortKeySelector="c => c.Instagram" FilterTextboxWidth="80">
+        @context.Instagram
+    </GridColumn>
+    <GridColumn TItem="AdditionalContactDto" HeaderText="TikTok" PropertyName="TikTok" SortString="tiktok" SortKeySelector="c => c.TikTok" FilterTextboxWidth="80">
+        @context.TikTok
+    </GridColumn>
+</Grid>
