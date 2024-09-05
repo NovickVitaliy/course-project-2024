@@ -10,4 +10,7 @@ public interface IDbAccessService
 
     [Post("/dbaccess/close/{login}")]
     Task Logout(string login, [Authorize]string token);
+
+    [Post("/dbaccess/forgot-password")]
+    Task<ForgotPasswordResponse> ForgotPassword(ForgotPasswordRequest request);
 }

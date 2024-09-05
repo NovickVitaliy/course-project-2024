@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Text;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs;
+using DatingAgencyMS.Application.DTOs.DbAccess;
 using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Application.DTOs.UserManagement.Requests;
 using DatingAgencyMS.Application.DTOs.UserManagement.Responses;
@@ -369,5 +370,38 @@ public class PostgresUserManager : IUserManager
         }
 
         throw new ArgumentException("Користувач з таким логіном не був знайдений", login);
+    }
+
+    public async Task<ServiceResult<ForgotPasswordResponse>> GetForgottenPassword(ForgotPasswordRequest request)
+    {
+        var connection = await _dbManager.GetRootConnection();
+        await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT encrypted_password FROM keys WHERE login = @login";
+            cmd.AddParameter("login", request.Login);
+
+            var reader = await cmd.ExecuteReaderAsync();
+            if (!await reader.ReadAsync())
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<ForgotPasswordResponse>.NotFound("Користувач БД", request.Login);
+            }
+
+            var encryptedPassword = reader.GetString("encrypted_password");
+            var decryptedPassword = PasswordHelper.DecryptPassword(encryptedPassword, _passwordEncryptionOptions.Key,
+                _passwordEncryptionOptions.Iv);
+
+            await reader.CloseAsync();
+            await transaction.CommitAsync();
+            
+            return ServiceResult<ForgotPasswordResponse>.Ok(new ForgotPasswordResponse(decryptedPassword));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<ForgotPasswordResponse>.BadRequest(e.Message);
+        }
     }
 }

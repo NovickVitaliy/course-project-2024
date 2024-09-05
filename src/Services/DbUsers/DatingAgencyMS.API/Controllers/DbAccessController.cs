@@ -1,11 +1,13 @@
 using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs;
+using DatingAgencyMS.Application.DTOs.DbAccess;
 using DatingAgencyMS.Application.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
 
+[Route("api/dbaccess")]
 public class DbAccessController : BaseApiController
 {
     private readonly IDbManager _dbManager;
@@ -19,7 +21,7 @@ public class DbAccessController : BaseApiController
         _userManager = userManager;
     }
 
-    [HttpPost]
+    [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginDbRequest request)
     {
@@ -42,7 +44,7 @@ public class DbAccessController : BaseApiController
     }
 
     [Authorize]
-    [HttpPost("{login}")]
+    [HttpGet("{login}/connection")]
     public async Task<IActionResult> Connection([FromRoute] string login)
     {
         var result = await _dbManager.GetConnection(login);
@@ -56,7 +58,7 @@ public class DbAccessController : BaseApiController
     }
 
     [Authorize]
-    [HttpPost("{login}")]
+    [HttpPost("{login}/close")]
     public async Task<IActionResult> Close([FromRoute] string login)
     {
         var user = HttpContext.User.Claims;
@@ -68,5 +70,17 @@ public class DbAccessController : BaseApiController
         }
 
         return Ok();
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request)
+    {
+        var response = await _userManager.GetForgottenPassword(request);
+        if (!response.Success)
+        {
+            return StatusCode(response.Code, response.ToHttpErrorResponse());
+        }
+
+        return Ok(response.ResponseData);
     }
 }
