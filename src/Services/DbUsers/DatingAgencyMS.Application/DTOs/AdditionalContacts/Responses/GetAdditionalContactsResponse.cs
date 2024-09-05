@@ -1,0 +1,3 @@
+namespace DatingAgencyMS.Application.DTOs.AdditionalContacts.Responses;
+
+public record GetAdditionalContactsResponse(IReadOnlyList<AdditionalContactDto> AdditionalContacts, long TotalCount);

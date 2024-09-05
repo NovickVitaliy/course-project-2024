@@ -7,5 +7,5 @@ namespace DatingAgencyMS.Client.Features.AdditionalContacts.Services;
 public interface IAdditionalContactsService
 {
     [Get("/additional-contacts")]
-    Task<GetAdditionalContactsResponse> Get(GetAdditionalContactsRequest request, [Authorize] string token);
+    Task<GetAdditionalContactsResponse> Get([Query] GetAdditionalContactsRequest request, [Authorize] string token);
 }

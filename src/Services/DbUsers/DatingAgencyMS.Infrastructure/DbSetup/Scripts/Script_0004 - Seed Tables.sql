@@ -98,3 +98,18 @@ VALUES (1, 2, 'Central Park', '2024-08-10 10:00:00', '2024-08-01', '2024-08-31',
        (10, 5, 'Metropolitan Museum', '2024-09-28 19:00:00', '2024-09-19', '2024-10-19', false);
 
 
+DO
+$$
+    BEGIN
+        FOR i IN 1..500
+            LOOP
+                INSERT INTO additionalcontacts (client_id, telegram, facebook, instagram, tiktok)
+                VALUES (i,
+                        CONCAT('@telegram_', i, '_', MOD(ABS(RANDOM())::int, 1000)), -- Random Telegram handle
+                        CONCAT('facebook_user_', i, '_', MOD(ABS(RANDOM())::int, 1000)), -- Random Facebook handle
+                        CONCAT('instagram_', i, '_', MOD(ABS(RANDOM())::int, 1000)), -- Random Instagram handle
+                        CONCAT('tiktok_user_', i, '_', MOD(ABS(RANDOM())::int, 1000)) -- Random TikTok handle
+                       );
+            END LOOP;
+    END
+$$;
