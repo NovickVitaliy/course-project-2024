@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using DatingAgencyMS.Application.Options;
 using DatingAgencyMS.Infrastructure;
 using DatingAgencyMS.Infrastructure.DbSetup;
 
@@ -13,6 +14,11 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
+builder.Services.AddOptions<PasswordEncryptionOptions>()
+    .BindConfiguration(PasswordEncryptionOptions.Position)
+    .ValidateOnStart()
+    .ValidateDataAnnotations();
 
 builder.Services.ConfigureInfrastructure(cfg);
 

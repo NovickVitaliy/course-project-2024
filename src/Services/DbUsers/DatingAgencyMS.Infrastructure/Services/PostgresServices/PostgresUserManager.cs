@@ -6,21 +6,26 @@ using DatingAgencyMS.Application.DTOs;
 using DatingAgencyMS.Application.DTOs.UserManagement;
 using DatingAgencyMS.Application.DTOs.UserManagement.Requests;
 using DatingAgencyMS.Application.DTOs.UserManagement.Responses;
+using DatingAgencyMS.Application.Options;
 using DatingAgencyMS.Application.Shared;
 using DatingAgencyMS.Domain.Models.DbManagement;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Helpers;
+using Microsoft.Extensions.Options;
 
 namespace DatingAgencyMS.Infrastructure.Services.PostgresServices;
 
 public class PostgresUserManager : IUserManager
 {
     private readonly IDbManager _dbManager;
+    private readonly PasswordEncryptionOptions _passwordEncryptionOptions;
 
-    public PostgresUserManager(IDbManager dbManager)
+    public PostgresUserManager(IDbManager dbManager, 
+        IOptions<PasswordEncryptionOptions> passwordEncryptionOptions)
     {
         _dbManager = dbManager;
+        _passwordEncryptionOptions = passwordEncryptionOptions.Value;
     }
 
     public async Task<ServiceResult<bool>> CheckUserCredentials(LoginDbRequest loginDbRequest)
@@ -179,14 +184,16 @@ public class PostgresUserManager : IUserManager
             }
 
             var (hashedPassword, salt) = PasswordHelper.HashPasword(request.Password);
+            var encyptedPassword = PasswordHelper.EncryptPassword(request.Password, _passwordEncryptionOptions.Key, _passwordEncryptionOptions.Iv);
             var role = request.Role.ToString().ToUpperInvariant();
             
-            cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, role) VALUES " +
-                              "(@login, @passwordHash, @passwordSalt, @role) RETURNING id;";
+            cmd.CommandText = "INSERT INTO keys (login, password_hash, password_salt, encrypted_password, role) VALUES " +
+                              "(@login, @passwordHash, @passwordSalt, @encryptedPassword, @role) RETURNING id;";
             cmd.AddParameter("login", request.Login);
             cmd.AddParameter("passwordHash", hashedPassword);
             cmd.AddParameter("passwordSalt", salt);
             cmd.AddParameter("role", role);
+            cmd.AddParameter("encryptedPassword", encyptedPassword);
             
             id = (int?)await cmd.ExecuteScalarAsync();
             if (id is null)

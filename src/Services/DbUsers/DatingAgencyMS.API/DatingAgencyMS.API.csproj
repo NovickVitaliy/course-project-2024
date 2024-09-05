@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>DatingAgencyMS.API</RootNamespace>
+        <UserSecretsId>1bedada6-b105-4f94-941c-4512b60d746a</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
