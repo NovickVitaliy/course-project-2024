@@ -31,6 +31,15 @@ public partial class CreateAdditionalContacts : ComponentBase
     private async Task OnValidSubmit()
     {
         if (CreateAdditionalContactsRequest is null || UserState.Value.User is null) return;
+        if (!(CreateAdditionalContactsRequest.Facebook is not null
+              || CreateAdditionalContactsRequest.Instagram is not null
+              || CreateAdditionalContactsRequest.Telegram is not null
+              || CreateAdditionalContactsRequest.TikTok is not null))
+        {
+            ToastService.Notify(new ToastMessage(ToastType.Danger, "Як мінімум одне посилання на соц. мережу, має бути вказане"));
+            return;
+        }
+        
         try
         {
             await AdditionalContactsService.CreateAsync(CreateAdditionalContactsRequest, UserState.Value.User.Token);
