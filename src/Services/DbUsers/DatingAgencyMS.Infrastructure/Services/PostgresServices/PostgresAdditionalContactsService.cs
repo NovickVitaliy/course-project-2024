@@ -112,7 +112,8 @@ public class PostgresAdditionalContactsService : IAdditionalContactsService
             cmd.AddParameter("facebook", request.Facebook)
                 .AddParameter("instagram", request.Instagram)
                 .AddParameter("telegram", request.Telegram)
-                .AddParameter("tiktok", request.TikTok);
+                .AddParameter("tiktok", request.TikTok)
+                .AddParameter("id", request.Id);
 
             var rowsAffected = await cmd.ExecuteNonQueryAsync();
             await transaction.CommitAsync();
@@ -125,6 +126,38 @@ public class PostgresAdditionalContactsService : IAdditionalContactsService
         {
             await transaction.RollbackAsync();
             return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
+    public async Task<ServiceResult<GetAdditionalContactByIdResponse>> GetByIdAsync(int id)
+    {
+        var connection = await _dbManager.GetConnectionOrThrow();
+        await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT * FROM additionalcontacts WHERE id = @id";
+            cmd.AddParameter("id", id);
+
+            var reader = await cmd.ExecuteReaderAsync();
+            if (!await reader.ReadAsync())
+            {
+                await reader.CloseAsync();
+                await transaction.RollbackAsync();
+                return ServiceResult<GetAdditionalContactByIdResponse>.NotFound("Додаткові контакти", id);
+            }
+
+            var additionalContacts = ReadAdditionalContact(reader);
+
+            await reader.CloseAsync();
+            await transaction.CommitAsync();
+            
+            return ServiceResult<GetAdditionalContactByIdResponse>.Ok(new GetAdditionalContactByIdResponse(additionalContacts));
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<GetAdditionalContactByIdResponse>.BadRequest(e.Message);
         }
     }
 

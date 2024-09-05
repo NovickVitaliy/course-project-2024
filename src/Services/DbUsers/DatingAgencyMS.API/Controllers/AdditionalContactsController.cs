@@ -52,4 +52,16 @@ public class AdditionalContactsController : BaseApiController
 
         return Ok();
     }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await _additionContactsService.GetByIdAsync(id);
+        if (!result.Success)
+        {
+            return StatusCode(result.Code, result.ToHttpErrorResponse());
+        }
+
+        return Ok(result.ResponseData);
+    }
 }

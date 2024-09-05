@@ -1,0 +1,3 @@
+namespace DatingAgencyMS.Application.DTOs.AdditionalContacts.Responses;
+
+public record GetAdditionalContactByIdResponse(AdditionalContactDto AdditionalContacts);

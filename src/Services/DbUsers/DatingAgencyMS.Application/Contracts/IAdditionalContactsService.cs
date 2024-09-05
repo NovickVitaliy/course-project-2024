@@ -9,4 +9,5 @@ public interface IAdditionalContactsService
     Task<ServiceResult<GetAdditionalContactsResponse>> GetAsync(GetAdditionalContactsRequest request);
     Task<ServiceResult<bool>> CreateAsync(CreateAdditionalContactsRequest request);
     Task<ServiceResult<bool>> UpdateAsync(UpdateAdditionalContactsRequest request);
+    Task<ServiceResult<GetAdditionalContactByIdResponse>> GetByIdAsync(int id);
 }

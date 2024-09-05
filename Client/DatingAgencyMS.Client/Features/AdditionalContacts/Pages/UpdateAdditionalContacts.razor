@@ -1,13 +1,12 @@
 @using BlazorBootstrap
 @using Microsoft.AspNetCore.Components.Forms
-@page "/tables/additional-contacts/{id}/update"
+@page "/tables/additional-contacts/{id:int}/update"
 <h3>Оновити об'єкт додаткових контактів</h3>
 
 <a href="/tables/additional-contacts">
     <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
     Повернутись назад
 </a>
-<h3>Оновити об'єкт додаткових контактів</h3>
 @if (_loggedInUser is not null && UpdateAdditionalContactsRequest is not null)
 {
     <div class="row">

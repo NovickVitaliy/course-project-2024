@@ -1,5 +1,6 @@
 @using BlazorBootstrap
 @using DatingAgencyMS.Client.Features.AdditionalContacts.Models
+@using DatingAgencyMS.Client.Helpers
 
 <Grid TItem="AdditionalContactDto"
     Class="table table-hover table-bordered table-striped"
@@ -27,4 +28,17 @@
     <GridColumn TItem="AdditionalContactDto" HeaderText="TikTok" PropertyName="TikTok" SortString="tiktok" SortKeySelector="c => c.TikTok" FilterTextboxWidth="80">
         @context.TikTok
     </GridColumn>
+    @if (UserState.Value.User.IsAllowedToUpdateAndDeleteEntities())
+    {
+    <GridColumn TItem="AdditionalContactDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+        <HeaderContent>
+            Опції
+        </HeaderContent>
+        <ChildContent>
+            <div class="d-flex gap-1">
+                <a href="/tables/additional-contacts/@context.Id/update" class="btn btn-success">Оновити</a>
+            </div>
+        </ChildContent>
+    </GridColumn>
+    }
 </Grid>
