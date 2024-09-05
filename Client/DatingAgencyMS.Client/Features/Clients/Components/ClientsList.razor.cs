@@ -1,7 +1,4 @@
 using BlazorBootstrap;
-using Common.Filtering.Filters;
-using Common.Filtering.Filters.NumberFilters;
-using Common.Filtering.FiltersOptions;
 using Common.Filtering.Pagination;
 using Common.Filtering.Sorting;
 using DatingAgencyMS.Client.Extensions;

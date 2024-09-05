@@ -1,6 +1,5 @@
 using DatingAgencyMS.Client.Features.PartnerRequirements.Models.Dto.Requests;
 using DatingAgencyMS.Client.Features.PartnerRequirements.Models.Dto.Responses;
-using Microsoft.AspNetCore.Mvc;
 using Refit;
 
 namespace DatingAgencyMS.Client.Features.PartnerRequirements.Services;

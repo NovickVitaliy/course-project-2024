@@ -6,7 +6,6 @@ using DatingAgencyMS.Client.Models.Core;
 using DatingAgencyMS.Client.Store.UserUseCase;
 using Fluxor;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using Refit;
 
 namespace DatingAgencyMS.Client.Features.PartnerRequirements.Pages;

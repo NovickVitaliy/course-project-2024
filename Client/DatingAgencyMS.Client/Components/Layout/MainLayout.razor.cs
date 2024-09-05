@@ -1,9 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using Blazored.LocalStorage;
 using DatingAgencyMS.Client.Constants;
-using DatingAgencyMS.Client.Helpers;
 using DatingAgencyMS.Client.Models.Core;
-using DatingAgencyMS.Client.Models.DTOs.Auth;
 using DatingAgencyMS.Client.Services;
 using DatingAgencyMS.Client.Store.UserUseCase;
 using Fluxor;

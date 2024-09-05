@@ -1,6 +1,5 @@
 using BlazorBootstrap;
 using DatingAgencyMS.Client.Extensions;
-using DatingAgencyMS.Client.Features.Clients.Services;
 using DatingAgencyMS.Client.Features.PartnerRequirements.Helpers;
 using DatingAgencyMS.Client.Features.PartnerRequirements.Models.Dto.Requests;
 using DatingAgencyMS.Client.Features.PartnerRequirements.Services;

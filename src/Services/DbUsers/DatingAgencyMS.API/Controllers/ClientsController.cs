@@ -2,7 +2,6 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Clients.Requests;
 using DatingAgencyMS.Application.Extensions;
-using DatingAgencyMS.Client.Constants;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;

@@ -5,7 +5,6 @@ using DatingAgencyMS.Application.Extensions;
 using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace DatingAgencyMS.API.Controllers;
 

@@ -2,8 +2,6 @@ using BlazorBootstrap;
 using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Models.DTOs.Auth;
 using DatingAgencyMS.Client.Services;
-using DatingAgencyMS.Client.Store.UserUseCase;
-using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Refit;
 

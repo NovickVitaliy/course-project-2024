@@ -9,7 +9,6 @@ using DatingAgencyMS.Domain.Models.Business;
 using DatingAgencyMS.Infrastructure.Extensions;
 using DatingAgencyMS.Infrastructure.Helpers;
 using System.Data;
-using DatingAgencyMS.Application.DTOs.Clients;
 
 
 namespace DatingAgencyMS.Infrastructure.Services.PostgresServices;

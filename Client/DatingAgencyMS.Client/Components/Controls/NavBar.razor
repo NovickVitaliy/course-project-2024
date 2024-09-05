@@ -9,11 +9,11 @@
             <span class="navbar-text">
                 @if (User is null)
                 {
-                    <text>To use application, please log in.</text>
+                    <text>Щоб використовувати додаток, будь ласка, зайдіть до акаунту.</text>
                 }
                 else
                 {
-                    <text>Welcome <b>@User.Login</b></text>
+                    <text>Вітаємо, <b>@User.Login</b></text>
                     <button class="btn btn-danger" @onclick="Logout">Вийти</button>
                 }
             </span>

@@ -6,7 +6,6 @@ using DatingAgencyMS.Client.Features.Invitations.Models.Dtos;
 using DatingAgencyMS.Client.Features.Invitations.Models.Dtos.Requests;
 using DatingAgencyMS.Client.Features.Invitations.Services;
 using DatingAgencyMS.Client.Helpers;
-using DatingAgencyMS.Client.Models.Core;
 using DatingAgencyMS.Client.Store.UserUseCase;
 using Fluxor;
 using Microsoft.AspNetCore.Components;

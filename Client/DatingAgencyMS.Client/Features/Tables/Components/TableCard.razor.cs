@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 
 namespace DatingAgencyMS.Client.Features.Tables.Components;

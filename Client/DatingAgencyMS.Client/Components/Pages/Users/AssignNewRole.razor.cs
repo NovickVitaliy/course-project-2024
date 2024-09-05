@@ -1,7 +1,6 @@
 using BlazorBootstrap;
 using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Models.Core;
-using DatingAgencyMS.Client.Models.DTOs.User;
 using DatingAgencyMS.Client.Models.DTOs.User.Requests;
 using DatingAgencyMS.Client.Services;
 using DatingAgencyMS.Client.Store.UserUseCase;

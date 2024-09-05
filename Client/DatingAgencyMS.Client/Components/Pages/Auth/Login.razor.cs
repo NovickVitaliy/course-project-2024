@@ -5,7 +5,6 @@ using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Models.DTOs.Auth;
 using DatingAgencyMS.Client.Store.UserUseCase;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using Refit;
 
 namespace DatingAgencyMS.Client.Components.Pages.Auth;

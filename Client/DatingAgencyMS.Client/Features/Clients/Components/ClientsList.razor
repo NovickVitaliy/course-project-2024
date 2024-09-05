@@ -61,12 +61,12 @@
     {
         <GridColumn TItem="ClientDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
             <HeaderContent>
-                Options
+                Опції
             </HeaderContent>
             <ChildContent>
                 <div class="d-flex gap-1">
-                    <button @onclick="() => DeleteClient(context.ClientId)" class="btn btn-danger">Delete</button>
-                    <a href="/tables/clients/@context.ClientId/update" class="btn btn-success">Update</a>
+                    <button @onclick="() => DeleteClient(context.ClientId)" class="btn btn-danger">Видалити</button>
+                    <a href="/tables/clients/@context.ClientId/update" class="btn btn-success">Оновити</a>
                 </div>
             </ChildContent>
         </GridColumn>

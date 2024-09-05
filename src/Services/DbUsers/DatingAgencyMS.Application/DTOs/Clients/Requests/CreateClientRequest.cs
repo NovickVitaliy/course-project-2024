@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using DatingAgencyMS.Domain.Models.Business;
 
 namespace DatingAgencyMS.Application.DTOs.Clients.Requests;
