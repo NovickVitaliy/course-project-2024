@@ -11,4 +11,10 @@ public interface IAdditionalContactsService
 
     [Post("/additional-contacts")]
     Task CreateAsync([Body] CreateAdditionalContactsRequest request, [Authorize] string token);
+
+    [Put("/additional-contacts/{id}")]
+    Task UpdateAsync(int id, UpdateAdditionalContactsRequest request, [Authorize] string token);
+
+    [Get("/additional-contacts/{id}")]
+    Task<GetAdditionalContactsByIdResponse> GetByIdAsync(int id, [Authorize] string token);
 }

@@ -1,0 +1,56 @@
+@using BlazorBootstrap
+@using Microsoft.AspNetCore.Components.Forms
+@page "/tables/additional-contacts/{id}/update"
+<h3>Оновити об'єкт додаткових контактів</h3>
+
+<a href="/tables/additional-contacts">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
+<h3>Оновити об'єкт додаткових контактів</h3>
+@if (_loggedInUser is not null && UpdateAdditionalContactsRequest is not null)
+{
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <EditForm FormName="updateAdditionalContactsForm" Model="UpdateAdditionalContactsRequest" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="mb-3">
+                    <label for="telegram" class="form-label">Telegram</label>
+                    <InputText id="telegram" @bind-Value="UpdateAdditionalContactsRequest.Telegram" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => UpdateAdditionalContactsRequest.Telegram"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="facebook" class="form-label">Facebook</label>
+                    <InputText id="facebook" @bind-Value="UpdateAdditionalContactsRequest.Facebook" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => UpdateAdditionalContactsRequest.Facebook"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="instagram" class="form-label">Instagram</label>
+                    <InputText id="instagram" @bind-Value="UpdateAdditionalContactsRequest.Instagram" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => UpdateAdditionalContactsRequest.Instagram"></ValidationMessage>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="tiktok" class="form-label">TikTok</label>
+                    <InputText id="tiktok" @bind-Value="UpdateAdditionalContactsRequest.TikTok" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => UpdateAdditionalContactsRequest.TikTok"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-1">
+                    <a class="btn btn-secondary" href="/tables/additional-contacts">Назад</a>
+                    <button type="submit" class="btn btn-primary">Оновити</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}

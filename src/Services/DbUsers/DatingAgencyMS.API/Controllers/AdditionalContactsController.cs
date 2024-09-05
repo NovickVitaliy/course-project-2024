@@ -40,4 +40,16 @@ public class AdditionalContactsController : BaseApiController
 
         return Created();
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, UpdateAdditionalContactsRequest request)
+    {
+        var response = await _additionContactsService.UpdateAsync(request);
+        if (!response.Success)
+        {
+            return StatusCode(response.Code, response.ToHttpErrorResponse());
+        }
+
+        return Ok();
+    }
 }

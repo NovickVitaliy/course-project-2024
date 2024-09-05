@@ -96,6 +96,38 @@ public class PostgresAdditionalContactsService : IAdditionalContactsService
         }
     }
 
+    public async Task<ServiceResult<bool>> UpdateAsync(UpdateAdditionalContactsRequest request)
+    {
+        var connection = await _dbManager.GetConnectionOrThrow();
+        await using var transaction = await connection.BeginTransactionAsync(IsolationLevel.Serializable);
+        try
+        {
+            await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "UPDATE additionalcontacts " +
+                              "SET facebook = @facebook, " +
+                              "instagram = @instagram, " +
+                              "telegram = @telegram, " +
+                              "tiktok = @tiktok " +
+                              "WHERE id = @id";
+            cmd.AddParameter("facebook", request.Facebook)
+                .AddParameter("instagram", request.Instagram)
+                .AddParameter("telegram", request.Telegram)
+                .AddParameter("tiktok", request.TikTok);
+
+            var rowsAffected = await cmd.ExecuteNonQueryAsync();
+            await transaction.CommitAsync();
+
+            return rowsAffected == 1
+                ? ServiceResult<bool>.Ok(true)
+                : ServiceResult<bool>.BadRequest("Помилка при оновлені об'єкта додаткових контактів");
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<bool>.BadRequest(e.Message);
+        }
+    }
+
     private AdditionalContactDto ReadAdditionalContact(DbDataReader reader)
     {
         var id = reader.GetInt32("id");
