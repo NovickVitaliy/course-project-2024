@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C423B0F4-9FFE-4FB6-A335-B04265989500}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbUsers", "DbUsers", "{6E5B7057-C7F1-46CD-8855-6E84879A8833}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DatingAgency.API", "DatingAgency.API", "{6E5B7057-C7F1-46CD-8855-6E84879A8833}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatingAgencyMS.API", "src\Services\DbUsers\DatingAgencyMS.API\DatingAgencyMS.API.csproj", "{12391B55-B738-4D4B-A9F5-8A2854592173}"
 EndProject
