@@ -118,7 +118,7 @@ public class PostgresPhoneNumbersService : IPhoneNumbersService
 
         var skipItems = ((request.PaginationInfo.PageNumber - 1) * request.PaginationInfo.PageSize);
         var pagination = $"OFFSET {skipItems} ROWS FETCH NEXT {request.PaginationInfo.PageSize} ROWS ONLY";
-        var conditionalSql = string.Concat(initialCondition, idCondition, phoneNumberCondition, additionalContactIdCondition)
+        var conditionalSql = string.Concat(initialCondition, idCondition, phoneNumberCondition, additionalContactIdCondition);
         return (string.Concat(selectFrom, initialCondition, conditionalSql, sortingString,
                 pagination), conditionalSql);
     }
