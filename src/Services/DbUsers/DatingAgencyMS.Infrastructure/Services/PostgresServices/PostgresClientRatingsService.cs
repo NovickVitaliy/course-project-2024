@@ -30,7 +30,7 @@ public class PostgresClientRatingsService : IClientRatingsService
             cmd.AddParameter("clientId", request.ClientId)
                 .AddParameter("rating", request.Rating)
                 .AddParameter("comment", request.Comment)
-                .AddParameter("ratingData", DateTime.UtcNow);
+                .AddParameter("ratingDate", DateTime.UtcNow);
 
             var id = (int?)await cmd.ExecuteScalarAsync();
 

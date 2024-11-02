@@ -1,0 +1,48 @@
+@page "/tables/client-ratings/create"
+@using DatingAgencyMS.Client.Features.ClientRatings.Models.Requests
+@using Microsoft.AspNetCore.Components.Forms
+<h3>Додати відгук клієнта</h3>
+
+<a href="/tables/additional-contacts">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
+
+<div class="row">
+    <div class="col-lg-6 col-sm-12">
+        @if (_request is not null)
+        {
+            <EditForm FormName="createClientRating" Model="_request" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="mb-3">
+                    <label for="clientId" class="form-label">Id клієнта</label>
+                    <InputNumber id="clientId" @bind-Value="_request.ClientId" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.ClientId"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="rating" class="form-label">Оцінка</label>
+                    <InputNumber id="rating" @bind-Value="_request.Rating" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Rating"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Відгук</label>
+                    <InputText id="comment" @bind-Value="_request.Comment" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Comment"></ValidationMessage>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-end gap-1">
+                    <a class="btn btn-secondary" href="/tables/client-ratings">Назад</a>
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
