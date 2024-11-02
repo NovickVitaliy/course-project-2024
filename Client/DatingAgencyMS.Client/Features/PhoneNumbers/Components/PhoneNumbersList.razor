@@ -1,0 +1,39 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.AdditionalContacts.Models
+@using DatingAgencyMS.Client.Features.PhoneNumbers.Models
+@using DatingAgencyMS.Client.Helpers
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+<ConfirmDialog @ref="_confirmDialog"></ConfirmDialog>
+<Grid @ref="_grid" TItem="PhoneNumberDto"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="PhoneNumbersDataProvider"
+      AllowPaging="true"
+      AllowSorting="true"
+      AllowFiltering="true"
+      PageSize="10"
+      Responsive="true">
+    <GridColumn TItem="PhoneNumberDto" HeaderText="Id" PropertyName="Id" SortString="id" SortKeySelector="c => c.Id" FilterTextboxWidth="80">
+        @context.Id
+    </GridColumn>
+    <GridColumn TItem="PhoneNumberDto" HeaderText="Номер телефону" PropertyName="PhoneNumber" SortString="phone_number" SortKeySelector="c => c.PhoneNumber" >
+        @context.PhoneNumber
+    </GridColumn>
+    <GridColumn TItem="PhoneNumberDto" HeaderText="Id об'єкту додаткових контактів" PropertyName="AdditionalContactsId" SortString="additional_contacts_id" SortKeySelector="c => c.AdditionalContactsId" FilterTextboxWidth="80">
+        @context.AdditionalContactsId
+    </GridColumn>
+    @if (UserState.Value.User.IsAllowedToUpdateAndDeleteEntities())
+    {
+    <GridColumn TItem="PhoneNumberDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+        <HeaderContent>
+            Опції
+        </HeaderContent>
+        <ChildContent>
+            <div class="d-flex gap-1">
+                <a href="/tables/phone-numbers/@context.Id/update" class="btn btn-success">Оновити</a>
+                <button @onclick="() => ConfirmDelete(context.Id)" class="btn btn-danger">Видалити</button>
+            </div>
+        </ChildContent>
+    </GridColumn>
+    }
+</Grid>

@@ -1,0 +1,21 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.PhoneNumbers.Components
+@using DatingAgencyMS.Client.Helpers
+
+@page "/tables/phone-numbers"
+<h3>Керування мобільними телефонами</h3>
+
+<a href="/tables">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    До списку таблиць
+</a>
+@if (_loggedInUser is not null)
+{
+    <div class="d-flex w-100 mb-3 gap-1">
+        @if (UserState.Value.User!.IsAllowedToCreateEntities())
+        {
+            <a href="/tables/phone-numbers/create" class="btn btn-primary">Створити номер телефону</a>
+        }
+    </div>
+    <PhoneNumbersList></PhoneNumbersList>
+}

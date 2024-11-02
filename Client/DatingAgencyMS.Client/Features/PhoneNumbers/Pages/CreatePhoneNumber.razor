@@ -1,0 +1,41 @@
+@page "/tables/phone-numbers/create"
+@using Microsoft.AspNetCore.Components.Forms
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using BlazorBootstrap
+<a href="/tables/phone-numbers">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
+<h3>Створити номер телефону</h3>
+
+<div class="row">
+    <div class="col-lg-6 col-sm-12">
+        @if (_request is not null)
+        {
+            <EditForm FormName="createPhoneNumber" Model="_request" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">Номер телефону</label>
+                    <InputText id="phoneNumber" @bind-Value="_request.PhoneNumber" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.PhoneNumber"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="additionalContactId" class="form-label">Id об'єкту додаткових контактів</label>
+                    <InputNumber id="additionalContactId" @bind-Value="_request.AdditionalContactsId" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.AdditionalContactsId"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-1">
+                    <a class="btn btn-secondary" href="/tables/phone-numbers">Назад</a>
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </div>
+            </EditForm>
+        }
+
+    </div>
+</div>

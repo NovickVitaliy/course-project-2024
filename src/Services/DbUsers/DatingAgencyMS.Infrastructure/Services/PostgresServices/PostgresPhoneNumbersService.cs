@@ -64,9 +64,10 @@ public class PostgresPhoneNumbersService : IPhoneNumbersService
             var phoneNumber = reader.GetString("phone_number");
             var additionalContactsId = reader.GetInt32("additional_contacts_id");
 
+            await reader.CloseAsync();
             await transaction.CommitAsync();
 
-            return ServiceResult<PhoneNumberDto>.Ok(new PhoneNumberDto(id, phoneNumber, additionalContactsId));
+            return ServiceResult<PhoneNumberDto>.Ok(new PhoneNumberDto(phoneNumberId, phoneNumber, additionalContactsId));
         }
         catch (Exception e)
         {
@@ -90,7 +91,7 @@ public class PostgresPhoneNumbersService : IPhoneNumbersService
             {
                 var id = reader.GetInt32("id");
                 var phoneNumber = reader.GetString("phone_number");
-                var additionalContactsId = reader.GetInt32("additional_contacts_info");
+                var additionalContactsId = reader.GetInt32("additional_contacts_id");
                 dtos.Add(new PhoneNumberDto(id, phoneNumber, additionalContactsId));
             }
 
@@ -119,7 +120,7 @@ public class PostgresPhoneNumbersService : IPhoneNumbersService
         var skipItems = ((request.PaginationInfo.PageNumber - 1) * request.PaginationInfo.PageSize);
         var pagination = $"OFFSET {skipItems} ROWS FETCH NEXT {request.PaginationInfo.PageSize} ROWS ONLY";
         var conditionalSql = string.Concat(initialCondition, idCondition, phoneNumberCondition, additionalContactIdCondition);
-        return (string.Concat(selectFrom, initialCondition, conditionalSql, sortingString,
+        return (string.Concat(selectFrom, conditionalSql, sortingString,
                 pagination), conditionalSql);
     }
 

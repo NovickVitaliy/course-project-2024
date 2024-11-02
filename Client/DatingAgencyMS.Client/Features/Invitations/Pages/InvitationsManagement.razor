@@ -1,6 +1,7 @@
 @page "/tables/invitations"
 @using DatingAgencyMS.Client.Features.Invitations.Components
 @using BlazorBootstrap
+@using DatingAgencyMS.Client.Helpers
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 <a href="/tables">
     <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
@@ -9,8 +10,11 @@
 <h3>Керування запрошеннями</h3>
 @if (_loggedInUser is not null)
 {
-    <div class="d-flex w-100 mb-3 gap-1">
-        <a class="btn btn-primary" href="/tables/invitations/create">Створити запрошення</a>
-    </div>
+    @if (UserState.Value.User!.IsAllowedToCreateEntities())
+    {
+        <div class="d-flex w-100 mb-3 gap-1">
+            <a class="btn btn-primary" href="/tables/invitations/create">Створити запрошення</a>
+        </div>
+    }
     <InvitationsList></InvitationsList>
 }

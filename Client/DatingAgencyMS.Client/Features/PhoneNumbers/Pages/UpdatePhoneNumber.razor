@@ -1,0 +1,32 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using BlazorBootstrap
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@page "/tables/phone-numbers/{id:int}/update"
+<a href="/tables/phone-numbers">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
+<h3>Оновити номер телефону</h3>
+@if (_loggedInUser is not null)
+{
+<div class="row">
+    <div class="col-lg-6 col-sm-12">
+        <EditForm FormName="updatePhoneNumber" Model="_request" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <div class="mb-3">
+                <label for="phone-number" class="form-label">Номер телефону</label>
+                <InputText id="phone-number" @bind-Value="_request.PhoneNumber" class="form-control"></InputText>
+                <div class="validation-message">
+                    <ValidationMessage For="() => _request.PhoneNumber"></ValidationMessage>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-1">
+                <a class="btn btn-secondary" href="/tables/phone-numbers">Назад</a>
+                <button type="submit" class="btn btn-primary">Оновити</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+}
