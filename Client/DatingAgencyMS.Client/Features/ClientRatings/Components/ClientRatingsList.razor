@@ -1,8 +1,10 @@
 @using BlazorBootstrap
 @using DatingAgencyMS.Client.Features.ClientRatings.Models
 @using DatingAgencyMS.Client.Helpers
-
-<Grid TItem="ClientRatingDto"
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+<ConfirmDialog @ref="_confirmDialog"></ConfirmDialog>
+<Grid @ref="_grid" TItem="ClientRatingDto"
     Class="table table-hover table-bordered table-striped"
     DataProvider="ClientRatingsDataProvider"
     AllowPaging="true"
@@ -34,6 +36,7 @@
         <ChildContent>
             <div class="d-flex gap-1">
                 <a href="/tables/client-ratings/@context.Id/update" class="btn btn-success">Оновити</a>
+                <button @onclick="() => ConfirmDeletion(context.Id)" class="btn btn-danger">Видалити</button>
             </div>
         </ChildContent>
     </GridColumn>

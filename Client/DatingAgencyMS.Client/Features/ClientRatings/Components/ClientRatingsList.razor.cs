@@ -18,6 +18,8 @@ public partial class ClientRatingsList : ComponentBase
     [Inject] private IState<UserState> UserState { get; init; }
     [Inject] private IClientRatingsService ClientRatingsService { get; init; }
     [Inject] private ToastService ToastService { get; init; }
+    private ConfirmDialog? _confirmDialog = null!;
+    private Grid<ClientRatingDto>? _grid = null!;
     
     private async Task<GridDataProviderResult<ClientRatingDto>> ClientRatingsDataProvider(GridDataProviderRequest<ClientRatingDto> request)
     {
@@ -61,5 +63,35 @@ public partial class ClientRatingsList : ComponentBase
 
         return new GetClientRatingsRequest(idFilter, clientIdFilter, ratingFilter, 
             commentFilter, ratingDateFilter, sortingInfo, paginationInfo);
+    }
+    private async Task ConfirmDeletion(int id)
+    {
+        if (_confirmDialog is null) return;
+
+        var confirmation = await _confirmDialog.ShowAsync(
+            title:$"Ви сравді хочете видалити цей відгук?",
+            message1:"Це видалить запис з БД. Ця дія незворотня.",
+            confirmDialogOptions: new ConfirmDialogOptions()
+            {
+                YesButtonText = "Видалити",
+                YesButtonColor = ButtonColor.Danger,
+                NoButtonText = "Назад",
+                NoButtonColor = ButtonColor.Secondary
+            });
+
+        if (confirmation)
+        {
+            try
+            {
+                await ClientRatingsService.DeleteAsync(id, UserState.Value.User!.Token);
+                ToastService.Notify(new ToastMessage(ToastType.Success, "Відгук було успішно видалено"));
+                await _grid!.RefreshDataAsync();
+            }
+            catch (ApiException e)
+            {
+                var apiError = e.ToApiError();
+                ToastService.Notify(new (ToastType.Danger, apiError.Description));
+            }
+        }
     }
 }
