@@ -1,0 +1,41 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.ClientRatings.Models
+@using DatingAgencyMS.Client.Helpers
+
+<Grid TItem="ClientRatingDto"
+    Class="table table-hover table-bordered table-striped"
+    DataProvider="ClientRatingsDataProvider"
+    AllowPaging="true"
+    AllowSorting="true"
+    AllowFiltering="true"
+    PageSize="10"
+    Responsive="true">
+    <GridColumn TItem="ClientRatingDto" HeaderText="Id" PropertyName="Id" SortString="id" SortKeySelector="c => c.Id" FilterTextboxWidth="80">
+        @context.Id
+    </GridColumn>
+    <GridColumn TItem="ClientRatingDto" HeaderText="Id Клієнта" PropertyName="ClientId" SortString="client_id" SortKeySelector="c => c.ClientId" FilterTextboxWidth="80">
+        @context.ClientId
+    </GridColumn>
+    <GridColumn TItem="ClientRatingDto" HeaderText="Оцінка" PropertyName="Rating" SortString="rating" SortKeySelector="c => c.Rating" FilterTextboxWidth="80">
+        @context.Rating
+    </GridColumn>
+    <GridColumn TItem="ClientRatingDto" HeaderText="Коментарій" PropertyName="Comment" SortString="comment" SortKeySelector="c => c.Comment">
+        @context.Comment
+    </GridColumn>
+    <GridColumn TItem="ClientRatingDto" HeaderText="Дата написання" PropertyName="RatingDate" SortString="rating_date" SortKeySelector="c => c.RatingDate">
+        @context.RatingDate
+    </GridColumn>
+    @if (UserState.Value.User.IsAllowedToUpdateAndDeleteEntities())
+    {
+    <GridColumn TItem="ClientRatingDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+        <HeaderContent>
+            Опції
+        </HeaderContent>
+        <ChildContent>
+            <div class="d-flex gap-1">
+                <a href="/tables/client-ratings/@context.Id/update" class="btn btn-success">Оновити</a>
+            </div>
+        </ChildContent>
+    </GridColumn>
+    }
+</Grid>

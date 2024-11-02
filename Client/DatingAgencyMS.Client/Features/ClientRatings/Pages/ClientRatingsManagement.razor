@@ -1,0 +1,15 @@
+@page "/tables/client-ratings"
+@using DatingAgencyMS.Client.Helpers
+@using DatingAgencyMS.Client.Features.ClientRatings.Components
+<h3>Керування відгуками клієнтів</h3>
+
+@if (_loggedInUser is not null)
+{
+    <div class="d-flex w-100 mb-3 gap-1">
+        @if (UserState.Value.User!.IsAllowedToCreateEntities())
+        {
+            <a class="btn btn-primary" href="/tables/client-ratings/create">Додати відгук клієнта</a>
+        }
+    </div>
+    <ClientRatingsList></ClientRatingsList>
+}

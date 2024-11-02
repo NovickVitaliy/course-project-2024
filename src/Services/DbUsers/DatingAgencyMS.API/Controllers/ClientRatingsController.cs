@@ -63,7 +63,7 @@ public class ClientRatingsController : BaseApiController
         return NoContent();
     }
 
-    [HttpDelete("{id:int")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         var result = await _clientRatingsService.DeleteClientRatingAsync(id);

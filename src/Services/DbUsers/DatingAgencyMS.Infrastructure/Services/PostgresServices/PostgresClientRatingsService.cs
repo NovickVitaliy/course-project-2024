@@ -188,7 +188,7 @@ public class PostgresClientRatingsService : IClientRatingsService
 
             await transaction.CommitAsync();
             return ServiceResult<bool>.NoContent();
-        }
+        }   
         catch (Exception e)
         {
             await transaction.RollbackAsync();
