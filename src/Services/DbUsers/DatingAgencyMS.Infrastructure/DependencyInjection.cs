@@ -60,6 +60,7 @@ public static class DependencyInjection
         services.AddScoped<IAdditionalContactsService, PostgresAdditionalContactsService>();
         services.AddScoped<IPhoneNumbersService, PostgresPhoneNumbersService>();
         services.AddScoped<IClientRatingsService, PostgresClientRatingsService>();
+        services.AddScoped<IComplaintsService, PostgresComplaintsService>();
         
         return services;
     }
