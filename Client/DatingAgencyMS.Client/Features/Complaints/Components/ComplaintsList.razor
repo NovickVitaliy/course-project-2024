@@ -1,0 +1,52 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.Complaints.Models
+@using DatingAgencyMS.Client.Helpers
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+<ConfirmDialog @ref="_confirmDialog"></ConfirmDialog>
+<Grid @ref="_grid" TItem="ComplaintDto"
+    Class="table table-hover table-bordered table-striped"
+    DataProvider="ComplaintsDataProvider"
+    AllowPaging="true"
+    AllowSorting="true"
+    AllowFiltering="true"
+    PageSize="10"
+    Responsive="true">
+    <GridColumn TItem="ComplaintDto" HeaderText="Id" PropertyName="ComplaintId" SortString="complaint_id" SortKeySelector="c => c.ComplaintId" FilterTextboxWidth="80">
+        @context.ComplaintId
+    </GridColumn>
+
+    <GridColumn TItem="ComplaintDto" HeaderText="Id скаржника" PropertyName="ComplainantId" SortString="complainant_id" SortKeySelector="c => c.ComplainantId" FilterTextboxWidth="80">
+        @context.ComplainantId
+    </GridColumn>
+
+    <GridColumn TItem="ComplaintDto" HeaderText="Id оскаржуваного" PropertyName="ComplaineeId" SortString="complainee_id" SortKeySelector="c => c.ComplaineeId" FilterTextboxWidth="80">
+        @context.ComplaineeId
+    </GridColumn>
+
+    <GridColumn TItem="ComplaintDto" HeaderText="Дата" PropertyName="Date" SortString="date" SortKeySelector="c => c.Date" FilterTextboxWidth="80">
+        @context.Date
+    </GridColumn>
+
+    <GridColumn TItem="ComplaintDto" HeaderText="Текст" PropertyName="Text" SortString="text" SortKeySelector="c => c.Text">
+        @context.Text
+    </GridColumn>
+    
+    <GridColumn TItem="ComplaintDto" HeaderText="Статус" PropertyName="ComplaintStatus" SortString="complaint_status" SortKeySelector="c => c.ComplaintStatus">
+        @context.ComplaintStatus
+    </GridColumn>
+    @if (UserState.Value.User.IsAllowedToUpdateAndDeleteEntities())
+    {
+    <GridColumn TItem="ComplaintDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+        <HeaderContent>
+            Опції
+        </HeaderContent>
+        <ChildContent>
+            <div class="d-flex gap-1">
+                <a href="/tables/complaints/@context.ComplaintId/update" class="btn btn-success">Оновити</a>
+                <button @onclick="() => ConfirmDeletion(context.ComplaintId)" class="btn btn-danger">Видалити</button>
+            </div>
+        </ChildContent>
+    </GridColumn>
+    }
+</Grid>

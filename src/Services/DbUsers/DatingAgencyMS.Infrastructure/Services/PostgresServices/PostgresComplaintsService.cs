@@ -28,7 +28,7 @@ public class PostgresComplaintsService : IComplaintsService
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
             cmd.CommandText = "INSERT INTO complaints(complainant_id, complainee_id, date, text, complaint_status) " +
-                              "VALUES (@complainantIt, @complaineeId, @date, @text, @complaintStatus) RETURNING complaint_id";
+                              "VALUES (@complainantId, @complaineeId, @date, @text, @complaintStatus) RETURNING complaint_id";
             cmd.AddParameter("complainantId", request.ComplainantId)
                 .AddParameter("complaineeId", request.ComplaineeId)
                 .AddParameter("date", DateTime.UtcNow)

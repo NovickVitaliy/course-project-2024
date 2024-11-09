@@ -1,0 +1,49 @@
+@using BlazorBootstrap
+@using Microsoft.AspNetCore.Components.Forms
+@page "/tables/complaints/create"
+<h3>Створення скарги</h3>
+
+
+<a href="/tables/client-ratings">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
+
+<div class="row">
+    <div class="col-lg-6 col-sm-12">
+        @if (_request is not null)
+        {
+            <EditForm FormName="createClientRating" Model="_request" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="mb-3">
+                    <label for="complainantId" class="form-label">Id того хто жаліється</label>
+                    <InputNumber id="complainantId" @bind-Value="_request.ComplainantId" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.ComplainantId"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="complaineeId" class="form-label">Id того, на кого жаліються</label>
+                    <InputNumber id="complaineeId" @bind-Value="_request.ComplaineeId" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.ComplaineeId"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="text" class="form-label">Текст скарги</label>
+                    <InputText id="text" @bind-Value="_request.Text" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.Text"></ValidationMessage>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-end gap-1">
+                    <a class="btn btn-secondary" href="/tables/complaints">Назад</a>
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>

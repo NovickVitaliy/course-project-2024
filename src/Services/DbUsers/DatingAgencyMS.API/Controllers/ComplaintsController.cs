@@ -16,7 +16,7 @@ public class ComplaintsController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAsync(GetComplaintsRequest request)
+    public async Task<IActionResult> GetAsync([FromQuery] GetComplaintsRequest request)
     {
         var result = await _complaintsService.GetComplaintsAsync(request);
         if (!result.Success)

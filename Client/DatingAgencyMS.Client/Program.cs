@@ -4,6 +4,7 @@ using DatingAgencyMS.Client.Extensions;
 using DatingAgencyMS.Client.Features.AdditionalContacts.Services;
 using DatingAgencyMS.Client.Features.ClientRatings.Services;
 using DatingAgencyMS.Client.Features.Clients.Services;
+using DatingAgencyMS.Client.Features.Complaints.Services;
 using DatingAgencyMS.Client.Features.CoupleArchive.Services;
 using DatingAgencyMS.Client.Features.Invitations.Services;
 using DatingAgencyMS.Client.Features.Meetings.Services;
@@ -30,7 +31,8 @@ builder.Services
     .AddRefitServiceWithBaseApiUrl<ICoupleArchiveService>(cfg)
     .AddRefitServiceWithBaseApiUrl<IAdditionalContactsService>(cfg)
     .AddRefitServiceWithBaseApiUrl<IPhoneNumbersService>(cfg)
-    .AddRefitServiceWithBaseApiUrl<IClientRatingsService>(cfg);
+    .AddRefitServiceWithBaseApiUrl<IClientRatingsService>(cfg)
+    .AddRefitServiceWithBaseApiUrl<IComplaintsService>(cfg);
 
 builder.Services.AddFluxor(options =>
 {

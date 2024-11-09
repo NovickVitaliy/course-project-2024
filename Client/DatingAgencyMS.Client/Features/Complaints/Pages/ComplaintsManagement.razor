@@ -1,0 +1,16 @@
+@page "/tables/complaints"
+@using DatingAgencyMS.Client.Helpers
+@using DatingAgencyMS.Client.Features.Complaints.Components
+<h3>Керування скаргами</h3>
+
+
+@if (_loggedInUser is not null)
+{
+    <div class="d-flex w-100 mb-3 gap-1">
+        @if (UserState.Value.User!.IsAllowedToCreateEntities())
+        {
+            <a class="btn btn-primary" href="/tables/complaints/create">Додати скаргу</a>
+        }
+    </div>
+    <ComplaintsList></ComplaintsList>
+}
