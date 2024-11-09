@@ -1,0 +1,48 @@
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Features.Invitations.Models.Dtos
+@using DatingAgencyMS.Client.Features.MeetingReviews.Models
+@using DatingAgencyMS.Client.Helpers
+@using Microsoft.AspNetCore.Components.Web
+@rendermode @(new InteractiveServerRenderMode(false))
+<ConfirmDialog @ref="_confirmDialog"></ConfirmDialog>
+<Grid @ref="_grid" TItem="MeetingReviewDto"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="MeetingReviewsDataProvider"
+      AllowPaging="true"
+      AllowSorting="true"
+      AllowFiltering="true"
+      PageSize="10"
+      Responsive="true">
+    <GridColumn TItem="MeetingReviewDto" HeaderText="Id Відгуку" PropertyName="Id" SortString="id" SortKeySelector="i => i.Id" FilterTextboxWidth="80">
+        @context.Id
+    </GridColumn>
+    <GridColumn TItem="MeetingReviewDto" HeaderText="Оцінка того, хто запросив" PropertyName="InviterScore" SortString="inviter_score" SortKeySelector="i => i.InviterScore" FilterTextboxWidth="80">
+        @context.InviterScore
+    </GridColumn>
+    <GridColumn TItem="MeetingReviewDto" HeaderText="Відгук того, хто запросив" PropertyName="InviterReview" SortString="inviter_review" SortKeySelector="i => i.InviterReview" FilterTextboxWidth="80">
+        @context.InviterReview
+    </GridColumn>
+    <GridColumn TItem="MeetingReviewDto" HeaderText="Оцінка того, кого запросили" PropertyName="InviteeScore" SortString="invitee_score" SortKeySelector="i => i.InviteeScore" FilterTextboxWidth="80">
+        @context.InviteeScore
+    </GridColumn>
+    <GridColumn TItem="MeetingReviewDto" HeaderText="Відгук того, хто запросив" PropertyName="InviteeReview" SortString="invitee_review" SortKeySelector="i => i.InviteeReview" FilterTextboxWidth="80">
+        @context.InviteeReview
+    </GridColumn>
+    <GridColumn TItem="MeetingReviewDto" HeaderText="Id зустрічі" PropertyName="MeetingId" SortString="meeting_id" SortKeySelector="i => i.MeetingId" FilterTextboxWidth="80">
+        @context.MeetingId
+    </GridColumn>
+    @if (UserState.Value.User.IsAllowedToUpdateAndDeleteEntities())
+    {
+    <GridColumn TItem="MeetingReviewDto" HeaderText="Options" PropertyName="Options" Filterable="false" Sortable="false">
+        <HeaderContent>
+            Опції
+        </HeaderContent>
+        <ChildContent>
+            <div class="d-flex gap-1">
+                <button @onclick="() => DeleteMeetingReview(context.Id)" class="btn btn-danger">Видалити</button>
+                <a href="/tables/meeting-reviews/@context.Id/update" class="btn btn-success">Оновити</a>
+            </div>
+        </ChildContent>
+    </GridColumn>
+    }
+</Grid>

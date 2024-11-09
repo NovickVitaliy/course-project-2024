@@ -1,0 +1,20 @@
+@page "/tables/meeting-reviews"
+@using BlazorBootstrap
+@using DatingAgencyMS.Client.Helpers
+@using DatingAgencyMS.Client.Features.MeetingReviews.Components
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+<a href="/tables">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    До списку таблиць
+</a>
+<h3>Керування відгуками про зустрічі</h3>
+@if (_loggedInUser is not null)
+{
+    @if (UserState.Value.User!.IsAllowedToCreateEntities())
+    {
+        <div class="d-flex w-100 mb-3 gap-1">
+            <a href="/tables/meeting-reviews/create" class="btn btn-primary">Створити відгук про зустріч</a>
+        </div>
+    }
+    <MeetingReviewsList></MeetingReviewsList>
+}

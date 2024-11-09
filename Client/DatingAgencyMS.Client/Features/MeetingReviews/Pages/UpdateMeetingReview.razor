@@ -1,0 +1,65 @@
+@page "/tables/meeting-reviews/{id:int}/update"
+@using Microsoft.AspNetCore.Components.Forms
+@using BlazorBootstrap
+<h3>Оновити запис відгуку про зустріч</h3>
+
+
+<a href="/tables/meeting-reviews">
+    <Icon CustomIconName="fa-solid fa-arrow-right"></Icon>
+    Повернутись назад
+</a>
+
+<div class="row">
+    <div class="col-lg-6 col-sm-12">
+        @if (_request is not null)
+        {
+            <EditForm FormName="updateMeetingReviewForm" Model="_request" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="mb-3">
+                    <label for="inviterScore" class="form-label">Оцінка того хто запрошував</label>
+                    <InputNumber id="inviterScore" @bind-Value="_request.InviterScore" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.InviterScore"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="inviterReview" class="form-label">Відгук того, хто запрошував</label>
+                    <InputText id="inviterReview" @bind-Value="_request.InviterReview" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.InviterReview"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="inviteeScore" class="form-label">Оцінка того кого запросили</label>
+                    <InputNumber id="inviteeScore" @bind-Value="_request.InviteeScore" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.InviteeScore"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="inviteeReview" class="form-label">Відгук того кого запросили</label>
+                    <InputText id="inviteeReview" @bind-Value="_request.InviteeReview" class="form-control"></InputText>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.InviteeReview"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="meetingId">Id зустрічі</label>
+                    <InputNumber id="meetingId" @bind-Value="_request.MeetingId" class="form-control"></InputNumber>
+                    <div class="validation-message">
+                        <ValidationMessage For="() => _request.MeetingId"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-1">
+                    <a class="btn btn-secondary" href="/tables/meeting-reviews">Назад</a>
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
