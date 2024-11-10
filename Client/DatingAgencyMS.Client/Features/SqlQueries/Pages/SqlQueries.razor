@@ -1,0 +1,8 @@
+@page "/tables/sql"
+@rendermode @(new InteractiveServerRenderMode(false))
+@using DatingAgencyMS.Client.Features.CodeMirror
+@using Microsoft.AspNetCore.Components.Web
+<h3>SQL Запити</h3>
+
+<CodeMirror @bind-Value="EditorContent" Mode="text/x-sql"></CodeMirror>
+<button @onclick="Process"></button>
