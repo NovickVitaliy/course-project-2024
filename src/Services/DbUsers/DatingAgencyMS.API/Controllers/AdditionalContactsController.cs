@@ -2,6 +2,7 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.AdditionalContacts.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Constants;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
@@ -30,6 +31,7 @@ public class AdditionalContactsController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> Create(CreateAdditionalContactsRequest request)
     {
         var result = await _additionContactsService.CreateAsync(request);
@@ -42,6 +44,7 @@ public class AdditionalContactsController : BaseApiController
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> Update(int id, UpdateAdditionalContactsRequest request)
     {
         var response = await _additionContactsService.UpdateAsync(request);

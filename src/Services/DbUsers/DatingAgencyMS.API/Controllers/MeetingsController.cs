@@ -3,6 +3,7 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Meetings.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Constants;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
@@ -45,6 +46,7 @@ public class MeetingsController : BaseApiController
     }
 
     [HttpPut("{meetingId:int}/change-status")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> ChangeMeetingStatus([FromBody] ChangeMeetingStatusRequest request,
         [FromRoute] int meetingId)
     { 

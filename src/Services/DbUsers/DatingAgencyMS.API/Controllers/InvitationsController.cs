@@ -4,10 +4,13 @@ using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Invitations.Requests;
 using DatingAgencyMS.Application.DTOs.Meetings.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Constants;
 using DatingAgencyMS.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers; 
 
+[Authorize]
 [Route("api/invitations")]
 public class InvitationsController : BaseApiController
 {
@@ -32,6 +35,7 @@ public class InvitationsController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> CreateInvitation(CreateInvitationRequest request)
     {
         var result = await _invitationsService.CreateInvitation(request);
@@ -44,6 +48,7 @@ public class InvitationsController : BaseApiController
     }
 
     [HttpDelete("{invitationId:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> DeleteInvitation(int invitationId)
     {
         var requestedBy = User.GetDbUserLogin();
@@ -57,6 +62,7 @@ public class InvitationsController : BaseApiController
     }
 
     [HttpPut("{invitationId:int}/accept")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> MarkAsAccepted(int invitationId)
     {
         try

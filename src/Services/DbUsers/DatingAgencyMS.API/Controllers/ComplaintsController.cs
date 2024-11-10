@@ -2,9 +2,12 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Complaints.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
 
+[Authorize]
 [Route("api/complaints")]
 public class ComplaintsController : BaseApiController
 {
@@ -40,6 +43,7 @@ public class ComplaintsController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> CreateAsync(CreateComplaintRequest request)
     {
         var result = await _complaintsService.CreateComplaintAsync(request);
@@ -52,6 +56,7 @@ public class ComplaintsController : BaseApiController
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> UpdateAsync(int id, UpdateComplaintRequest request)
     {
         request = request with { ComplaintId = id };
@@ -65,6 +70,7 @@ public class ComplaintsController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         var result = await _complaintsService.DeleteComplaintAsync(id);

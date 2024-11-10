@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
 
-
 [Route("api/[controller]")]
 [Authorize(Policy = ApplicationPolicies.IsOwnerOrAdmin)]
 public class UsersController : BaseApiController
@@ -21,6 +20,7 @@ public class UsersController : BaseApiController
     }
     
     [HttpPost]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> CreateUser(CreateUserRequest request)
     {
         var result = await _userManager.CreateUser(request);
@@ -58,6 +58,7 @@ public class UsersController : BaseApiController
     }
     
     [HttpDelete]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> DeleteUser([FromQuery] DeleteUserRequest request)
     {
         var result = await _userManager.DeleteUser(request);
@@ -70,6 +71,7 @@ public class UsersController : BaseApiController
     }
 
     [HttpPut("{userId:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> AssignNewRole([FromRoute] int _, [FromBody] AssignNewRoleRequest request)
     {
         var result = await _userManager.AssignNewRole(request);

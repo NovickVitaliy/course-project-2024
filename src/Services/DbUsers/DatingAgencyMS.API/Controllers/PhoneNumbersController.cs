@@ -2,9 +2,12 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.PhoneNumbers.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
 
+[Authorize]
 [Route("api/phone-numbers")]
 public class PhoneNumbersController : BaseApiController
 {
@@ -16,6 +19,7 @@ public class PhoneNumbersController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> CreateAsync(CreatePhoneNumberRequest request)
     {
         var result = await _phoneNumbersService.CreatePhoneNumberAsync(request);
@@ -52,6 +56,7 @@ public class PhoneNumbersController : BaseApiController
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> UpdateAsync(int id, UpdatePhoneNumberRequest request)
     {
         request = request with { Id = id };
@@ -65,6 +70,7 @@ public class PhoneNumbersController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         var result = await _phoneNumbersService.DeletePhoneNumberAsync(id);

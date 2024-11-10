@@ -2,9 +2,11 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.Visits.Requests;
 using DatingAgencyMS.Application.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
 
+[Authorize]
 [Route("api/visits")]
 public class VisitsController : BaseApiController
 {

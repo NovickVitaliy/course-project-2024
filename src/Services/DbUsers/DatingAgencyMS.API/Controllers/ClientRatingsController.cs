@@ -2,9 +2,12 @@ using DatingAgencyMS.API.Controllers.Base;
 using DatingAgencyMS.Application.Contracts;
 using DatingAgencyMS.Application.DTOs.ClientRatings.Requests;
 using DatingAgencyMS.Application.Extensions;
+using DatingAgencyMS.Infrastructure.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DatingAgencyMS.API.Controllers;
 
+[Authorize]
 [Route("api/client-ratings")]
 public class ClientRatingsController : BaseApiController
 {
@@ -39,6 +42,7 @@ public class ClientRatingsController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> CreateAsync(CreateClientRatingRequest request)
     {
         var result = await _clientRatingsService.CreateClientRatingAsync(request);
@@ -51,6 +55,7 @@ public class ClientRatingsController : BaseApiController
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> UpdateAsync(int id, UpdateClientRatingRequest request)
     {
         request = request with { Id = id };
@@ -64,6 +69,7 @@ public class ClientRatingsController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = ApplicationPolicies.CreateUpdateDeleteAccess)]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         var result = await _clientRatingsService.DeleteClientRatingAsync(id);
