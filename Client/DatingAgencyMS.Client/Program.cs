@@ -11,6 +11,7 @@ using DatingAgencyMS.Client.Features.MeetingReviews.Services;
 using DatingAgencyMS.Client.Features.Meetings.Services;
 using DatingAgencyMS.Client.Features.PartnerRequirements.Services;
 using DatingAgencyMS.Client.Features.PhoneNumbers.Services;
+using DatingAgencyMS.Client.Features.SqlQueries.Services;
 using DatingAgencyMS.Client.Features.Visits.Services;
 using DatingAgencyMS.Client.Services;
 using Fluxor;
@@ -34,7 +35,8 @@ builder.Services
     .AddRefitServiceWithBaseApiUrl<IPhoneNumbersService>(cfg)
     .AddRefitServiceWithBaseApiUrl<IClientRatingsService>(cfg)
     .AddRefitServiceWithBaseApiUrl<IComplaintsService>(cfg)
-    .AddRefitServiceWithBaseApiUrl<IMeetingReviewsService>(cfg);
+    .AddRefitServiceWithBaseApiUrl<IMeetingReviewsService>(cfg)
+    .AddRefitServiceWithBaseApiUrl<ISqlQueryService>(cfg);
 
 builder.Services.AddFluxor(options =>
 {

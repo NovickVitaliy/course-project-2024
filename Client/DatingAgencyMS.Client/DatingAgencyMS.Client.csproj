@@ -21,8 +21,4 @@
       <ProjectReference Include="..\..\Common.Filtering\Common.Filtering.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Features\SqlQueries\Services\" />
-    </ItemGroup>
-
 </Project>

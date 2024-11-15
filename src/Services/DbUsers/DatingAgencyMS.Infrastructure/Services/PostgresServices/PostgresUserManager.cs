@@ -385,6 +385,7 @@ public class PostgresUserManager : IUserManager
             var reader = await cmd.ExecuteReaderAsync();
             if (!await reader.ReadAsync())
             {
+                await reader.CloseAsync();
                 await transaction.RollbackAsync();
                 return ServiceResult<ForgotPasswordResponse>.NotFound("Користувач БД", request.Login);
             }

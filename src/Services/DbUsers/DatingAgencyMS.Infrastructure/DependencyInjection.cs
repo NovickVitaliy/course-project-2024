@@ -62,6 +62,7 @@ public static class DependencyInjection
         services.AddScoped<IClientRatingsService, PostgresClientRatingsService>();
         services.AddScoped<IComplaintsService, PostgresComplaintsService>();
         services.AddScoped<IMeetingReviewsService, PostgresMeetingReviewsService>();
+        services.AddScoped<ISqlQueryService, PostgresSqlService>();
         
         return services;
     }

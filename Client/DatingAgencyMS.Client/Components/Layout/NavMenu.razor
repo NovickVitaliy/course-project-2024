@@ -20,10 +20,19 @@
         </div>
         @if (User is not null)
         {
+            @if (IsOwner())
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/tables/sql" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> SQL Запити
+                    </NavLink>
+                </div>
+            }
             @if (IsInRoleAllowedToManageUsers())
             {
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" style="line-height: 1.2rem" href="/users-management" Match="NavLinkMatch.All">
+                    <NavLink class="nav-link" style="line-height: 1.2rem" href="/users-management"
+                             Match="NavLinkMatch.All">
                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Керування користувачами
                     </NavLink>
                 </div>
@@ -32,12 +41,6 @@
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="/tables" Match="NavLinkMatch.All">
                     <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Таблиці
-                </NavLink>
-            </div>
-            
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="/tables/sql" Match="NavLinkMatch.All">
-                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> SQL Запити
                 </NavLink>
             </div>
         }
@@ -67,6 +70,11 @@
     private bool IsInRoleAllowedToManageUsers()
     {
         return User is not null && _rolesAllowedToManageUsers.HasFlag(User.Role);
+    }
+
+    private bool IsOwner()
+    {
+        return User is not null && DbRoles.Owner.HasFlag(User.Role);
     }
 
 }

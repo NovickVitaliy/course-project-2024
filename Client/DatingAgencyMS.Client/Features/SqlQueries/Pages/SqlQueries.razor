@@ -5,4 +5,20 @@
 <h3>SQL Запити</h3>
 
 <CodeMirror @bind-Value="EditorContent" Mode="text/x-sql"></CodeMirror>
-<button @onclick="Process"></button>
+<button class="btn btn-primary mb-3" @onclick="Process">Запустити SQL запит</button>
+
+<div>
+  @if (_sqlServiceResult is not null)
+  {
+    if (_sqlServiceResult.Length > 1)
+    {
+      <ul class="list-group list-group-flush">
+      @foreach (string se in _sqlServiceResult)
+      {
+          <li class="list-group-item">@se</li>
+      }
+      </ul>
+    }
+  }
+
+</div>
