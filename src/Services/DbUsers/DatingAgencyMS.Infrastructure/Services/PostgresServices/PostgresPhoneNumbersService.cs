@@ -25,6 +25,16 @@ public class PostgresPhoneNumbersService : IPhoneNumbersService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM additionalcontacts WHERE id = @id";
+            cmd.AddParameter("id", request.AdditionalContactsId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count == 0)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<int>.NotFound("Додаткові контакти", request.AdditionalContactsId);
+            }
+            cmd.Parameters.Clear();
+            
             cmd.CommandText = "INSERT INTO phonenumbers (phone_number, additional_contacts_id) " +
                               "VALUES (@phoneNumber, @additionalContactsId) RETURNING id";
             cmd.AddParameter("phoneNumber", request.PhoneNumber)
@@ -165,6 +175,16 @@ public class PostgresPhoneNumbersService : IPhoneNumbersService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM PhoneNumbers WHERE id = @id";
+            cmd.AddParameter("id", id);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count == 0)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Номер телефону", id);
+            }
+            cmd.Parameters.Clear();
+            
             cmd.CommandText = "DELETE FROM PhoneNumbers WHERE id = @id";
             cmd.AddParameter("id", id);
 

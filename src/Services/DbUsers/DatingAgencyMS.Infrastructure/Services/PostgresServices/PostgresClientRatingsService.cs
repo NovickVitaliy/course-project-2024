@@ -25,6 +25,15 @@ public class PostgresClientRatingsService : IClientRatingsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT * FROM clients WHERE id = @clientId";
+            cmd.AddParameter("clientId", request.ClientId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<int>.NotFound("Клієнт", request.ClientId);
+            } 
+            cmd.Parameters.Clear();
             cmd.CommandText = "INSERT INTO clientratings (client_id, rating, comment, rating_date) " +
                               "VALUES (@clientId, @rating, @comment, @ratingDate) RETURNING rating_id";
             cmd.AddParameter("clientId", request.ClientId)
@@ -181,6 +190,16 @@ public class PostgresClientRatingsService : IClientRatingsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM clientratings WHERE rating_id = @ratingId";
+            cmd.AddParameter("ratingId", id);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Відгук клієнта", id);
+            }
+            cmd.Parameters.Clear();
+            
             cmd.CommandText = "DELETE FROM clientratings WHERE rating_id = @ratingId";
             cmd.AddParameter("ratingId", id);
 

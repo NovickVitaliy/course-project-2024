@@ -70,7 +70,16 @@ public class PostgresAdditionalContactsService : IAdditionalContactsService
                 await transaction.RollbackAsync();
                 return ServiceResult<bool>.BadRequest("Об'єкт додаткових записів для даного користувача вже існує.");
             }
-            
+            cmd.Parameters.Clear();
+
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE id = @clientId";
+            cmd.AddParameter("clientId", request.ClientId);
+            count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Клієнт", request.ClientId);
+            }
             cmd.Parameters.Clear();
             
             cmd.CommandText = "INSERT INTO additionalcontacts (client_id, telegram, facebook, instagram, tiktok) " +

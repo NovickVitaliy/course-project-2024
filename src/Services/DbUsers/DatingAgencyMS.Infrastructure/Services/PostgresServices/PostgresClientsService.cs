@@ -162,6 +162,15 @@ public class PostgresClientsService : IClientsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE id = @id";
+            cmd.AddParameter("id", clientId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Клієнт", clientId);
+            }
+            cmd.Parameters.Clear();
             cmd.CommandText = "DELETE FROM clients WHERE id = @clientId";
             cmd.AddParameter("clientId", clientId);
 

@@ -29,6 +29,26 @@ public class PostgresMeetingsService : IMeetingsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE id = @clientId";
+            cmd.AddParameter("clientId", request.InviterId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<int>.NotFound("Клієнт", request.InviterId);
+            }
+            cmd.Parameters.Clear();
+
+            cmd.AddParameter("clientId", request.InviteeId);
+            count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<int>.NotFound("Клієнт", request.InviteeId);
+            }
+            cmd.Parameters.Clear();
+            
+            
             cmd.CommandText = "INSERT INTO meetings (date, inviter_id, invitee_id, location, result) " +
                               "VALUES (@date, @inviterId, @inviteeId, @location, @result) RETURNING meeting_id";
             cmd.AddParameter("date", request.Date)
@@ -120,7 +140,15 @@ public class PostgresMeetingsService : IMeetingsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
-
+            cmd.CommandText = "SELECT COUNT(*) FROM meetings WHERE meeting_id = @meetingId";
+            cmd.AddParameter("meetingId", request.MeetingId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Зустріч", request.MeetingId);
+            }
+            cmd.Parameters.Clear();
             await UpdateMeetingRecord(cmd, request);
             var partnersIds = await ReadPartnersIds(cmd, request);
             await CreateVisitRecord(cmd, partnersIds.InviterId, request.MeetingId, request.InviterVisited);

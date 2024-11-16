@@ -27,6 +27,26 @@ public class PostgresComplaintsService : IComplaintsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE id = @id";
+            cmd.AddParameter("id", request.ComplainantId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<int>.NotFound("Клієнт", request.ComplainantId);
+            }
+            cmd.Parameters.Clear();
+            
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE id = @id";
+            cmd.AddParameter("id", request.ComplaineeId);
+            count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<int>.NotFound("Клієнт", request.ComplainantId);
+            }
+            cmd.Parameters.Clear();
+            
             cmd.CommandText = "INSERT INTO complaints(complainant_id, complainee_id, date, text, complaint_status) " +
                               "VALUES (@complainantId, @complaineeId, @date, @text, @complaintStatus) RETURNING complaint_id";
             cmd.AddParameter("complainantId", request.ComplainantId)

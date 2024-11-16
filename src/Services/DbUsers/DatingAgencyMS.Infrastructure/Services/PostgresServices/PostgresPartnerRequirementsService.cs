@@ -29,6 +29,16 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE id = @clientId";
+            cmd.AddParameter("clientId", request.ClientId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count == 0)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Клієнт", request.ClientId);
+            }
+            cmd.Parameters.Clear();
+            
             cmd.CommandText = "INSERT INTO partnerrequirements (gender, sex, min_age, max_age, min_height, max_height, min_weight, max_weight, zodiac_sign, location, client_id) " +
                               "VALUES (@gender, @sex, @minAge, @maxAge, @minHeight, @maxHeight, @minWeight, @maxWeight, @zodiacSign, @location, @clientId)";
             cmd.AddParameter("gender", request.Gender);
@@ -161,6 +171,16 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE id = @clientId";
+            cmd.AddParameter("clientId", request.ClientId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count == 0)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Клієнт", request.ClientId);
+            }
+            cmd.Parameters.Clear();
+            
             cmd.CommandText = "UPDATE partnerrequirements SET " +
                               "gender = @gender, " +
                               "sex = @sex, " +
@@ -208,6 +228,15 @@ public class PostgresPartnerRequirementsService : IPartnerRequirementsService
         try
         {
             var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM partnerrequirements WHERE requirement_id = @id";
+            cmd.AddParameter("id", id);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count == 0)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<bool>.NotFound("Клієнт", id);
+            }
+            cmd.Parameters.Clear();
             cmd.CommandText = "DELETE FROM partnerrequirements WHERE requirement_id = @id";
             cmd.AddParameter("id", id);
 

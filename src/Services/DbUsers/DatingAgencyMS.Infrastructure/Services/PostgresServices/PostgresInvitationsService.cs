@@ -54,6 +54,26 @@ public class PostgresInvitationsService : IInvitationsService
         try
         {
             await using var cmd = transaction.CreateCommandWithAssignedTransaction();
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE id = @id";
+            cmd.AddParameter("id", request.InviterId);
+            var count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<int>.NotFound("Клієнт", request.InviterId);
+            }
+            cmd.Parameters.Clear();
+            
+            cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE id = @id";
+            cmd.AddParameter("id", request.InviteeId);
+            count = (long?)await cmd.ExecuteScalarAsync();
+            if (count != 1)
+            {
+                await transaction.RollbackAsync();
+                return ServiceResult<int>.NotFound("Клієнт", request.InviteeId);
+            }
+            cmd.Parameters.Clear();
+            
             cmd.CommandText =
                 "INSERT INTO invitations (inviter_id, invitee_id, location, date_of_meeting, created_on, active_to, is_accepted) " +
                 "VALUES (@inviterId, @inviteeId, @location, @dateOfMeeting, @createdOn, @activeTo, @isAccepted) RETURNING invitation_id";
