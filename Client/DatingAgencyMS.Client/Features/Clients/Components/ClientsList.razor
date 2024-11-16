@@ -43,10 +43,10 @@
         @context.Age
     </GridColumn>
     <GridColumn TItem="ClientDto" HeaderText="Ріст" PropertyName="Height" SortString="height" SortKeySelector="c => c.Height" FilterTextboxWidth="80">
-        @context.Height
+        @context.Height см.
     </GridColumn>
     <GridColumn TItem="ClientDto" HeaderText="Вага" PropertyName="Weight" SortString="weight" SortKeySelector="c => c.Weight" FilterTextboxWidth="80">
-        @context.Weight
+        @context.Weight кг.
     </GridColumn>
     <GridColumn TItem="ClientDto" HeaderText="Знак Зодіаку" PropertyName="ZodiacSign" SortString="zodiac_sign" Filterable="false"  SortKeySelector="c => c.ZodiacSign" FilterTextboxWidth="80">
         @ZodiacSignHelper.GetUkrainianTranslation(context.ZodiacSign)
