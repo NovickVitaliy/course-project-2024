@@ -53,7 +53,7 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
 
         if (_connections.ContainsKey(login))
         {
-            return ServiceResult<bool>.BadRequest("Підключення до БД вже встановлене для даного користувача");
+            return ServiceResult<bool>.Ok(true);
         }
 
         _connections.TryAdd(login, new DbConnectionInfo(connection));
@@ -79,6 +79,7 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
     {
         var login = _httpContextAccessor.HttpContext!.User.GetDbUserLogin();
         var serviceResult = await GetConnection(login);
+        return await GetRootConnection();
         if (!serviceResult.Success) throw new InvalidOperationException("Невдалось отримати підключення до БД. Спробуйте перезайти в аккаунт");
         return serviceResult.ResponseData!;
     }
