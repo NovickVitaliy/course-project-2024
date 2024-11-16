@@ -79,7 +79,6 @@ public class PostgresDbManager : IDbManager, IAsyncDisposable
     {
         var login = _httpContextAccessor.HttpContext!.User.GetDbUserLogin();
         var serviceResult = await GetConnection(login);
-        return await GetRootConnection();
         if (!serviceResult.Success) throw new InvalidOperationException("Невдалось отримати підключення до БД. Спробуйте перезайти в аккаунт");
         return serviceResult.ResponseData!;
     }

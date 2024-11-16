@@ -204,11 +204,11 @@ public class PostgresUserManager : IUserManager
             }
 
             cmd.Parameters.Clear();
-            var escapedLogin = "\"" + request.Login.Replace("\"", "\"\"") + "\"";
+            var escapedLogin = "\"" + request.Login.ToLowerInvariant().Replace("\"", "\"\"") + "\"";
             var escapedPassword = "'" + request.Password.Replace("'", "''") + "'";
             cmd.CommandText = $"CREATE ROLE {escapedLogin} WITH LOGIN PASSWORD {escapedPassword}";
             await cmd.ExecuteNonQueryAsync();
-            await GrantAccessRights(escapedLogin, request.Role, cmd);
+            await GrantAccessRights(request.Login.ToLowerInvariant(), request.Role, cmd);
 
             await transaction.CommitAsync();
         }
