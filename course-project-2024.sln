@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B278D927-5429-4146-BBD9-BBB600FA1E2D}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+		nginx\course-project.conf = nginx\course-project.conf
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatingAgencyMS.Domain", "src\Services\DbUsers\DatingAgencyMS.Domain\DatingAgencyMS.Domain.csproj", "{51B4B1B6-7E9D-4DD9-9B78-95000848D1F4}"

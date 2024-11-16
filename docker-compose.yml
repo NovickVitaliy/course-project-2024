@@ -1,9 +1,4 @@
 ﻿services:
-#  dbusers.api:
-#    image: dbusers.api
-#    build:
-#      context: .
-#      dockerfile: src/Services/DbUsers/DbUsers.API/Dockerfile
   postgres.db:
     image: postgres
     container_name: postgres.db
@@ -16,5 +11,48 @@
     volumes:
       - postgres-default-volume:/var/lib/postgresql/data
 
+  datingagencyms.api:
+    image: datingagencyms.api
+    build:
+      context: .
+      dockerfile: src/Services/DbUsers/DatingAgencyMS.API/Dockerfile
+    environment:
+      - ConnectionStrings__pg_conn_template=Host=postgres.db;Port=5432;Database=datingAgencyDb;Username={0};Password={1}
+      - ConnectionStrings__ConnectionStringForRoot=Host=postgres.db;Port=5432;Database=datingAgencyDb;Username=root;Password=xc56-426i-rkmf
+      - ASPNETCORE_HTTP_PORTS=8080
+      - JwtSettings__Issuer=datingAgency.api
+      - JwtSettings__Audience=datingAgency.client
+      - JwtSettings__LifetimeInMinutes=60
+      - JwtSettings__Secret=1AB61AB1-9F2A-4E95-99F1-CE5CE5E19718
+      - PasswordEncryptionOptions__Key=71d45046e1e75b1f4d3396b4ff79ea5d
+      - PasswordEncryptionOptions__Iv=HR$2pIjHR$2pIj12
+    ports:
+      - "6000:8080"
+    depends_on:
+      - postgres.db
+
+  datingagencyms.client:
+    image: datingagencyms.client
+    build:
+      context: .
+      dockerfile: Client/DatingAgencyMS.Client/Dockerfile
+    environment:
+      - ApiBaseUrl=http://datingagencyms.api:8080/api
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "6050:8080"
+    depends_on:
+      - postgres.db
+  
+  nginx:
+    image: nginx:latest
+    ports:
+      - "7000:80"
+    restart: always
+    volumes:
+      - ./nginx/cfg/:/etc/nginx/conf.d/:ro
+      - ./nginx/certs:/etc/nginx/ssl
+  
 volumes:
   postgres-default-volume:

@@ -15,14 +15,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+      <ProjectReference Include="..\DatingAgencyMS.Application\DatingAgencyMS.Application.csproj" />
+      <ProjectReference Include="..\DatingAgencyMS.Infrastructure\DatingAgencyMS.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DatingAgencyMS.Application\DatingAgencyMS.Application.csproj" />
-      <ProjectReference Include="..\DatingAgencyMS.Infrastructure\DatingAgencyMS.Infrastructure.csproj" />
+      <Content Include="..\..\..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
